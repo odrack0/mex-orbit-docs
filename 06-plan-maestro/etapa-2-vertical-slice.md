@@ -28,6 +28,10 @@ Cada una termina en algo observable; el orden respeta las dependencias.
 
 **Gate E2 cerrado.** El loop vertical completo corre de punta a punta y se verifica solo.
 
+### Después del gate
+
+- **Mobiliario del mapa** (2026-08-25): el **portal** del 1-1 entra como dato — migración `.3` con la fila en `map_portal` y el mapa vecino `1-2` que exige su FK (*"el destino existe por construcción"*); viaja **completo en `EnterMap`** (struct `MapPortal`), como manda la spec para portales, estaciones y POIs. En el cliente es `PortalNode`: aro quieto, vórtice que gira y late, y la etiqueta del sector destino debajo; clic = rumbo al portal. **El salto en sí es de E3.** La **caja de carga** deja de estar hardcodeada y pasa a `data/props/cargo-box.json`, como el resto de los assets. El minimapa gana los rombos de estación y portal.
+
 ## Reglas de la etapa
 
 - Código en inglés, comentarios en español; UI bajo el skill `mexorbit-ui`; todo número de juego se lee de BD, jamás se hardcodea.
