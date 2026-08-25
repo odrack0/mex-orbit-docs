@@ -1,0 +1,736 @@
+<title>MexOrbit E</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;500;700&family=Geologica:wght@300;400;500;600&family=Martian+Mono:wght@400;500&display=swap">
+<style>
+  /* ============ PROPUESTA E — B evolucionada: chrome flotante, aurora, gradiente 2026 ============ */
+  :root{
+    --bg:#05060C;
+    --glass:rgba(13,17,30,.55);
+    --glass-2:rgba(9,12,22,.68);
+    --stroke:rgba(140,160,210,.14);
+    --txt:#D7E1F2;
+    --muted:#7E8AA6;
+    --faint:#4A5470;
+    --cy:#4AD8FF;
+    --vi:#8B7CFF;
+    --grad:linear-gradient(90deg,#4AD8FF,#8B7CFF);
+    --hp:#4FE39B;
+    --shield:#5FA8FF;
+    --hostile:#FF5C7A;
+    --warn:#FFC46B;
+    --r:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--txt);font-family:'Geologica',system-ui,sans-serif;font-size:14px;overflow:hidden}
+  .mono{font-family:'Martian Mono',monospace;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .disp{font-family:'Unbounded',sans-serif}
+  .lbl{font-family:'Unbounded';font-weight:500;font-size:8px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .gtxt{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  /* ============ ESCENA + AURORA ============ */
+  #scene{position:fixed;inset:0;z-index:0}
+  #stars{position:absolute;inset:0;width:100%;height:100%}
+  .aurora{position:absolute;inset:-20%;filter:blur(70px);opacity:.5;
+    background:
+      radial-gradient(38% 30% at 22% 30%, rgba(139,124,255,.16), transparent 70%),
+      radial-gradient(34% 30% at 78% 68%, rgba(74,216,255,.13), transparent 70%);
+    animation:drift 26s ease-in-out infinite alternate}
+  @keyframes drift{to{transform:translate(4%, -3%) scale(1.06)}}
+  .ship{position:absolute;filter:drop-shadow(0 0 14px rgba(74,216,255,.22))}
+  .ship.enemy{filter:drop-shadow(0 0 14px rgba(255,92,122,.26))}
+  #playerShip{left:46%;top:55%}
+  #enemyShip{left:63%;top:30%}
+  .tbrack{position:absolute;left:59.6%;top:24.9%;width:132px;height:132px;pointer-events:none;animation:tpulse 2.6s ease-in-out infinite}
+  @keyframes tpulse{50%{transform:scale(1.05);opacity:.75}}
+
+  /* ============ CHROME FLOTANTE ============ */
+  .hud{position:fixed;z-index:10}
+  .card{
+    background:var(--glass);
+    -webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);
+    border:1px solid var(--stroke);border-radius:var(--r);
+    box-shadow:0 10px 32px rgba(0,0,0,.35);
+    position:relative;
+  }
+  .card::before{ /* tick de esquina: la herencia de B, destilada a un solo gesto */
+    content:"";position:absolute;top:-1px;left:16px;width:34px;height:2px;border-radius:2px;background:var(--grad)}
+
+  .bar{height:6px;background:rgba(6,8,15,.8);border-radius:99px;position:relative;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:99px}
+  .bar.hp i{background:linear-gradient(90deg,#2FA873,var(--hp))}
+  .bar.sh i{background:linear-gradient(90deg,#3B78C9,var(--shield))}
+  .bar.en i{background:var(--grad)}
+  .bar.hostile i{background:linear-gradient(90deg,#C23A56,var(--hostile))}
+
+  /* ============ TOP ============ */
+  #brandtag{top:16px;left:20px;z-index:15}
+  #brandtag .disp{font-weight:700;font-size:14px;letter-spacing:.18em}
+  #brandtag small{display:block;font-family:'Unbounded';font-weight:300;font-size:7px;letter-spacing:.3em;color:var(--faint);margin-top:4px;text-transform:uppercase}
+  #wallet{top:14px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:15}
+  .pillw{display:flex;align-items:center;gap:9px;padding:9px 16px;border-radius:99px;
+    background:var(--glass-2);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid var(--stroke)}
+  .pillw b{font-family:'Martian Mono';font-weight:500;font-size:12.5px}
+
+  /* objetivo — placa superior central (estándar MMO moderno) */
+  #target{top:64px;left:50%;transform:translateX(-50%);width:330px;padding:12px 18px 14px;text-align:center}
+  #target h2{font-family:'Unbounded';font-weight:500;font-size:12.5px;letter-spacing:.14em;color:var(--hostile);text-transform:uppercase}
+  #target .sub{font-size:10.5px;color:var(--muted);margin-top:2px}
+  #target .bars{display:flex;flex-direction:column;gap:5px;margin-top:9px}
+  #target .num{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:5px}
+
+  /* zona: chips arriba derecha */
+  #zone{top:16px;right:20px;display:flex;flex-direction:column;gap:8px;align-items:flex-end;z-index:15}
+  .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:99px;font-size:11.5px;
+    background:var(--glass-2);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid var(--stroke);color:var(--muted)}
+  .chip.risk{color:var(--hostile);border-color:rgba(255,92,122,.35)}
+  .chip.risk::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--hostile);animation:blink 1.6s infinite}
+  @keyframes blink{50%{opacity:.25}}
+  .chip .mono{font-size:10.5px}
+  .chip b{color:var(--warn);font-weight:600}
+
+  /* ============ ESTADO DEL JUGADOR: flotante, abajo centro ============ */
+  #status{bottom:104px;left:50%;transform:translateX(-50%);width:420px;display:flex;flex-direction:column;gap:6px;z-index:11}
+  #status .row{display:grid;grid-template-columns:16px 1fr 86px;gap:10px;align-items:center}
+  #status .ico{width:9px;height:9px;border-radius:50%;justify-self:center}
+  #status .v{text-align:right;font-size:10.5px;color:var(--muted)}
+  #status .meta{display:flex;justify-content:space-between;align-items:center;margin-top:2px}
+  #status .name{font-family:'Unbounded';font-weight:500;font-size:10px;letter-spacing:.18em;text-transform:uppercase}
+  #status .name span{color:var(--cy)}
+  #status .coating{font-size:10.5px;color:var(--muted)}
+  #status .coating b{color:var(--shield);font-weight:600}
+
+  /* ============ ACTION BAR: squircles ============ */
+  #actions{bottom:22px;left:50%;transform:translateX(-50%);display:flex;gap:8px;align-items:center;z-index:12;
+    padding:8px;border-radius:22px;background:var(--glass-2);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid var(--stroke)}
+  .slot{
+    width:54px;height:54px;border:1px solid transparent;border-radius:15px;cursor:pointer;color:var(--txt);
+    background:rgba(16,21,38,.7);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    position:relative;transition:transform .12s ease, border-color .12s, box-shadow .12s;
+  }
+  .slot:hover{transform:translateY(-3px);border-color:rgba(74,216,255,.35)}
+  .slot:focus-visible{outline:1.5px solid var(--cy);outline-offset:2px}
+  .slot .code{font-family:'Unbounded';font-weight:500;font-size:8px;letter-spacing:.04em}
+  .slot .n{font-family:'Martian Mono';font-size:8.5px;color:var(--muted)}
+  .slot .key{position:absolute;top:4px;left:8px;font-size:7px;color:var(--faint);font-family:'Martian Mono'}
+  .slot.sel{border-color:transparent;background:
+    linear-gradient(rgba(13,18,33,.92),rgba(13,18,33,.92)) padding-box, var(--grad) border-box;
+    box-shadow:0 0 18px rgba(94,168,255,.3)}
+  .slot.sel .code{color:var(--cy)}
+  .slot.cd::after{content:"";position:absolute;inset:0;border-radius:15px;background:conic-gradient(rgba(5,6,12,.85) 0 58%, transparent 58%)}
+  .divider{width:1px;height:36px;background:var(--stroke)}
+
+  /* ============ DOCK flotante ============ */
+  #dock{left:14px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:4px;z-index:20;
+    padding:8px 6px;border-radius:20px;background:var(--glass-2);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid var(--stroke)}
+  .dock-btn{
+    width:46px;height:46px;border:none;border-radius:13px;cursor:pointer;background:transparent;color:var(--muted);
+    display:flex;align-items:center;justify-content:center;position:relative;transition:background .15s,color .15s;
+  }
+  .dock-btn svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .dock-btn:hover{color:var(--txt);background:rgba(140,160,210,.08)}
+  .dock-btn.on{color:#fff;background:
+    linear-gradient(rgba(16,22,40,.9),rgba(16,22,40,.9)) padding-box, var(--grad) border-box;
+    border:1px solid transparent}
+  .dock-btn:focus-visible{outline:1.5px solid var(--cy);outline-offset:2px}
+  .dock-btn .tip{position:absolute;left:56px;top:50%;transform:translateY(-50%);white-space:nowrap;
+    font-size:11px;color:var(--txt);background:rgba(9,12,22,.95);border:1px solid var(--stroke);border-radius:9px;
+    padding:5px 11px;opacity:0;pointer-events:none;transition:opacity .12s}
+  .dock-btn:hover .tip{opacity:1}
+
+  /* ============ PLANOS + CHAT ============ */
+  #planos{top:150px;left:84px;display:flex;flex-direction:column;gap:8px;z-index:9}
+  .ppill{display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:99px;
+    background:var(--glass-2);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid var(--stroke)}
+  .ppill .nm{font-family:'Unbounded';font-weight:500;font-size:8.5px;letter-spacing:.14em}
+  .ppill .track{width:74px;height:4px;border-radius:99px;background:rgba(74,84,112,.35);overflow:hidden}
+  .ppill .track i{display:block;height:100%;background:var(--grad);border-radius:99px}
+  .ppill .mono{font-size:9px;color:var(--muted)}
+  #chat{bottom:22px;left:20px;width:320px;padding:12px 16px;font-size:12.5px;z-index:9}
+  #chat .msg{margin-top:5px;line-height:1.5}
+  #chat .ch{color:var(--faint)} #chat .who{color:var(--vi)} #chat .sys{color:var(--cy)}
+
+  /* ============ MINIMAPA CIRCULAR ============ */
+  #mapwrap{bottom:22px;right:22px;width:186px;height:186px;z-index:9}
+  #mapring{position:absolute;inset:0;border-radius:50%;border:1px solid var(--stroke);
+    background:var(--glass-2);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    box-shadow:0 10px 32px rgba(0,0,0,.35)}
+  #mapring::before{content:"N";position:absolute;top:6px;left:50%;transform:translateX(-50%);
+    font-family:'Unbounded';font-size:8px;color:var(--muted)}
+  #minimap{position:absolute;inset:14px;border-radius:50%}
+  #mapwrap .zlbl{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);white-space:nowrap}
+
+  /* ============ VENTANAS ============ */
+  .win{position:fixed;z-index:30;display:none;flex-direction:column;border-radius:var(--r);
+    background:rgba(10,13,24,.88);-webkit-backdrop-filter:blur(20px) saturate(1.2);backdrop-filter:blur(20px) saturate(1.2);
+    border:1px solid var(--stroke);box-shadow:0 30px 90px rgba(0,0,0,.55);overflow:hidden;
+    animation:winin .18s ease}
+  @keyframes winin{from{opacity:0;transform:translateX(-50%) scale(.97)}to{opacity:1;transform:translateX(-50%) scale(1)}}
+  .win.open{display:flex}
+  .win-h{display:flex;align-items:center;gap:12px;padding:13px 16px;position:relative}
+  .win-h::after{content:"";position:absolute;left:16px;right:16px;bottom:0;height:1px;
+    background:linear-gradient(90deg,rgba(74,216,255,.5),rgba(139,124,255,.35),transparent)}
+  .win-h .wicon{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(rgba(16,22,40,.9),rgba(16,22,40,.9)) padding-box, var(--grad) border-box;border:1px solid transparent}
+  .win-h .wicon svg{width:16px;height:16px;stroke:var(--cy);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .win-h h2{font-family:'Unbounded';font-weight:500;font-size:12px;letter-spacing:.18em;text-transform:uppercase}
+  .win-h .sub{font-size:11px;color:var(--muted)}
+  .win-h button{margin-left:auto;background:none;border:1px solid var(--stroke);border-radius:9px;color:var(--muted);
+    font-family:'Martian Mono';font-size:12px;width:28px;height:28px;cursor:pointer;transition:color .12s,border-color .12s}
+  .win-h button:hover{color:var(--hostile);border-color:rgba(255,92,122,.45)}
+  .win-b{padding:18px;overflow:auto}
+  .btn{
+    font-family:'Unbounded';font-weight:500;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:#fff;border:1px solid transparent;border-radius:99px;padding:10px 22px;cursor:pointer;
+    background:linear-gradient(rgba(15,20,37,.85),rgba(15,20,37,.85)) padding-box, var(--grad) border-box;
+    transition:box-shadow .15s, transform .12s;
+  }
+  .btn:hover{box-shadow:0 0 20px rgba(94,168,255,.35);transform:translateY(-1px)}
+  .btn:focus-visible{outline:1.5px solid var(--cy);outline-offset:2px}
+  .btn.ghost{background:none;color:var(--muted);border-color:var(--stroke)}
+  .btn.ghost:hover{color:var(--txt);box-shadow:none;transform:none}
+  .btn.danger{background:none;color:var(--hostile);border-color:rgba(255,92,122,.4)}
+  .btn[disabled]{background:none;color:var(--faint);border-color:var(--stroke);pointer-events:none}
+
+  /* --- MATERIALIZADOR --- */
+  #win-mat{top:66px;left:50%;transform:translateX(-50%);width:910px;max-width:97vw}
+  .mat-grid{display:grid;grid-template-columns:270px 1fr 250px;gap:16px}
+  #machine{display:flex;flex-direction:column;align-items:center;gap:12px;padding:16px;border-radius:14px;background:rgba(8,11,20,.6);border:1px solid var(--stroke)}
+  #core{width:166px;height:166px;position:relative;display:flex;align-items:center;justify-content:center}
+  #core svg{position:absolute;inset:0;animation:rot 20s linear infinite}
+  @keyframes rot{to{transform:rotate(360deg)}}
+  #core .flux{font-family:'Martian Mono';font-weight:500;font-size:24px;color:var(--vi)}
+  #core .flbl{position:absolute;bottom:32px;font-family:'Unbounded';font-size:7px;letter-spacing:.3em;color:var(--muted)}
+  .spin-row{display:flex;gap:6px}
+  #machine .note{font-size:11px;color:var(--muted);text-align:center;line-height:1.55}
+  #machine .note b{color:var(--txt)}
+  .ecl-tabs{display:flex;gap:6px;margin-bottom:12px}
+  .ecl-tab{flex:1;padding:9px;background:none;border:1px solid var(--stroke);border-radius:99px;cursor:pointer;
+    font-family:'Unbounded';font-weight:500;font-size:8.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;transition:color .12s}
+  .ecl-tab:hover{color:var(--txt)}
+  .ecl-tab.on{color:#fff;border-color:transparent;
+    background:linear-gradient(rgba(15,20,37,.9),rgba(15,20,37,.9)) padding-box, var(--grad) border-box}
+  #gate-view{padding:16px;border-radius:14px;background:rgba(8,11,20,.6);border:1px solid var(--stroke);text-align:center}
+  #gate-view h3{font-family:'Unbounded';font-weight:700;font-size:15px;letter-spacing:.18em}
+  #gate-view .tier{font-size:9px;color:var(--muted);letter-spacing:.16em;font-family:'Unbounded';text-transform:uppercase;margin-top:4px}
+  #ringwrap{width:184px;height:184px;margin:13px auto;position:relative}
+  #ringwrap svg{width:100%;height:100%;transform:rotate(-90deg)}
+  #ringwrap .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+  #ringwrap .ctr b{font-family:'Martian Mono';font-weight:500;font-size:20px}
+  #gate-view .gsub{font-size:12px;color:var(--muted)}
+  #gate-view .gsub b{color:var(--txt)}
+  #matlog{display:flex;flex-direction:column;padding:14px;border-radius:14px;background:rgba(8,11,20,.6);border:1px solid var(--stroke)}
+  #matlog ul{list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:10px;font-size:12px;max-height:300px;overflow:auto}
+  #matlog li{display:flex;justify-content:space-between;gap:8px;padding:7px 10px;border-radius:9px;background:rgba(6,8,15,.55)}
+  #matlog li.pieza{border:1px solid rgba(74,216,255,.25);color:var(--txt)}
+  #matlog li.sub{color:var(--muted)}
+  #matlog li .t{font-family:'Martian Mono';font-size:9px;color:var(--faint)}
+  .odds{margin-top:12px;font-size:10.5px;color:var(--faint);line-height:1.6}
+  .odds b{color:var(--muted)}
+
+  /* --- HANGAR / MERCADO --- */
+  #win-hangar{top:84px;left:50%;transform:translateX(-50%);width:730px;max-width:95vw}
+  .hgrid{display:grid;grid-template-columns:240px 1fr;gap:16px}
+  #shipbox{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px;border-radius:14px;background:rgba(8,11,20,.6);border:1px solid var(--stroke)}
+  #shipbox .nm{font-family:'Unbounded';font-weight:700;font-size:15px;letter-spacing:.16em}
+  #shipbox .cls{font-size:10px;color:var(--muted);letter-spacing:.12em}
+  .sgrid{display:grid;grid-template-columns:repeat(8,1fr);gap:5px}
+  .sslot{aspect-ratio:1;background:rgba(6,8,15,.55);border:1px solid var(--stroke);border-radius:9px;
+    display:flex;align-items:center;justify-content:center;font-family:'Unbounded';font-weight:500;font-size:7px;cursor:pointer;transition:border-color .12s}
+  .sslot:hover{border-color:rgba(74,216,255,.4)}
+  .sslot.x{border-color:rgba(139,124,255,.4);color:var(--vi)}
+  .sec{margin-top:12px}
+  .sec .lbl{display:flex;justify-content:space-between;margin-bottom:6px}
+  .dur{display:flex;align-items:center;gap:10px;margin-top:14px;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,196,107,.3);background:rgba(255,196,107,.05);font-size:12px}
+  .dur b{color:var(--warn)}
+  #win-market{top:80px;left:50%;transform:translateX(-50%);width:850px;max-width:96vw}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{font-family:'Unbounded';font-weight:500;font-size:7.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid rgba(74,216,255,.25)}
+  td{padding:10px;border-bottom:1px solid var(--stroke)}
+  td.num,th.num{text-align:right}
+  tr.row:hover td{background:rgba(74,216,255,.04)}
+  .inm{font-weight:600}
+  .inm small{display:block;font-weight:300;font-size:10.5px;color:var(--faint)}
+  .buy{color:var(--hp)} .sell{color:var(--hostile)}
+
+  /* --- STUB --- */
+  .stub{top:120px;left:50%;transform:translateX(-50%);width:460px;max-width:92vw}
+  .stub .win-b{display:flex;flex-direction:column;align-items:center;gap:12px;padding:34px 24px;text-align:center}
+  .stub .win-b svg{width:34px;height:34px;stroke:var(--faint);fill:none;stroke-width:1.4}
+  .stub .win-b p{font-size:12.5px;color:var(--muted);line-height:1.6;max-width:320px}
+
+  /* --- KILLSCREEN --- */
+  #kill{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;
+    background:radial-gradient(60% 60% at 50% 45%, rgba(255,92,122,.1), rgba(5,6,12,.9))}
+  #kill.open{display:flex}
+  #kill .card2{width:520px;max-width:92vw;border-radius:var(--r);overflow:hidden;
+    background:rgba(12,10,18,.94);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+    border:1px solid rgba(255,92,122,.4);box-shadow:0 30px 90px rgba(0,0,0,.6);animation:winin .2s ease}
+  #kill .khead{display:flex;align-items:center;gap:12px;padding:14px 18px;position:relative}
+  #kill .khead::after{content:"";position:absolute;left:16px;right:16px;bottom:0;height:1px;
+    background:linear-gradient(90deg,rgba(255,92,122,.6),transparent)}
+  #kill .khead .wicon{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+    border:1px solid rgba(255,92,122,.45)}
+  #kill .khead .wicon svg{width:16px;height:16px;stroke:var(--hostile);fill:none;stroke-width:1.7}
+  #kill .khead h2{font-family:'Unbounded';font-weight:700;font-size:14px;letter-spacing:.22em;color:var(--hostile);text-transform:uppercase}
+  #kill .by{text-align:center;font-size:12px;color:var(--muted);padding:12px 12px 0}
+  #kill .by b{color:var(--txt)}
+  .k-body{padding:16px 26px 24px;display:flex;flex-direction:column;gap:13px}
+  .k-row{display:flex;justify-content:space-between;gap:10px;font-size:13px}
+  .k-row .k{color:var(--muted)} .k-row .v{text-align:right}
+  .blackbox{padding:12px 14px;border-radius:12px;border:1px dashed rgba(255,196,107,.35);background:rgba(255,196,107,.04);font-size:12.5px;line-height:1.6}
+  .blackbox b{color:var(--warn)}
+  .blackbox .cd{font-family:'Martian Mono';color:var(--txt)}
+  .k-actions{display:flex;gap:10px;justify-content:center;margin-top:2px}
+
+  /* --- LOGIN --- */
+  #login{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:30px;background:var(--bg)}
+  #login .aurora2{position:absolute;inset:-20%;filter:blur(80px);opacity:.55;
+    background:radial-gradient(36% 30% at 30% 35%, rgba(139,124,255,.2), transparent 70%),
+               radial-gradient(32% 28% at 72% 60%, rgba(74,216,255,.16), transparent 70%);
+    animation:drift 22s ease-in-out infinite alternate}
+  #login.off{display:none}
+  #logo{text-align:center;z-index:1}
+  #logo .disp{font-weight:700;font-size:32px;letter-spacing:.3em;padding-left:.3em}
+  #logo small{display:block;margin-top:12px;font-family:'Unbounded';font-weight:300;font-size:7.5px;letter-spacing:.4em;color:var(--faint);text-transform:uppercase}
+  #login .card3{width:360px;border-radius:var(--r);z-index:1;position:relative;overflow:hidden;
+    background:var(--glass);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+    border:1px solid var(--stroke);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+  #login .card3::before{content:"";position:absolute;top:0;left:16px;width:36px;height:2px;border-radius:2px;background:var(--grad)}
+  #login .inner{padding:26px 28px;display:flex;flex-direction:column;gap:15px}
+  #login .lt{display:flex;align-items:center;gap:10px}
+  #login .lt .wicon{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(rgba(16,22,40,.9),rgba(16,22,40,.9)) padding-box, var(--grad) border-box;border:1px solid transparent}
+  #login .lt .wicon svg{width:15px;height:15px;stroke:var(--cy);fill:none;stroke-width:1.7}
+  #login .lt h2{font-family:'Unbounded';font-weight:500;font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+  .field{display:flex;flex-direction:column;gap:6px}
+  .field input{background:rgba(6,8,14,.7);border:1px solid var(--stroke);border-radius:11px;color:var(--txt);
+    font-family:'Geologica';font-size:14px;padding:11px 14px;transition:border-color .15s,box-shadow .15s}
+  .field input:focus{outline:none;border-color:rgba(74,216,255,.5);box-shadow:0 0 0 3px rgba(74,216,255,.12)}
+  #login .status{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
+  #login .status .ok{color:var(--hp)}
+  #login .btn{width:100%;padding:13px;font-size:10px}
+  #login .foot{font-size:10.5px;color:var(--faint);text-align:center}
+
+  #toast{position:fixed;bottom:104px;left:50%;transform:translateX(-50%);z-index:65;
+    font-family:'Unbounded';font-weight:500;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--txt);
+    background:rgba(9,12,22,.95);border:1px solid transparent;border-radius:99px;padding:11px 24px;
+    background:linear-gradient(rgba(9,12,22,.95),rgba(9,12,22,.95)) padding-box, var(--grad) border-box;
+    opacity:0;pointer-events:none;transition:opacity .25s}
+  #toast.show{opacity:1}
+  #note{position:fixed;bottom:5px;left:50%;transform:translateX(-50%);z-index:45;
+    font-family:'Unbounded';font-weight:300;font-size:7px;letter-spacing:.26em;color:var(--faint);text-transform:uppercase}
+  #devkill{position:fixed;top:64px;right:20px;z-index:15}
+
+  @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+  @media (max-width:960px){#chat,#planos{display:none}.mat-grid{grid-template-columns:1fr}.hgrid{grid-template-columns:1fr}}
+</style>
+
+<!-- iconos compartidos -->
+<svg style="display:none" aria-hidden="true">
+  <symbol id="i-ship" viewBox="0 0 24 24"><path d="M12 3 L15 9 L21 12 L15 15 L12 21 L9 15 L3 12 L9 9 Z"/></symbol>
+  <symbol id="i-store" viewBox="0 0 24 24"><path d="M4 9 L4 20 L20 20 L20 9 M2 9 L4 4 L20 4 L22 9 Z M9 20 V14 H15 V20"/></symbol>
+  <symbol id="i-market" viewBox="0 0 24 24"><path d="M4 19 L4 12 M9 19 L9 7 M14 19 L14 10 M19 19 L19 4"/></symbol>
+  <symbol id="i-mat" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 4 V1 M12 23 V20 M4 12 H1 M23 12 H20"/></symbol>
+  <symbol id="i-pilot" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21 C4 16 8 14 12 14 C16 14 20 16 20 21"/></symbol>
+  <symbol id="i-quest" viewBox="0 0 24 24"><path d="M9 6 H20 M9 12 H20 M9 18 H20 M4 6 L5 7 L7 4.5 M4 12 L5 13 L7 10.5 M4 18 L5 19 L7 16.5"/></symbol>
+  <symbol id="i-clan" viewBox="0 0 24 24"><path d="M6 21 V4 M6 4 H18 L15 8 L18 12 H6"/></symbol>
+  <symbol id="i-group" viewBox="0 0 24 24"><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M2 20 C2 16 5 14.5 8 14.5 C11 14.5 14 16 14 20 M13 15 C15.5 14.6 22 15.5 22 20"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3 V6 M12 18 V21 M3 12 H6 M18 12 H21 M12 12 L15.5 8.5"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2 V5 M12 19 V22 M2 12 H5 M19 12 H22 M4.9 4.9 L7 7 M17 17 L19.1 19.1 M19.1 4.9 L17 7 M7 17 L4.9 19.1"/></symbol>
+  <symbol id="i-skull" viewBox="0 0 24 24"><path d="M12 3 C7 3 4 6.5 4 11 C4 14 6 16 8 17 L8 21 L16 21 L16 17 C18 16 20 14 20 11 C20 6.5 17 3 12 3 Z"/><circle cx="9" cy="11" r="1.6"/><circle cx="15" cy="11" r="1.6"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="12" r="4"/><path d="M12 12 H21 M18 12 V16 M15 12 V15"/></symbol>
+</svg>
+
+<!-- ============ ESCENA ============ -->
+<div id="scene" aria-hidden="true">
+  <div class="aurora"></div>
+  <canvas id="stars"></canvas>
+  <svg id="playerShip" class="ship" width="106" height="106" viewBox="0 0 100 100">
+    <g transform="rotate(28 50 50)">
+      <path d="M50 6 L60 30 L82 44 L70 52 L74 78 L58 66 L50 92 L42 66 L26 78 L30 52 L18 44 L40 30 Z"
+            fill="#0F1524" stroke="#4AD8FF" stroke-width="1.4"/>
+      <path d="M50 22 L56 40 L50 62 L44 40 Z" fill="#4AD8FF" opacity=".8"/>
+      <circle cx="50" cy="46" r="4.5" fill="#8B7CFF"/>
+    </g>
+  </svg>
+  <svg id="enemyShip" class="ship enemy" width="84" height="84" viewBox="0 0 100 100">
+    <g transform="rotate(-18 50 50)">
+      <path d="M50 8 L72 34 L64 70 L50 92 L36 70 L28 34 Z" fill="#1A0F1C" stroke="#FF5C7A" stroke-width="1.5"/>
+      <path d="M50 22 L61 38 L57 62 L50 74 L43 62 L39 38 Z" fill="none" stroke="#FF9FB2" stroke-width="1" opacity=".6"/>
+    </g>
+  </svg>
+  <div class="tbrack">
+    <svg viewBox="0 0 100 100" fill="none" stroke="#FF5C7A" stroke-width="1.3">
+      <path d="M8 30 V8 H30 M70 8 H92 V30 M92 70 V92 H70 M30 92 H8 V70" stroke-linecap="round"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ============ HUD ============ -->
+<div class="hud" id="brandtag"><div class="disp gtxt">MEXORBIT</div><small>propuesta e · 2026</small></div>
+
+<div class="hud" id="wallet">
+  <div class="pillw"><span class="lbl">Credits</span><b class="mono">1,245,300</b></div>
+  <div class="pillw"><span class="lbl">Flux</span><b class="mono" style="color:var(--vi)">86</b></div>
+  <div class="pillw"><span class="lbl">License</span><b class="mono" style="color:var(--hp)">23d</b></div>
+</div>
+
+<div class="hud" id="zone">
+  <span class="chip risk">RIESGO DE CARGA 100% · SECTOR 4-4</span>
+  <span class="chip">Evento&nbsp;<b>LA ESCOLTA vs MORDAX</b>&nbsp;<span class="mono">19:42</span></span>
+</div>
+<button class="hud btn ghost" id="devkill" style="font-size:8px;padding:8px 14px">Simular destrucción</button>
+
+<!-- objetivo: placa central -->
+<section class="hud card" id="target" aria-label="Objetivo">
+  <h2>Vitron Elite</h2><div class="sub">Objetivo fijado · 412 m</div>
+  <div class="bars">
+    <div class="bar hostile"><i style="width:41%"></i></div>
+    <div class="bar sh"><i style="width:23%"></i></div>
+  </div>
+  <div class="num"><span class="mono">82,000</span><span class="mono">36,800</span></div>
+</section>
+
+<!-- planos: píldoras -->
+<div class="hud" id="planos" aria-label="Planos">
+  <div class="ppill"><span class="nm">QUASAR</span><span class="track"><i style="width:70%"></i></span><span class="mono">7/10</span></div>
+  <div class="ppill"><span class="nm">NOVA</span><span class="track"><i style="width:25%"></i></span><span class="mono">2/8</span></div>
+</div>
+
+<!-- estado del jugador: flotante sobre la action bar -->
+<section class="hud" id="status" aria-label="Estado">
+  <div class="meta"><span class="name">ODRACK <span>· ORION</span></span>
+    <span class="coating">Recubrimiento <b>Tachyon</b> <span class="mono" style="font-size:10px">84%</span></span></div>
+  <div class="row"><span class="ico" style="background:var(--hp)"></span><div class="bar hp"><i style="width:88%"></i></div><span class="v mono">225,280</span></div>
+  <div class="row"><span class="ico" style="background:var(--shield)"></span><div class="bar sh"><i style="width:64%"></i></div><span class="v mono">160,000</span></div>
+  <div class="row"><span class="ico" style="background:var(--vi)"></span><div class="bar en"><i style="width:34%"></i></div><span class="v mono">340/1,000</span></div>
+</section>
+
+<nav class="hud" id="actions" aria-label="Acciones">
+  <button class="slot"><span class="key">1</span><span class="code">CEL-1</span><span class="n">∞</span></button>
+  <button class="slot sel"><span class="key">2</span><span class="code">CEL-2</span><span class="n">4,180</span></button>
+  <button class="slot"><span class="key">3</span><span class="code">CEL-3</span><span class="n">960</span></button>
+  <button class="slot"><span class="key">4</span><span class="code">CEL-4</span><span class="n">1,240</span></button>
+  <span class="divider"></span>
+  <button class="slot"><span class="key">R</span><span class="code">TOR-3</span><span class="n">312</span></button>
+  <span class="divider"></span>
+  <button class="slot"><span class="key">Q</span><span class="code" style="color:var(--shield)">SHELL</span><span class="n">×12</span></button>
+  <button class="slot cd"><span class="key">W</span><span class="code">VEIL</span><span class="n">×5</span></button>
+  <button class="slot"><span class="key">X</span><span class="code">WARP</span><span class="n">×2</span></button>
+</nav>
+
+<!-- dock flotante con tooltips -->
+<nav class="hud" id="dock" aria-label="Menú de ventanas">
+  <button class="dock-btn" data-win="hangar"><svg><use href="#i-ship"/></svg><span class="tip">Hangar · H</span></button>
+  <button class="dock-btn" data-stub="Almacén" data-icon="i-store"><svg><use href="#i-store"/></svg><span class="tip">Almacén</span></button>
+  <button class="dock-btn" data-win="market"><svg><use href="#i-market"/></svg><span class="tip">Mercado · M</span></button>
+  <button class="dock-btn" data-win="mat"><svg><use href="#i-mat"/></svg><span class="tip">Materializador · E</span></button>
+  <button class="dock-btn" data-stub="Perfil del Piloto" data-icon="i-pilot"><svg><use href="#i-pilot"/></svg><span class="tip">Perfil del Piloto</span></button>
+  <button class="dock-btn" data-stub="Misiones" data-icon="i-quest"><svg><use href="#i-quest"/></svg><span class="tip">Misiones</span></button>
+  <button class="dock-btn" data-stub="Clan" data-icon="i-clan"><svg><use href="#i-clan"/></svg><span class="tip">Clan</span></button>
+  <button class="dock-btn" data-stub="Grupo" data-icon="i-group"><svg><use href="#i-group"/></svg><span class="tip">Grupo</span></button>
+  <button class="dock-btn" data-stub="Mapa Estelar" data-icon="i-map"><svg><use href="#i-map"/></svg><span class="tip">Mapa Estelar</span></button>
+  <button class="dock-btn" data-stub="Ajustes" data-icon="i-gear"><svg><use href="#i-gear"/></svg><span class="tip">Ajustes</span></button>
+</nav>
+
+<section class="hud card" id="chat" aria-label="Comms">
+  <span class="lbl">Comms</span>
+  <div class="msg"><span class="ch">[Global]</span> <span class="who">Kaira:</span> vendo Coronium, órdenes arriba del piso</div>
+  <div class="msg"><span class="ch">[Clan]</span> <span class="who">Vex_Hunter:</span> FAUCES en 10, falta Ursa</div>
+  <div class="msg"><span class="sys">◆ El Hexon Titan apareció en 4-5.</span></div>
+</section>
+
+<!-- minimapa circular -->
+<div class="hud" id="mapwrap" aria-label="Minimapa">
+  <div id="mapring"></div>
+  <canvas id="minimap" width="158" height="158"></canvas>
+  <span class="zlbl lbl">4-4 · disputada</span>
+</div>
+
+<!-- ============ VENTANA: MATERIALIZADOR ============ -->
+<div class="win" id="win-mat" role="dialog" aria-label="Materializador" style="top:66px;left:50%">
+  <div class="win-h">
+    <span class="wicon"><svg><use href="#i-mat"/></svg></span>
+    <h2>Materializador</h2><span class="sub">generador de Eclipses · límite diario 2/3</span>
+    <button data-close aria-label="Cerrar">×</button>
+  </div>
+  <div class="win-b">
+    <div class="mat-grid">
+      <div id="machine">
+        <div id="core">
+          <svg viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="50" r="47" stroke="rgba(74,216,255,.22)" stroke-width="1" stroke-dasharray="4 6"/>
+            <circle cx="50" cy="50" r="40" stroke="rgba(139,124,255,.3)" stroke-width="1" stroke-dasharray="18 10"/>
+            <circle cx="50" cy="50" r="33" stroke="rgba(74,216,255,.4)" stroke-width="1.5" stroke-dasharray="2 8"/>
+          </svg>
+          <div style="text-align:center"><div class="flux mono" id="fluxN">86</div></div>
+          <span class="flbl">FLUX</span>
+        </div>
+        <div class="spin-row">
+          <button class="btn" data-spin="1">×1 · 4</button>
+          <button class="btn ghost" data-spin="5">×5 · 20</button>
+          <button class="btn ghost" data-spin="10">×10 · 40</button>
+        </div>
+        <p class="note">Cada activación: <b>1 pieza garantizada</b> del Eclipse elegido + subproducto de la tabla publicada.</p>
+      </div>
+      <div>
+        <div class="ecl-tabs">
+          <button class="ecl-tab" data-ecl="pen">Penumbra</button>
+          <button class="ecl-tab on" data-ecl="umb">Umbra</button>
+          <button class="ecl-tab" data-ecl="ant">Antumbra</button>
+        </div>
+        <div id="gate-view">
+          <h3 id="gname">UMBRA</h3>
+          <div class="tier" id="gtier">La sombra total · media · T3</div>
+          <div id="ringwrap">
+            <svg viewBox="0 0 100 100" id="ring"></svg>
+            <div class="ctr"><b class="mono" id="gcount">31/52</b><span class="lbl">piezas</span></div>
+          </div>
+          <p class="gsub">Recompensa al entrar: <b id="grew">CEL-4 + OVC-1 + insumos Photon</b></p>
+          <div style="margin-top:12px"><button class="btn" id="enterBtn" disabled>Materializar 21 piezas más</button></div>
+        </div>
+      </div>
+      <div id="matlog">
+        <span class="lbl">Registro</span>
+        <ul id="loglist">
+          <li class="pieza"><span>+1 pieza · UMBRA</span><span class="t">19:31</span></li>
+          <li class="sub"><span>CEL-2 ×40</span><span class="t">19:31</span></li>
+          <li class="pieza"><span>+1 pieza · UMBRA</span><span class="t">19:30</span></li>
+          <li class="sub"><span>SHELL-C ×1</span><span class="t">19:30</span></li>
+          <li class="sub"><span>Fuel ×60</span><span class="t">19:28</span></li>
+          <li class="pieza"><span>+1 pieza · UMBRA</span><span class="t">19:28</span></li>
+        </ul>
+        <p class="odds">Subproductos (tabla publicada): <b>munición 62%</b> · <b>Cargas 18%</b> · <b>Fuel 12%</b> · <b>partículas 8%</b></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ VENTANA: HANGAR ============ -->
+<div class="win" id="win-hangar" role="dialog" aria-label="Hangar" style="top:84px;left:50%">
+  <div class="win-h">
+    <span class="wicon"><svg><use href="#i-ship"/></svg></span>
+    <h2>Hangar</h2><span class="sub">ORION · nave de batalla · 15/15/3</span>
+    <button data-close aria-label="Cerrar">×</button>
+  </div>
+  <div class="win-b">
+    <div class="hgrid">
+      <div id="shipbox">
+        <svg width="124" height="124" viewBox="0 0 100 100" aria-hidden="true">
+          <path d="M50 4 L61 29 L85 44 L71 53 L76 82 L58 68 L50 96 L42 68 L24 82 L29 53 L15 44 L39 29 Z" fill="#0F1524" stroke="#4AD8FF" stroke-width="1.6"/>
+          <path d="M50 20 L57 40 L50 64 L43 40 Z" fill="#4AD8FF" opacity=".85"/>
+          <circle cx="50" cy="45" r="5" fill="#8B7CFF"/>
+        </svg>
+        <div class="nm">ORION</div><div class="cls">EL BUQUE INSIGNIA</div>
+        <div style="width:100%;display:flex;flex-direction:column;gap:8px;margin-top:6px">
+          <div style="display:grid;grid-template-columns:36px 1fr 70px;gap:10px;align-items:center"><span class="lbl">HP</span><div class="bar hp"><i style="width:100%"></i></div><span class="mono" style="font-size:11px;text-align:right">256,000</span></div>
+          <div style="display:grid;grid-template-columns:36px 1fr 70px;gap:10px;align-items:center"><span class="lbl">Vel</span><div class="bar sh"><i style="width:62%"></i></div><span class="mono" style="font-size:11px;text-align:right">300</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="sec" style="margin-top:0"><div class="lbl"><span>Láseres · 15</span><span class="mono" style="letter-spacing:0;font-size:9px;text-transform:none">PB-3 ×15 · Tachyon 84%</span></div>
+          <div class="sgrid">
+            <div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div>
+            <div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div>
+          </div></div>
+        <div class="sec"><div class="lbl"><span>Generadores · 15</span><span class="mono" style="letter-spacing:0;font-size:9px;text-transform:none">DF-B2 ×11 · ION-6 ×4</span></div>
+          <div class="sgrid">
+            <div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">DFB2</div>
+            <div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">ION6</div><div class="sslot">ION6</div><div class="sslot">ION6</div><div class="sslot">ION6</div>
+          </div></div>
+        <div class="sec"><div class="lbl"><span>Extras · 3</span></div>
+          <div class="sgrid"><div class="sslot x">SHELL</div><div class="sslot x">VEIL</div><div class="sslot x">WARPX</div></div></div>
+        <div class="dur">⚠ Durabilidad <b>91%</b> · reparación <span class="mono">12,400 Credits</span>
+          <button class="btn" style="margin-left:auto" data-toast="Equipo reparado · −12,400 Credits">Reparar</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ VENTANA: MERCADO ============ -->
+<div class="win" id="win-market" role="dialog" aria-label="Mercado" style="top:80px;left:50%">
+  <div class="win-h">
+    <span class="wicon"><svg><use href="#i-market"/></svg></span>
+    <h2>Mercado</h2><span class="sub">órdenes de compra y venta · global · comisión 5%</span>
+    <button data-close aria-label="Cerrar">×</button>
+  </div>
+  <div class="win-b">
+    <div style="overflow-x:auto">
+    <table>
+      <thead><tr><th>Item</th><th class="num">Compra</th><th class="num">Venta</th><th class="num">Piso NPC</th><th class="num">Vol. diario</th><th></th></tr></thead>
+      <tbody>
+        <tr class="row"><td><span class="inm">Coronium<small>crudo · zona disputada</small></span></td><td class="num mono buy">74</td><td class="num mono sell">81</td><td class="num mono" style="color:var(--faint)">25</td><td class="num mono" style="color:var(--muted)">12,800</td><td><button class="btn ghost" data-toast="Orden de venta · 500 Coronium @ 80">Vender</button></td></tr>
+        <tr class="row"><td><span class="inm">Tachyon<small>ápice · cae de Titans</small></span></td><td class="num mono buy">9,200</td><td class="num mono sell">9,850</td><td class="num mono" style="color:var(--faint)">6,000</td><td class="num mono" style="color:var(--muted)">410</td><td><button class="btn ghost" data-toast="Orden de compra · 10 Tachyon @ 9,500">Comprar</button></td></tr>
+        <tr class="row"><td><span class="inm">Plano Quasar<small>legendario · incursiones</small></span></td><td class="num mono buy">86,000</td><td class="num mono sell">94,000</td><td class="num mono" style="color:var(--faint)">—</td><td class="num mono" style="color:var(--muted)">36</td><td><button class="btn ghost" data-toast="Orden de compra · 1 Plano Quasar @ 90,000">Comprar</button></td></tr>
+        <tr class="row"><td><span class="inm gtxt">Starbond<small style="color:var(--faint)">canjea Star License · un salto</small></span></td><td class="num mono buy">418,000</td><td class="num mono sell">431,000</td><td class="num mono" style="color:var(--faint)">fijo</td><td class="num mono" style="color:var(--muted)">9</td><td><button class="btn" data-toast="Starbond comprado · −431,000 Credits">Comprar</button></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STUB ============ -->
+<div class="win stub" id="win-stub" role="dialog" aria-label="Ventana en diseño" style="top:120px;left:50%">
+  <div class="win-h">
+    <span class="wicon"><svg id="stubIcon"><use href="#i-gear"/></svg></span>
+    <h2 id="stubTitle">Ajustes</h2>
+    <button data-close aria-label="Cerrar">×</button>
+  </div>
+  <div class="win-b">
+    <svg id="stubBigIcon"><use href="#i-gear"/></svg>
+    <p>Esta ventana existe en el menú y hereda el chrome del design system —<br><b id="stubName" style="color:var(--txt)">Ajustes</b> se maqueta en la siguiente iteración.</p>
+  </div>
+</div>
+
+<!-- ============ KILLSCREEN ============ -->
+<div id="kill" role="dialog" aria-label="Nave destruida">
+  <div class="card2">
+    <div class="khead">
+      <span class="wicon"><svg><use href="#i-skull"/></svg></span>
+      <h2>Nave destruida</h2>
+    </div>
+    <p class="by">Tu ORION cayó ante <b>VITRON ELITE</b> · sector 4-4 · <span class="mono">19:47:12</span></p>
+    <div class="k-body">
+      <div class="k-row"><span class="k">Zona disputada — carga soltada</span><span class="v mono" style="color:var(--hostile)">100%</span></div>
+      <div class="blackbox">◆ Tu <b>Black Box</b> quedó en el sitio con <b>210 Coronium · 40 Aurorium · 2 SHELL-C</b>.<br>
+        Desaparece en <span class="cd" id="bbTimer">2:43</span> — quien llegue primero, la reclama.</div>
+      <div class="k-row"><span class="k">Desgaste del equipo</span><span class="v mono">−2% · factura 12,400 Credits</span></div>
+      <div class="k-row"><span class="k">Reaparición</span><span class="v" style="color:var(--hp)">Gratis e instantánea, en tu base</span></div>
+      <div class="k-actions">
+        <button class="btn" data-respawn>Reaparecer en base</button>
+        <button class="btn danger" data-toast="Rumbo a tu Black Box — suerte, piloto" data-respawn>Volver por la Black Box</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LOGIN ============ -->
+<div id="login">
+  <div class="aurora2"></div>
+  <div id="logo"><div class="disp gtxt">MEXORBIT</div><small>nombre temporal · prototipo e</small></div>
+  <div class="card3">
+    <div class="inner">
+      <div class="lt"><span class="wicon"><svg><use href="#i-key"/></svg></span><h2>Acceso de piloto</h2></div>
+      <div class="field"><span class="lbl">Piloto</span><input type="text" value="odrack" autocomplete="username"></div>
+      <div class="field"><span class="lbl">Contraseña</span><input type="password" value="········" autocomplete="current-password"></div>
+      <div class="status"><span>Servidor: <b class="ok">EN LÍNEA</b></span><span class="mono" style="font-size:10px">147 pilotos · v0.1</span></div>
+      <button class="btn" id="connect">Conectar</button>
+      <p class="foot">Temporada 1 activa · próxima Escolta 19:42</p>
+    </div>
+  </div>
+</div>
+
+<div id="toast" role="status"></div>
+<div id="note">Propuesta E · evolución de B · militar-espacial 2026 · valores simulados</div>
+
+<script>
+  // ---- Starfield ----
+  const cv=document.getElementById('stars'),cx=cv.getContext('2d');
+  let W,H,stars=[];const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;
+    stars=Array.from({length:240},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.3+.2,s:Math.random()*.08+.02,tw:Math.random()*6.3}));}
+  addEventListener('resize',resize);resize();
+  (function draw(t){cx.clearRect(0,0,W,H);
+    for(const s of stars){cx.globalAlpha=.3+.45*Math.abs(Math.sin((t||0)/1700+s.tw));
+      cx.fillStyle=s.r>1?'#D7E1F2':'#7E8AA6';cx.beginPath();cx.arc(s.x,s.y,s.r,0,7);cx.fill();
+      if(!reduced){s.y+=s.s;if(s.y>H)s.y=0;}}
+    cx.globalAlpha=1;requestAnimationFrame(draw);})();
+
+  // ---- Minimapa circular ----
+  const mc=document.getElementById('minimap'),mm=mc.getContext('2d');
+  function drawMap(){
+    mm.clearRect(0,0,158,158);
+    mm.save();mm.beginPath();mm.arc(79,79,79,0,7);mm.clip();
+    mm.strokeStyle='rgba(74,216,255,.1)';
+    for(let x=0;x<=158;x+=22){mm.beginPath();mm.moveTo(x,0);mm.lineTo(x,158);mm.stroke();}
+    for(let y=0;y<=158;y+=22){mm.beginPath();mm.moveTo(0,y);mm.lineTo(158,y);mm.stroke();}
+    const dot=(x,y,c,r=2.2)=>{mm.fillStyle=c;mm.beginPath();mm.arc(x,y,r,0,7);mm.fill();};
+    dot(88,84,'#4AD8FF',3.2);dot(112,58,'#FF5C7A');dot(126,68,'#FF5C7A');dot(36,112,'#FF5C7A');
+    dot(56,36,'#5FA8FF');dot(70,120,'#5FA8FF');dot(28,28,'#FFC46B',2.6);
+    mm.strokeStyle='rgba(74,216,255,.5)';mm.strokeRect(66,60,46,38);
+    mm.restore();
+    // anillo de rumbo
+    mm.strokeStyle='rgba(140,160,210,.25)';mm.beginPath();mm.arc(79,79,77,0,7);mm.stroke();
+  }
+  drawMap();
+
+  // ---- Anillo de piezas ----
+  const ring=document.getElementById('ring');
+  const gates={pen:{n:'PENUMBRA',tier:'La sombra parcial · entrada · T2',total:24,have:24,rew:'CEL-4 + insumos Ion',color:'#9FB6C9'},
+               umb:{n:'UMBRA',tier:'La sombra total · media · T3',total:52,have:31,rew:'CEL-4 + OVC-1 + insumos Photon',color:'#4AD8FF'},
+               ant:{n:'ANTUMBRA',tier:'Más allá de la sombra · alta · T3',total:86,have:4,rew:'CEL-4 + OVC-1 ++ · insumos Boson',color:'#8B7CFF'}};
+  function drawRing(g){
+    let s='';const R=44,C=50,gap=1.6,seg=360/g.total;
+    for(let i=0;i<g.total;i++){
+      const a0=(i*seg+gap/2)*Math.PI/180,a1=((i+1)*seg-gap/2)*Math.PI/180;
+      s+=`<path d="M${(C+R*Math.cos(a0)).toFixed(1)} ${(C+R*Math.sin(a0)).toFixed(1)} A${R} ${R} 0 0 1 ${(C+R*Math.cos(a1)).toFixed(1)} ${(C+R*Math.sin(a1)).toFixed(1)}" stroke="${i<g.have?g.color:'rgba(74,84,112,.3)'}" stroke-width="6" stroke-linecap="round" fill="none"/>`;
+    }
+    ring.innerHTML=s;
+    const el=id=>document.getElementById(id);
+    el('gname').textContent=g.n;el('gname').style.color=g.color;
+    el('gtier').textContent=g.tier;el('gcount').textContent=g.have+'/'+g.total;el('grew').textContent=g.rew;
+    const btn=el('enterBtn');
+    if(g.have>=g.total){btn.disabled=false;btn.textContent='ENTRAR AL '+g.n;}
+    else{btn.disabled=true;btn.textContent='Materializar '+(g.total-g.have)+' piezas más';}
+  }
+  let cur='umb';drawRing(gates.umb);
+  document.querySelectorAll('.ecl-tab').forEach(t=>t.addEventListener('click',()=>{
+    document.querySelectorAll('.ecl-tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');
+    cur=t.dataset.ecl;drawRing(gates[cur]);}));
+
+  // ---- Materializar ----
+  let flux=86;const fluxN=document.getElementById('fluxN'),log=document.getElementById('loglist');
+  const subs=['CEL-2 ×40','CEL-3 ×12','DRN-1 ×25','SHELL-C ×1','SHOCK-C ×1','VEIL-C ×1','Fuel ×60','Ion ×3','Photon ×2'];
+  document.querySelectorAll('[data-spin]').forEach(b=>b.addEventListener('click',()=>{
+    const n=+b.dataset.spin,cost=n*4,g=gates[cur];
+    if(flux<cost||g.have>=g.total){showToast(flux<cost?'Flux insuficiente':'Eclipse completo');return;}
+    flux-=cost;fluxN.textContent=flux;
+    const now=new Date(),t=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+    for(let i=0;i<n&&g.have<g.total;i++){g.have++;
+      log.insertAdjacentHTML('afterbegin',`<li class="pieza"><span>+1 pieza · ${g.n}</span><span class="t">${t}</span></li>`);
+      log.insertAdjacentHTML('afterbegin',`<li class="sub"><span>${subs[Math.floor(Math.random()*subs.length)]}</span><span class="t">${t}</span></li>`);}
+    drawRing(g);while(log.children.length>14)log.lastElementChild.remove();
+  }));
+
+  // ---- Ventanas + stubs ----
+  const tasks=[...document.querySelectorAll('.dock-btn')];
+  const wins={hangar:g('win-hangar'),market:g('win-market'),mat:g('win-mat'),stub:g('win-stub')};
+  function g(id){return document.getElementById(id)}
+  function closeAll(){Object.values(wins).forEach(x=>x.classList.remove('open'));tasks.forEach(t=>t.classList.remove('on'));}
+  function toggle(id,btn){const w=wins[id],open=w.classList.contains('open')&&btn.classList.contains('on');
+    closeAll();if(!open){w.classList.add('open');btn.classList.add('on');}}
+  tasks.forEach(t=>t.addEventListener('click',()=>{
+    if(t.dataset.win){toggle(t.dataset.win,t);}
+    else{const open=wins.stub.classList.contains('open')&&t.classList.contains('on');
+      closeAll();
+      if(!open){
+        g('stubTitle').textContent=t.dataset.stub;g('stubName').textContent=t.dataset.stub;
+        g('stubIcon').firstElementChild.setAttribute('href','#'+t.dataset.icon);
+        g('stubBigIcon').firstElementChild.setAttribute('href','#'+t.dataset.icon);
+        wins.stub.classList.add('open');t.classList.add('on');}}
+  }));
+  document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',closeAll));
+  addEventListener('keydown',e=>{
+    if(e.key==='Escape'){closeAll();g('kill').classList.remove('open');}
+    const k=e.key.toLowerCase();
+    if(document.activeElement.tagName!=='INPUT'){
+      if(k==='h')toggle('hangar',tasks[0]);if(k==='m')toggle('market',tasks[2]);if(k==='e')toggle('mat',tasks[3]);}
+  });
+
+  // ---- Toast / Kill / Login / Munición ----
+  const toast=g('toast');let tt;
+  function showToast(m){toast.textContent=m;toast.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>toast.classList.remove('show'),2600);}
+  document.querySelectorAll('[data-toast]').forEach(b=>b.addEventListener('click',()=>showToast(b.dataset.toast)));
+  let bbT=163,bbInt;
+  g('devkill').addEventListener('click',()=>{g('kill').classList.add('open');bbT=163;clearInterval(bbInt);
+    bbInt=setInterval(()=>{bbT--;if(bbT<0){clearInterval(bbInt);return;}
+      g('bbTimer').textContent=Math.floor(bbT/60)+':'+String(bbT%60).padStart(2,'0');},1000);});
+  document.querySelectorAll('[data-respawn]').forEach(b=>b.addEventListener('click',()=>{g('kill').classList.remove('open');clearInterval(bbInt);}));
+  g('connect').addEventListener('click',()=>{g('login').classList.add('off');showToast('Conexión establecida · bienvenido, piloto');});
+  document.querySelectorAll('#login input').forEach(i=>i.addEventListener('keydown',e=>{if(e.key==='Enter')g('connect').click();}));
+  document.querySelectorAll('#actions .slot').forEach(s=>s.addEventListener('click',()=>{
+    if(s.querySelector('.code').textContent.startsWith('CEL')){
+      document.querySelectorAll('#actions .slot').forEach(x=>x.classList.remove('sel'));s.classList.add('sel');}}));
+</script>
