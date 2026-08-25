@@ -51,10 +51,20 @@
     color:var(--muted);font-family:'JetBrains Mono';font-size:11px;line-height:1;cursor:pointer;z-index:2;
     transition:color .12s,border-color .12s}
   .pmin:hover{color:var(--cyan);border-color:var(--edge)}
-  .glass.col{padding-top:8px;padding-bottom:8px}
-  .glass.col .prow,.glass.col .plano,.glass.col .msg,.glass.col .risk,.glass.col .evt,
-  #target.col .trow,.glass.col #coating{display:none}
-  .glass.col::before{border-top-color:var(--warn);border-left-color:var(--warn)}
+  .hid{display:none!important}
+  /* bandeja de paneles minimizados (arriba-izquierda) */
+  #htray{top:58px;left:72px;display:flex;gap:6px;z-index:21}
+  .htray-btn{width:34px;height:34px;background:var(--glass-2);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    border:1px solid rgba(255,183,77,.4);color:var(--warn);cursor:pointer;position:relative;
+    display:flex;align-items:center;justify-content:center;animation:trayIn .16s ease;
+    transition:color .12s,border-color .12s,box-shadow .12s}
+  .htray-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .htray-btn:hover{color:var(--cyan);border-color:var(--edge);box-shadow:0 0 10px rgba(0,229,255,.2)}
+  .htray-btn .tip{position:absolute;top:38px;left:0;font-family:'Michroma';font-size:7.5px;letter-spacing:.14em;color:var(--warn);
+    background:rgba(10,13,24,.92);border:1px solid var(--edge-soft);padding:3px 7px;white-space:nowrap;
+    opacity:0;pointer-events:none;transition:opacity .12s}
+  .htray-btn:hover .tip{opacity:1;color:var(--cyan)}
+  @keyframes trayIn{from{transform:translateY(-6px);opacity:0}to{transform:translateY(0);opacity:1}}
 
   .bar{height:7px;background:rgba(7,9,16,.85);border:1px solid var(--edge-soft);position:relative;overflow:hidden}
   .bar i{display:block;height:100%}
@@ -423,6 +433,9 @@
   </button>
 </nav>
 
+<!-- bandeja de paneles del HUD minimizados -->
+<nav class="hud" id="htray" aria-label="Paneles minimizados"></nav>
+
 <!-- el menú completo del juego: todas las ventanas, abiertas o cerradas -->
 <nav class="hud" id="dock" aria-label="Menú de ventanas">
   <div class="dock-cap">Menú</div>
@@ -746,9 +759,7 @@
   requestAnimationFrame(drawMap);
   document.getElementById('zin').addEventListener('click',()=>{zoom=Math.min(2,+(zoom+0.25).toFixed(2));document.getElementById('zlvl').textContent=zoom.toFixed(1)+'×';});
   document.getElementById('zout').addEventListener('click',()=>{zoom=Math.max(0.5,+(zoom-0.25).toFixed(2));document.getElementById('zlvl').textContent=zoom.toFixed(1)+'×';});
-  document.getElementById('mapMin').addEventListener('click',()=>{
-    const w=document.getElementById('mapwrap');w.classList.toggle('min');
-    document.getElementById('mapMin').textContent=w.classList.contains('min')?'+':'–';});
+  document.getElementById('mapMin').addEventListener('click',()=>hudMin('mapwrap'));
 
   // ---- Anillo de piezas ----
   const ring=document.getElementById('ring');
@@ -868,10 +879,27 @@
   document.querySelectorAll('#actions .hex').forEach(s=>s.addEventListener('click',()=>{
     if(s.querySelector('.code').textContent.startsWith('CEL')){
       document.querySelectorAll('#actions .hex').forEach(x=>x.classList.remove('sel'));s.classList.add('sel');}}));
-  // ---- Minimizar paneles del HUD (la pantalla se limpia hasta dejar solo las barras) ----
+  // ---- Paneles del HUD: minimizar → icono en la bandeja superior izquierda ----
+  const HPANELS={
+    pilot:{n:'NAVE',ic:'<svg viewBox="0 0 24 24"><path d="M12 3 L16 13 L12 10.5 L8 13 Z M12 10.5 V17 M8 19.5 H16"/></svg>'},
+    zone:{n:'SECTOR',ic:'<svg viewBox="0 0 24 24"><path d="M5.5 20 V4.5 M5.5 4.5 H18 L15 8 L18 11.5 H5.5"/></svg>'},
+    target:{n:'OBJETIVO',ic:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5.5"/><path d="M12 3.5 V7 M12 17 V20.5 M3.5 12 H7 M17 12 H20.5"/></svg>'},
+    planos:{n:'FABRICACIÓN',ic:'<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16"/><path d="M8 8.5 H13 M8 12 H16 M8 15.5 H14.5"/></svg>'},
+    chat:{n:'COMMS',ic:'<svg viewBox="0 0 24 24"><path d="M4 5 H20 V16 H10.5 L6.5 20 V16 H4 Z"/></svg>'},
+    mapwrap:{n:'MAPA',ic:'<svg viewBox="0 0 24 24"><path d="M4 6.5 L9 4.5 L15 6.5 L20 4.5 V17.5 L15 19.5 L9 17.5 L4 19.5 Z M9 4.5 V17.5 M15 6.5 V19.5"/></svg>'}
+  };
+  const htray=g('htray');
+  function trayAdd(id){
+    if(htray.querySelector('[data-tid="'+id+'"]'))return;
+    const p=HPANELS[id],b=document.createElement('button');
+    b.className='htray-btn';b.dataset.tid=id;b.setAttribute('aria-label','Restaurar '+p.n);
+    b.innerHTML=p.ic+'<span class="tip">'+p.n+'</span>';
+    b.addEventListener('click',()=>{g(id).classList.remove('hid');b.remove();});
+    htray.appendChild(b);
+  }
+  function hudMin(id){g(id).classList.add('hid');trayAdd(id);}
   document.querySelectorAll('[data-pmin]').forEach(b=>b.addEventListener('click',()=>{
-    const p=b.closest('.glass');p.classList.toggle('col');
-    b.textContent=p.classList.contains('col')?'+':'–';}));
+    hudMin(b.closest('.glass').id);}));
   // ---- Fila II: activaciones simuladas ----
   document.querySelectorAll('#actions2 .hex').forEach(s=>s.addEventListener('click',()=>{
     showToast(s.querySelector('.code').textContent+' ACTIVADO');}));
