@@ -59,8 +59,8 @@
   .bar.en i{background:var(--violet)} .bar.hostile i{background:var(--hostile)}
 
   /* ============ TOP ============ */
-  #top{top:12px;left:50%;transform:translateX(-50%);display:flex;gap:1px;z-index:15;padding-right:26px}
-  #top .pmin{top:50%;transform:translateY(-50%);right:0}
+  #top{top:12px;left:50%;transform:translateX(-50%);z-index:15;padding:9px 14px 12px}
+  #top .cells{display:flex;gap:1px;margin-top:8px}
   .top-cell{padding:8px 22px;background:var(--glass-2);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
     border:1px solid var(--edge-soft);display:flex;flex-direction:column;align-items:center;line-height:1.25}
   .top-cell b{font-family:'JetBrains Mono';font-weight:500;font-size:14px}
@@ -94,19 +94,15 @@
   .dock-btn span{font-family:'Michroma';font-size:6.8px;letter-spacing:.1em;text-transform:uppercase}
   .dock-btn:hover{color:#fff;background:rgba(0,229,255,.07)}
   .dock-btn:hover svg{filter:drop-shadow(0 0 6px rgba(0,229,255,.6))}
-  .dock-btn.on{color:var(--cyan);border-top-color:var(--cyan);background:rgba(0,229,255,.1)}
-  .dock-btn.on svg{filter:drop-shadow(0 0 8px rgba(0,229,255,.7))}
   .dock-btn:focus-visible{outline:1px solid var(--cyan);outline-offset:-3px}
   .ndot{position:absolute;top:6px;right:9px;width:7px;height:7px;border-radius:50%;background:var(--warn);
     box-shadow:0 0 8px rgba(255,200,92,.7);animation:ndot 1.8s ease-in-out infinite}
   @keyframes ndot{50%{opacity:.35}}
-  /* estados del menú: abierta (cian) · minimizada (ámbar) */
-  .dock-btn.on::after,.dock-btn.minz::after{content:"";position:absolute;left:50%;bottom:5px;transform:translateX(-50%);
-    width:5px;height:5px;border-radius:50%}
-  .dock-btn.on::after{background:var(--cyan);box-shadow:0 0 8px rgba(0,229,255,.8)}
-  .dock-btn.minz{color:var(--warn);border-top-color:var(--warn);background:rgba(255,200,92,.06)}
-  .dock-btn.minz svg{filter:drop-shadow(0 0 6px rgba(255,200,92,.5))}
-  .dock-btn.minz::after{background:var(--warn);box-shadow:0 0 8px rgba(255,200,92,.8)}
+  /* estado único del menú: ventana abierta = ámbar; cerrada o minimizada = neutro */
+  .dock-btn.on{color:var(--warn);border-top-color:var(--warn);background:rgba(255,200,92,.08)}
+  .dock-btn.on svg{filter:drop-shadow(0 0 8px rgba(255,200,92,.6))}
+  .dock-btn.on::after{content:"";position:absolute;left:50%;bottom:5px;transform:translateX(-50%);
+    width:5px;height:5px;border-radius:50%;background:var(--warn);box-shadow:0 0 8px rgba(255,200,92,.8)}
   /* pasar el mouse por el botón ilumina su ventana: la conexión ventana↔menú, visible */
   .win.hint{border-color:var(--cyan);box-shadow:0 0 34px rgba(0,229,255,.4), 0 26px 70px rgba(0,0,0,.55)}
 
@@ -187,6 +183,9 @@
     border:1px solid var(--edge);box-shadow:0 26px 70px rgba(0,0,0,.55)}
   .win.open{display:flex;animation:winin .16s ease}
   @keyframes winin{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+  /* ventana ya arrastrada: posición en px, la animación no debe re-centrar */
+  .win.free.open{animation:wininf .16s ease}
+  @keyframes wininf{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
   .win::before,.win::after{content:"";position:absolute;width:17px;height:17px;pointer-events:none;z-index:2}
   .win::before{top:-1px;left:-1px;border-top:2px solid var(--cyan);border-left:2px solid var(--cyan)}
   .win::after{bottom:-1px;right:-1px;border-bottom:2px solid var(--cyan);border-right:2px solid var(--cyan)}
@@ -411,12 +410,15 @@
 
 <!-- ============ HUD ============ -->
 <div class="hud" id="brandtag"><div class="disp">MEX<b>ORBIT</b></div><small>propuesta i · la b con vida</small></div>
-<div class="hud" id="top">
+<section class="hud glass" id="top" aria-label="General">
   <button class="pmin" data-pmin aria-label="Minimizar general">–</button>
-  <div class="top-cell"><span class="lbl">Credits</span><b class="mono">1,245,300</b></div>
-  <div class="top-cell"><span class="lbl">Flux</span><b class="mono" style="color:var(--violet)">86</b></div>
-  <div class="top-cell"><span class="lbl">License</span><b class="mono" style="color:var(--hp)">23d</b></div>
-</div>
+  <span class="lbl">General</span>
+  <div class="cells">
+    <div class="top-cell"><span class="lbl">Credits</span><b class="mono">1,245,300</b></div>
+    <div class="top-cell"><span class="lbl">Flux</span><b class="mono" style="color:var(--violet)">86</b></div>
+    <div class="top-cell"><span class="lbl">License</span><b class="mono" style="color:var(--hp)">23d</b></div>
+  </div>
+</section>
 <button class="hud btn ghost" id="devkill" style="font-size:8px;padding:8px 12px">Simular destrucción</button>
 
 <!-- sistema: ayuda · pantalla completa · salir -->
@@ -896,6 +898,30 @@
     b.addEventListener('click',()=>{g(b.dataset.hud).classList.toggle('hid');hudSync(b.dataset.hud);});
     hudSync(b.dataset.hud);
   });
+  // ---- Arrastre: clic sostenido en la barra de título mueve la ventana ----
+  function makeDrag(w,h){
+    h.style.cursor='move';
+    h.addEventListener('mousedown',e=>{
+      if(e.target.closest('button'))return;
+      e.preventDefault();
+      if(w.classList.contains('win'))front(w);
+      const r=w.getBoundingClientRect();
+      w.style.left=r.left+'px';w.style.top=r.top+'px';
+      w.style.right='auto';w.style.bottom='auto';w.style.transform='none';w.style.margin='0';
+      w.classList.add('free');
+      const ox=e.clientX-r.left,oy=e.clientY-r.top;
+      const mv=ev=>{
+        const vw=innerWidth||document.documentElement.clientWidth||1e9,
+              vh=innerHeight||document.documentElement.clientHeight||1e9;
+        w.style.left=Math.max(0,Math.min(vw-60,ev.clientX-ox))+'px';
+        w.style.top=Math.max(0,Math.min(vh-40,ev.clientY-oy))+'px';};
+      const up=()=>{removeEventListener('mousemove',mv);removeEventListener('mouseup',up);};
+      addEventListener('mousemove',mv);addEventListener('mouseup',up);
+    });
+  }
+  document.querySelectorAll('.win').forEach(w=>{const h=w.querySelector('.win-h');if(h)makeDrag(w,h);});
+  [['pilot','h1'],['zone','.lbl'],['target','h2'],['planos','.lbl'],['chat','.lbl'],['mapwrap','.mhead'],['top','.lbl']]
+    .forEach(([id,sel])=>{const p=g(id),h=p&&p.querySelector(sel);if(h)makeDrag(p,h);});
   // ---- Fila II: activaciones simuladas ----
   document.querySelectorAll('#actions2 .hex').forEach(s=>s.addEventListener('click',()=>{
     showToast(s.querySelector('.code').textContent+' ACTIVADO');}));
