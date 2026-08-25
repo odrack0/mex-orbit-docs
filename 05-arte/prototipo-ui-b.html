@@ -1,0 +1,649 @@
+<title>MexOrbit Holo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma&family=Exo+2:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  /* ============ PROPUESTA B — "HOLO": vidrio táctico frío. Tema único oscuro ============ */
+  :root{
+    --bg:#07070F;
+    --glass:rgba(16,20,34,.62);
+    --glass-2:rgba(10,13,24,.75);
+    --edge:rgba(0,229,255,.28);
+    --edge-soft:rgba(120,140,190,.16);
+    --txt:#D6E2F0;
+    --muted:#7E8CA8;
+    --faint:#4C5670;
+    --cyan:#00E5FF;
+    --violet:#A78BFA;
+    --hp:#3DFF9C;
+    --shield:#5EB9FF;
+    --hostile:#FF3D6E;
+    --warn:#FFC85C;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--txt);font-family:'Exo 2',system-ui,sans-serif;font-size:14px;overflow:hidden}
+  .mono{font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums}
+  .disp{font-family:'Michroma',sans-serif}
+  .lbl{font-family:'Michroma';font-size:8.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
+
+  /* ============ ESCENA ============ */
+  #scene{position:fixed;inset:0;z-index:0}
+  #stars{position:absolute;inset:0;width:100%;height:100%}
+  .nebula{position:absolute;inset:0;background:
+    radial-gradient(55% 40% at 20% 25%, rgba(167,139,250,.08), transparent 70%),
+    radial-gradient(50% 55% at 80% 75%, rgba(0,229,255,.06), transparent 70%);}
+  .grid-floor{position:absolute;inset:0;opacity:.05;
+    background-image:linear-gradient(rgba(0,229,255,.6) 1px, transparent 1px),linear-gradient(90deg, rgba(0,229,255,.6) 1px, transparent 1px);
+    background-size:90px 90px;mask-image:radial-gradient(70% 70% at 50% 50%, #000, transparent);}
+  .ship{position:absolute;filter:drop-shadow(0 0 16px rgba(0,229,255,.3))}
+  .ship.enemy{filter:drop-shadow(0 0 16px rgba(255,61,110,.35))}
+  #playerShip{left:45%;top:54%}
+  #enemyShip{left:64%;top:28%}
+  .tbrack{position:absolute;left:60.4%;top:22.6%;width:140px;height:140px;pointer-events:none;animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{50%{transform:scale(1.04);opacity:.8}}
+
+  /* ============ PANEL VIDRIO ============ */
+  .glass{
+    background:var(--glass);
+    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    border:1px solid var(--edge-soft);
+    position:relative;
+  }
+  /* muescas de esquina (holo-targeting) */
+  .glass::before,.glass::after{content:"";position:absolute;width:14px;height:14px;pointer-events:none}
+  .glass::before{top:-1px;left:-1px;border-top:1.5px solid var(--cyan);border-left:1.5px solid var(--cyan)}
+  .glass::after{bottom:-1px;right:-1px;border-bottom:1.5px solid var(--cyan);border-right:1.5px solid var(--cyan)}
+  .hud{position:fixed;z-index:10}
+
+  /* barras */
+  .bar{height:7px;background:rgba(8,10,18,.8);border:1px solid var(--edge-soft);position:relative;overflow:hidden}
+  .bar i{display:block;height:100%}
+  .bar.hp i{background:linear-gradient(90deg,#1E9E63,var(--hp));box-shadow:0 0 8px rgba(61,255,156,.4)}
+  .bar.sh i{background:linear-gradient(90deg,#2C6FB4,var(--shield));box-shadow:0 0 8px rgba(94,185,255,.4)}
+  .bar.en i{background:linear-gradient(90deg,#7C5CC9,var(--violet));box-shadow:0 0 8px rgba(167,139,250,.4)}
+  .bar.hostile i{background:linear-gradient(90deg,#B02A50,var(--hostile))}
+
+  /* ============ DOCK LATERAL ============ */
+  #dock{left:0;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;z-index:20}
+  .dock-btn{
+    width:58px;height:58px;border:none;border-left:2px solid transparent;cursor:pointer;
+    background:var(--glass-2);color:var(--muted);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--edge-soft);transition:color .15s,border-color .15s;
+  }
+  .dock-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5}
+  .dock-btn span{font-family:'Michroma';font-size:6.5px;letter-spacing:.14em}
+  .dock-btn:hover{color:var(--txt)}
+  .dock-btn.on{color:var(--cyan);border-left-color:var(--cyan);background:rgba(0,229,255,.06)}
+  .dock-btn:focus-visible{outline:1px solid var(--cyan);outline-offset:-3px}
+
+  /* ============ TOP ============ */
+  #top{top:12px;left:50%;transform:translateX(-50%);display:flex;gap:1px;z-index:15}
+  .top-cell{padding:8px 22px;background:var(--glass-2);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    border:1px solid var(--edge-soft);display:flex;flex-direction:column;align-items:center;line-height:1.25}
+  .top-cell b{font-family:'JetBrains Mono';font-weight:500;font-size:14px}
+  #brandtag{top:14px;left:16px;z-index:15}
+  #brandtag .disp{font-size:13px;letter-spacing:.32em;color:var(--txt)}
+  #brandtag .disp b{color:var(--cyan);font-weight:400}
+  #brandtag small{display:block;font-size:8px;letter-spacing:.3em;color:var(--faint);margin-top:3px;font-family:'Michroma'}
+
+  /* ============ PILOTO ============ */
+  #pilot{bottom:16px;left:76px;width:300px;padding:14px 16px}
+  #pilot h1{font-family:'Michroma';font-size:13px;letter-spacing:.12em}
+  #pilot h1 span{color:var(--cyan)}
+  .prow{display:grid;grid-template-columns:52px 1fr 78px;gap:10px;align-items:center;margin-top:9px}
+  .prow .v{text-align:right;font-size:11.5px;color:var(--muted)}
+
+  /* ============ ZONA + OBJETIVO ============ */
+  #zone{top:14px;right:16px;width:252px;padding:12px 16px}
+  #zone .risk{margin-top:8px;font-family:'Michroma';font-size:9px;letter-spacing:.16em;color:var(--hostile);
+    border:1px solid rgba(255,61,110,.45);padding:7px 10px;
+    background:repeating-linear-gradient(-45deg, rgba(255,61,110,.09) 0 8px, transparent 8px 16px)}
+  #zone .evt{margin-top:8px;font-size:12px;color:var(--muted)}
+  #zone .evt b{color:var(--warn);font-weight:600}
+  #target{top:150px;right:16px;width:252px;padding:12px 16px}
+  #target h2{font-family:'Michroma';font-size:12px;letter-spacing:.1em;color:var(--hostile)}
+  #target h2 em{font-style:normal;display:block;font-size:8px;letter-spacing:.26em;color:var(--muted);margin-bottom:3px}
+  #target .trow{display:grid;grid-template-columns:1fr 72px;gap:8px;align-items:center;margin-top:8px}
+  #target .trow .v{text-align:right;font-size:11px;color:var(--muted)}
+
+  /* ============ ACTION BAR — slots hexagonales ============ */
+  #actions{bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:8px;align-items:flex-end;z-index:12}
+  .hex{
+    width:58px;height:64px;border:none;cursor:pointer;position:relative;color:var(--txt);
+    clip-path:polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+    background:linear-gradient(180deg, rgba(20,26,44,.92), rgba(10,13,24,.92));
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    transition:transform .1s;
+  }
+  .hex::before{content:"";position:absolute;inset:1.5px;
+    clip-path:polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+    background:linear-gradient(180deg, rgba(26,34,56,.95), rgba(12,16,28,.95));z-index:-1}
+  .hex{border:0;outline:1px solid var(--edge-soft)}
+  .hex:hover{outline-color:rgba(0,229,255,.5)}
+  .hex:focus-visible{outline:1.5px solid var(--cyan)}
+  .hex .code{font-family:'Michroma';font-size:8.5px;letter-spacing:.05em}
+  .hex .n{font-family:'JetBrains Mono';font-size:9.5px;color:var(--muted)}
+  .hex .key{position:absolute;top:7px;font-size:7px;color:var(--faint);font-family:'JetBrains Mono'}
+  .hex.sel{outline:1.5px solid var(--cyan);box-shadow:0 0 18px rgba(0,229,255,.35)}
+  .hex.sel .code{color:var(--cyan)}
+  .hex.cd::after{content:"";position:absolute;inset:0;background:conic-gradient(rgba(7,7,15,.85) 0 58%, transparent 58%);
+    clip-path:polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%)}
+
+  /* ============ MINIMAPA + PLANOS + CHAT ============ */
+  #mapwrap{bottom:16px;right:16px;width:220px;padding:10px 12px}
+  #minimap{width:196px;height:146px;display:block;background:rgba(5,6,12,.9);border:1px solid var(--edge-soft)}
+  #planos{top:150px;left:16px;width:200px;padding:12px 14px}
+  .plano{margin-top:9px}
+  .plano .r{display:flex;justify-content:space-between;align-items:baseline}
+  .plano .nm{font-family:'Michroma';font-size:10.5px;letter-spacing:.08em}
+  .pips{display:flex;gap:3px;margin-top:5px}
+  .pip{flex:1;height:3px;background:rgba(76,86,112,.35)}
+  .pip.f{background:var(--cyan);box-shadow:0 0 6px rgba(0,229,255,.5)}
+  #chat{bottom:16px;left:392px;width:320px;padding:10px 14px;font-size:12.5px}
+  #chat .msg{margin-top:5px;line-height:1.45}
+  #chat .ch{color:var(--faint)} #chat .who{color:var(--violet)} #chat .sys{color:var(--cyan)}
+
+  /* ============ VENTANAS ============ */
+  .win{position:fixed;z-index:30;display:none;flex-direction:column;
+    background:rgba(11,14,26,.92);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+    border:1px solid var(--edge);box-shadow:0 30px 80px rgba(0,0,0,.6), 0 0 40px rgba(0,229,255,.06)}
+  .win.open{display:flex}
+  .win::before,.win::after{content:"";position:absolute;width:18px;height:18px;pointer-events:none}
+  .win::before{top:-1px;left:-1px;border-top:2px solid var(--cyan);border-left:2px solid var(--cyan)}
+  .win::after{bottom:-1px;right:-1px;border-bottom:2px solid var(--cyan);border-right:2px solid var(--cyan)}
+  .win-h{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid var(--edge-soft)}
+  .win-h h2{font-family:'Michroma';font-size:13px;letter-spacing:.26em;text-transform:uppercase;color:var(--cyan)}
+  .win-h .sub{font-size:11px;color:var(--muted)}
+  .win-h button{margin-left:auto;background:none;border:1px solid var(--edge-soft);color:var(--muted);
+    font-family:'JetBrains Mono';width:26px;height:26px;cursor:pointer}
+  .win-h button:hover{color:var(--hostile);border-color:var(--hostile)}
+  .win-b{padding:18px;overflow:auto}
+  .btn{
+    font-family:'Michroma';font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--cyan);background:rgba(0,229,255,.07);border:1px solid var(--edge);
+    padding:10px 20px;cursor:pointer;transition:background .15s,box-shadow .15s;
+  }
+  .btn:hover{background:rgba(0,229,255,.14);box-shadow:0 0 16px rgba(0,229,255,.25)}
+  .btn:focus-visible{outline:1.5px solid var(--cyan);outline-offset:2px}
+  .btn.ghost{color:var(--muted);border-color:var(--edge-soft);background:none}
+  .btn.ghost:hover{color:var(--txt);box-shadow:none;background:rgba(126,140,168,.08)}
+  .btn.danger{color:var(--hostile);border-color:rgba(255,61,110,.4);background:rgba(255,61,110,.06)}
+  .btn[disabled]{color:var(--faint);border-color:var(--edge-soft);background:none;pointer-events:none}
+
+  /* --- MATERIALIZADOR (estilo generador GG) --- */
+  #win-mat{top:70px;left:50%;transform:translateX(-50%);width:900px;max-width:97vw}
+  .mat-grid{display:grid;grid-template-columns:280px 1fr 250px;gap:18px}
+  /* la máquina */
+  #machine{display:flex;flex-direction:column;align-items:center;gap:12px;padding:16px;background:var(--glass-2);border:1px solid var(--edge-soft)}
+  #core{width:170px;height:170px;position:relative;display:flex;align-items:center;justify-content:center}
+  #core svg{position:absolute;inset:0;animation:rot 14s linear infinite}
+  @keyframes rot{to{transform:rotate(360deg)}}
+  #core .flux{font-family:'JetBrains Mono';font-size:26px;color:var(--violet);text-shadow:0 0 18px rgba(167,139,250,.5)}
+  #core .flbl{position:absolute;bottom:34px;font-family:'Michroma';font-size:8px;letter-spacing:.3em;color:var(--muted)}
+  .spin-row{display:flex;gap:6px}
+  .spin-row .btn{padding:9px 14px}
+  #machine .note{font-size:11px;color:var(--muted);text-align:center;line-height:1.5}
+  #machine .note b{color:var(--txt)}
+  /* selector de eclipse + progreso de piezas */
+  .ecl-tabs{display:flex;gap:6px;margin-bottom:14px}
+  .ecl-tab{flex:1;padding:9px;background:none;border:1px solid var(--edge-soft);cursor:pointer;
+    font-family:'Michroma';font-size:9.5px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+  .ecl-tab.on{color:var(--cyan);border-color:var(--edge);background:rgba(0,229,255,.06)}
+  #gate-view{padding:16px;background:var(--glass-2);border:1px solid var(--edge-soft);text-align:center}
+  #gate-view h3{font-family:'Michroma';font-size:17px;letter-spacing:.22em;color:#FFD262}
+  #gate-view .tier{font-size:10px;color:var(--muted);letter-spacing:.18em;font-family:'Michroma';text-transform:uppercase;margin-top:3px}
+  #ringwrap{width:190px;height:190px;margin:14px auto;position:relative}
+  #ringwrap svg{width:100%;height:100%;transform:rotate(-90deg)}
+  #ringwrap .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+  #ringwrap .ctr b{font-family:'JetBrains Mono';font-size:22px}
+  #gate-view .gsub{font-size:12px;color:var(--muted)}
+  #gate-view .gsub b{color:var(--txt)}
+  /* log de recompensas */
+  #matlog{display:flex;flex-direction:column;padding:14px;background:var(--glass-2);border:1px solid var(--edge-soft)}
+  #matlog ul{list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:10px;font-size:12px;max-height:300px;overflow:auto}
+  #matlog li{display:flex;justify-content:space-between;gap:8px;padding:6px 8px;background:rgba(8,10,18,.5);border-left:2px solid var(--edge-soft)}
+  #matlog li.pieza{border-left-color:var(--cyan);color:var(--txt)}
+  #matlog li.sub{color:var(--muted)}
+  #matlog li .t{font-family:'JetBrains Mono';font-size:10px;color:var(--faint)}
+  .odds{margin-top:12px;font-size:10.5px;color:var(--faint);line-height:1.6}
+  .odds b{color:var(--muted)}
+
+  /* --- HANGAR / MERCADO (versiones ligeras re-skin) --- */
+  #win-hangar{top:90px;left:50%;transform:translateX(-50%);width:720px;max-width:95vw}
+  .hgrid{display:grid;grid-template-columns:240px 1fr;gap:16px}
+  #shipbox{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px;background:var(--glass-2);border:1px solid var(--edge-soft)}
+  #shipbox .nm{font-family:'Michroma';font-size:16px;letter-spacing:.2em}
+  #shipbox .cls{font-size:10px;color:var(--muted);letter-spacing:.14em}
+  .sgrid{display:grid;grid-template-columns:repeat(8,1fr);gap:5px}
+  .sslot{aspect-ratio:1;background:rgba(8,10,18,.6);border:1px solid var(--edge-soft);
+    display:flex;align-items:center;justify-content:center;font-family:'Michroma';font-size:8px;cursor:pointer}
+  .sslot:hover{border-color:rgba(0,229,255,.45)}
+  .sslot.x{border-color:rgba(167,139,250,.4);color:var(--violet)}
+  .sec{margin-top:12px}
+  .sec .lbl{display:flex;justify-content:space-between;margin-bottom:6px}
+  .dur{display:flex;align-items:center;gap:10px;margin-top:14px;padding:10px 12px;border:1px solid rgba(255,200,92,.3);background:rgba(255,200,92,.05);font-size:12px}
+  .dur b{color:var(--warn)}
+  #win-market{top:86px;left:50%;transform:translateX(-50%);width:840px;max-width:96vw}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{font-family:'Michroma';font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--edge)}
+  td{padding:9px 10px;border-bottom:1px solid var(--edge-soft)}
+  td.num,th.num{text-align:right}
+  tr.row:hover td{background:rgba(0,229,255,.04)}
+  .inm{font-weight:600}
+  .inm small{display:block;font-weight:400;font-size:10.5px;color:var(--faint)}
+  .buy{color:var(--hp)} .sell{color:var(--hostile)}
+
+  /* --- KILLSCREEN --- */
+  #kill{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;
+    background:radial-gradient(60% 60% at 50% 45%, rgba(255,61,110,.13), rgba(7,7,15,.9))}
+  #kill.open{display:flex}
+  #kill .card{width:520px;max-width:92vw;background:rgba(12,10,18,.95);border:1px solid rgba(255,61,110,.45);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);padding:0;position:relative}
+  #kill .card::before{content:"";position:absolute;top:-1px;left:-1px;width:20px;height:20px;border-top:2px solid var(--hostile);border-left:2px solid var(--hostile)}
+  #kill .card::after{content:"";position:absolute;bottom:-1px;right:-1px;width:20px;height:20px;border-bottom:2px solid var(--hostile);border-right:2px solid var(--hostile)}
+  #kill h2{font-family:'Michroma';font-size:20px;letter-spacing:.3em;color:var(--hostile);text-align:center;
+    padding:26px 20px 6px;text-shadow:0 0 24px rgba(255,61,110,.5)}
+  #kill .by{text-align:center;font-size:12px;color:var(--muted);padding-bottom:16px;border-bottom:1px solid rgba(255,61,110,.2)}
+  #kill .by b{color:var(--txt)}
+  .k-body{padding:18px 26px 24px;display:flex;flex-direction:column;gap:14px}
+  .k-row{display:flex;justify-content:space-between;gap:10px;font-size:13px}
+  .k-row .k{color:var(--muted)} .k-row .v{text-align:right}
+  .blackbox{padding:12px 14px;border:1px dashed rgba(255,200,92,.35);background:rgba(255,200,92,.04);font-size:12.5px;line-height:1.55}
+  .blackbox b{color:var(--warn)}
+  .blackbox .cd{font-family:'JetBrains Mono';color:var(--txt)}
+  .k-actions{display:flex;gap:10px;justify-content:center;margin-top:4px}
+
+  /* --- LOGIN --- */
+  #login{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:26px;
+    background:radial-gradient(70% 60% at 50% 35%, rgba(0,229,255,.05), transparent), var(--bg)}
+  #login.off{display:none}
+  #logo{text-align:center}
+  #logo .disp{font-size:34px;letter-spacing:.5em;padding-left:.5em;color:var(--txt);text-shadow:0 0 30px rgba(0,229,255,.35)}
+  #logo .disp b{color:var(--cyan);font-weight:400}
+  #logo small{display:block;margin-top:10px;font-family:'Michroma';font-size:8px;letter-spacing:.4em;color:var(--faint)}
+  #login .card{width:360px;padding:26px 28px;display:flex;flex-direction:column;gap:14px;background:var(--glass);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid var(--edge)}
+  #login .card::before{content:"";position:absolute;top:-1px;left:-1px;width:16px;height:16px;border-top:2px solid var(--cyan);border-left:2px solid var(--cyan)}
+  #login .card{position:relative}
+  .field{display:flex;flex-direction:column;gap:5px}
+  .field input{
+    background:rgba(6,8,15,.8);border:1px solid var(--edge-soft);color:var(--txt);
+    font-family:'Exo 2';font-size:14px;padding:10px 12px;transition:border-color .15s;
+  }
+  .field input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 10px rgba(0,229,255,.2)}
+  #login .status{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
+  #login .status .ok{color:var(--hp)}
+  #login .btn{width:100%;padding:13px;font-size:11px}
+  #login .foot{font-size:10px;color:var(--faint);text-align:center;letter-spacing:.06em}
+
+  #toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:65;
+    font-family:'Michroma';font-size:10px;letter-spacing:.14em;color:var(--cyan);
+    background:rgba(10,13,24,.95);border:1px solid var(--edge);padding:11px 22px;
+    opacity:0;pointer-events:none;transition:opacity .25s}
+  #toast.show{opacity:1}
+  #note{position:fixed;bottom:4px;left:50%;transform:translateX(-50%);z-index:45;
+    font-size:8px;letter-spacing:.26em;color:var(--faint);text-transform:uppercase;font-family:'Michroma'}
+  #devkill{position:fixed;top:14px;right:284px;z-index:15}
+
+  @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+  @media (max-width:960px){#chat,#planos{display:none}.mat-grid{grid-template-columns:1fr}.hgrid{grid-template-columns:1fr}}
+</style>
+
+<!-- ============ ESCENA ============ -->
+<div id="scene" aria-hidden="true">
+  <canvas id="stars"></canvas>
+  <div class="nebula"></div>
+  <div class="grid-floor"></div>
+  <svg id="playerShip" class="ship" width="110" height="110" viewBox="0 0 100 100">
+    <g transform="rotate(30 50 50)">
+      <path d="M50 6 L60 30 L82 44 L70 52 L74 78 L58 66 L50 92 L42 66 L26 78 L30 52 L18 44 L40 30 Z"
+            fill="#101726" stroke="#00E5FF" stroke-width="1.4"/>
+      <path d="M50 22 L56 40 L50 62 L44 40 Z" fill="#00E5FF" opacity=".8"/>
+      <circle cx="50" cy="46" r="4.5" fill="#A78BFA"/>
+    </g>
+  </svg>
+  <svg id="enemyShip" class="ship enemy" width="86" height="86" viewBox="0 0 100 100">
+    <g transform="rotate(-18 50 50)">
+      <path d="M50 8 L72 34 L64 70 L50 92 L36 70 L28 34 Z" fill="#1B1020" stroke="#FF3D6E" stroke-width="1.5"/>
+      <path d="M50 22 L61 38 L57 62 L50 74 L43 62 L39 38 Z" fill="none" stroke="#FF8FB0" stroke-width="1" opacity=".7"/>
+    </g>
+  </svg>
+  <div class="tbrack">
+    <svg viewBox="0 0 100 100" fill="none" stroke="#FF3D6E" stroke-width="1.4">
+      <path d="M6 28 V6 H28 M72 6 H94 V28 M94 72 V94 H72 M28 94 H6 V72"/>
+      <path d="M50 2 V10 M50 90 V98 M2 50 H10 M90 50 H98" opacity=".6"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ============ HUD ============ -->
+<div class="hud" id="brandtag"><div class="disp">MEX<b>ORBIT</b></div><small>propuesta b · holo</small></div>
+
+<div class="hud" id="top">
+  <div class="top-cell"><span class="lbl">Credits</span><b class="mono">1,245,300</b></div>
+  <div class="top-cell"><span class="lbl">Flux</span><b class="mono" style="color:var(--violet)">86</b></div>
+  <div class="top-cell"><span class="lbl">License</span><b class="mono" style="color:var(--hp)">23d</b></div>
+</div>
+<button class="hud btn ghost" id="devkill" data-kill style="font-size:8px;padding:8px 12px">Simular destrucción</button>
+
+<nav class="hud" id="dock" aria-label="Ventanas">
+  <button class="dock-btn" data-win="hangar"><svg viewBox="0 0 24 24"><path d="M12 3 L15 9 L21 12 L15 15 L12 21 L9 15 L3 12 L9 9 Z"/></svg><span>HANGAR</span></button>
+  <button class="dock-btn" data-win="market"><svg viewBox="0 0 24 24"><path d="M4 18 L4 12 M9 18 L9 8 M14 18 L14 10 M19 18 L19 5"/></svg><span>MERCADO</span></button>
+  <button class="dock-btn" data-win="mat"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 4 V1 M12 23 V20 M4 12 H1 M23 12 H20"/></svg><span>MATERIAL.</span></button>
+</nav>
+
+<section class="hud glass" id="pilot" aria-label="Estado del piloto">
+  <h1>ODRACK <span>· ORION</span></h1>
+  <div class="prow"><span class="lbl">Casco</span><div class="bar hp"><i style="width:88%"></i></div><span class="v mono">225,280</span></div>
+  <div class="prow"><span class="lbl">Escudo</span><div class="bar sh"><i style="width:64%"></i></div><span class="v mono">160,000</span></div>
+  <div class="prow"><span class="lbl">Carga</span><div class="bar en"><i style="width:34%"></i></div><span class="v mono">340/1,000</span></div>
+</section>
+
+<section class="hud glass" id="zone" aria-label="Zona">
+  <span class="lbl">Sector 4-4 · Vorago</span>
+  <div class="risk">RIESGO DE CARGA · 100%</div>
+  <div class="evt">Evento: <b>LA ESCOLTA vs MORDAX</b> <span class="mono">19:42</span></div>
+</section>
+
+<section class="hud glass" id="target" aria-label="Objetivo">
+  <h2><em>Objetivo fijado</em>VITRON ELITE</h2>
+  <div class="trow"><div class="bar hostile"><i style="width:41%"></i></div><span class="v mono">82,000</span></div>
+  <div class="trow"><div class="bar sh"><i style="width:23%"></i></div><span class="v mono">36,800</span></div>
+  <div class="trow" style="grid-template-columns:1fr auto"><span class="lbl">Distancia</span><span class="v mono">412 m</span></div>
+</section>
+
+<section class="hud glass" id="planos" aria-label="Planos">
+  <span class="lbl">Planos</span>
+  <div class="plano"><div class="r"><span class="nm">QUASAR</span><span class="mono" style="font-size:10.5px;color:var(--muted)">7/10</span></div>
+    <div class="pips"><span class="pip f"></span><span class="pip f"></span><span class="pip f"></span><span class="pip f"></span><span class="pip f"></span><span class="pip f"></span><span class="pip f"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></div></div>
+  <div class="plano"><div class="r"><span class="nm">NOVA</span><span class="mono" style="font-size:10.5px;color:var(--muted)">2/8</span></div>
+    <div class="pips"><span class="pip f"></span><span class="pip f"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></div></div>
+</section>
+
+<section class="hud glass" id="chat" aria-label="Chat">
+  <span class="lbl">Comms</span>
+  <div class="msg"><span class="ch">[Global]</span> <span class="who">Kaira:</span> vendo Coronium bajo el piso, órdenes arriba</div>
+  <div class="msg"><span class="ch">[Clan]</span> <span class="who">Vex_Hunter:</span> FAUCES en 10, falta Ursa</div>
+  <div class="msg"><span class="sys">◆ El Hexon Titan apareció en 4-5.</span></div>
+</section>
+
+<nav class="hud" id="actions" aria-label="Acciones">
+  <button class="hex"><span class="key">1</span><span class="code">CEL-1</span><span class="n">∞</span></button>
+  <button class="hex sel"><span class="key">2</span><span class="code">CEL-2</span><span class="n">4,180</span></button>
+  <button class="hex"><span class="key">3</span><span class="code">CEL-3</span><span class="n">960</span></button>
+  <button class="hex"><span class="key">4</span><span class="code">CEL-4</span><span class="n">1,240</span></button>
+  <span style="width:12px"></span>
+  <button class="hex"><span class="key">R</span><span class="code">TOR-3</span><span class="n">312</span></button>
+  <span style="width:12px"></span>
+  <button class="hex"><span class="key">Q</span><span class="code" style="color:var(--shield)">SHELL</span><span class="n">×12</span></button>
+  <button class="hex cd"><span class="key">W</span><span class="code">VEIL</span><span class="n">×5</span></button>
+  <button class="hex"><span class="key">X</span><span class="code">WARP</span><span class="n">×2</span></button>
+</nav>
+
+<section class="hud glass" id="mapwrap" aria-label="Minimapa">
+  <span class="lbl">4-4 · disputada</span>
+  <canvas id="minimap" width="196" height="146"></canvas>
+</section>
+
+<!-- ============ VENTANA: MATERIALIZADOR (generador de Eclipses) ============ -->
+<div class="win" id="win-mat" role="dialog" aria-label="Materializador">
+  <div class="win-h"><h2>Materializador</h2><span class="sub">generador de Eclipses · límite diario 2/3</span><button data-close aria-label="Cerrar">×</button></div>
+  <div class="win-b">
+    <div class="mat-grid">
+      <!-- la máquina -->
+      <div id="machine">
+        <div id="core">
+          <svg viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="50" r="47" stroke="rgba(0,229,255,.25)" stroke-width="1" stroke-dasharray="4 6"/>
+            <circle cx="50" cy="50" r="40" stroke="rgba(167,139,250,.35)" stroke-width="1" stroke-dasharray="18 10"/>
+            <circle cx="50" cy="50" r="33" stroke="rgba(0,229,255,.5)" stroke-width="1.5" stroke-dasharray="2 8"/>
+          </svg>
+          <div style="text-align:center"><div class="flux mono" id="fluxN">86</div></div>
+          <span class="flbl">FLUX</span>
+        </div>
+        <div class="spin-row">
+          <button class="btn" data-spin="1">×1 · 4 Flux</button>
+          <button class="btn" data-spin="5">×5 · 20</button>
+          <button class="btn" data-spin="10">×10 · 40</button>
+        </div>
+        <p class="note">Cada activación entrega <b>1 pieza garantizada</b> del Eclipse elegido<br>+ un subproducto de la tabla publicada.</p>
+      </div>
+      <!-- selector + progreso -->
+      <div>
+        <div class="ecl-tabs">
+          <button class="ecl-tab" data-ecl="pen">Penumbra</button>
+          <button class="ecl-tab on" data-ecl="umb">Umbra</button>
+          <button class="ecl-tab" data-ecl="ant">Antumbra</button>
+        </div>
+        <div id="gate-view">
+          <h3 id="gname">UMBRA</h3>
+          <div class="tier" id="gtier">La sombra total · media · T3</div>
+          <div id="ringwrap">
+            <svg viewBox="0 0 100 100" id="ring"></svg>
+            <div class="ctr"><b class="mono" id="gcount">31/52</b><span class="lbl">piezas</span></div>
+          </div>
+          <p class="gsub">Recompensa al entrar: <b id="grew">CEL-4 + OVC-1 + insumos Photon</b></p>
+          <div style="margin-top:12px"><button class="btn" id="enterBtn" disabled>Materializar 21 piezas más</button></div>
+        </div>
+      </div>
+      <!-- log -->
+      <div id="matlog">
+        <span class="lbl">Registro</span>
+        <ul id="loglist">
+          <li class="pieza"><span>+1 pieza · UMBRA</span><span class="t">19:31</span></li>
+          <li class="sub"><span>CEL-2 ×40</span><span class="t">19:31</span></li>
+          <li class="pieza"><span>+1 pieza · UMBRA</span><span class="t">19:30</span></li>
+          <li class="sub"><span>SHELL-C ×1</span><span class="t">19:30</span></li>
+          <li class="sub"><span>Fuel ×60</span><span class="t">19:28</span></li>
+          <li class="pieza"><span>+1 pieza · UMBRA</span><span class="t">19:28</span></li>
+          <li class="sub"><span>DRN-1 ×25</span><span class="t">19:26</span></li>
+        </ul>
+        <p class="odds">Subproductos (tabla publicada): <b>munición 62%</b> · <b>Cargas 18%</b> · <b>Fuel 12%</b> · <b>partículas 8%</b></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ VENTANA: HANGAR ============ -->
+<div class="win" id="win-hangar" role="dialog" aria-label="Hangar">
+  <div class="win-h"><h2>Hangar</h2><span class="sub">ORION · nave de batalla · 15/15/3</span><button data-close aria-label="Cerrar">×</button></div>
+  <div class="win-b">
+    <div class="hgrid">
+      <div id="shipbox">
+        <svg width="130" height="130" viewBox="0 0 100 100" aria-hidden="true">
+          <path d="M50 4 L61 29 L85 44 L71 53 L76 82 L58 68 L50 96 L42 68 L24 82 L29 53 L15 44 L39 29 Z" fill="#101726" stroke="#00E5FF" stroke-width="1.6"/>
+          <path d="M50 20 L57 40 L50 64 L43 40 Z" fill="#00E5FF" opacity=".85"/>
+          <circle cx="50" cy="45" r="5" fill="#A78BFA"/>
+        </svg>
+        <div class="nm">ORION</div><div class="cls">EL BUQUE INSIGNIA</div>
+        <div style="width:100%;display:flex;flex-direction:column;gap:8px;margin-top:6px">
+          <div class="prow" style="grid-template-columns:40px 1fr 70px"><span class="lbl">HP</span><div class="bar hp"><i style="width:100%"></i></div><span class="v mono">256,000</span></div>
+          <div class="prow" style="grid-template-columns:40px 1fr 70px"><span class="lbl">Vel</span><div class="bar sh"><i style="width:62%"></i></div><span class="v mono">300</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="sec"><div class="lbl"><span>Láseres · 15</span><span class="mono" style="letter-spacing:0;font-size:10px">PB-3 ×15 · recubrimiento Tachyon 84%</span></div>
+          <div class="sgrid">
+            <div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div>
+            <div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div>
+          </div></div>
+        <div class="sec"><div class="lbl"><span>Generadores · 15</span><span class="mono" style="letter-spacing:0;font-size:10px">DF-B2 ×11 · ION-6 ×4</span></div>
+          <div class="sgrid">
+            <div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">DFB2</div>
+            <div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">ION6</div><div class="sslot">ION6</div><div class="sslot">ION6</div><div class="sslot">ION6</div>
+          </div></div>
+        <div class="sec"><div class="lbl"><span>Extras · 3</span></div>
+          <div class="sgrid"><div class="sslot x">SHELL</div><div class="sslot x">VEIL</div><div class="sslot x">WARPX</div></div></div>
+        <div class="dur">⚠ Durabilidad <b>91%</b> · reparación <span class="mono">12,400 Credits</span>
+          <button class="btn" style="margin-left:auto" data-toast="EQUIPO REPARADO · −12,400 CREDITS">Reparar</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ VENTANA: MERCADO ============ -->
+<div class="win" id="win-market" role="dialog" aria-label="Mercado">
+  <div class="win-h"><h2>Mercado</h2><span class="sub">órdenes de compra y venta · global · comisión 5%</span><button data-close aria-label="Cerrar">×</button></div>
+  <div class="win-b">
+    <div style="overflow-x:auto">
+    <table>
+      <thead><tr><th>Item</th><th class="num">Compra</th><th class="num">Venta</th><th class="num">Piso NPC</th><th class="num">Vol. diario</th><th></th></tr></thead>
+      <tbody>
+        <tr class="row"><td><span class="inm">Coronium<small>crudo · zona disputada</small></span></td><td class="num mono buy">74</td><td class="num mono sell">81</td><td class="num mono" style="color:var(--faint)">25</td><td class="num mono" style="color:var(--muted)">12,800</td><td><button class="btn ghost" data-toast="ORDEN DE VENTA · 500 CORONIUM @ 80">Vender</button></td></tr>
+        <tr class="row"><td><span class="inm">Tachyon<small>ápice · cae de Titans</small></span></td><td class="num mono buy">9,200</td><td class="num mono sell">9,850</td><td class="num mono" style="color:var(--faint)">6,000</td><td class="num mono" style="color:var(--muted)">410</td><td><button class="btn ghost" data-toast="ORDEN DE COMPRA · 10 TACHYON @ 9,500">Comprar</button></td></tr>
+        <tr class="row"><td><span class="inm">Plano Quasar<small>legendario · incursiones</small></span></td><td class="num mono buy">86,000</td><td class="num mono sell">94,000</td><td class="num mono" style="color:var(--faint)">—</td><td class="num mono" style="color:var(--muted)">36</td><td><button class="btn ghost" data-toast="ORDEN DE COMPRA · 1 PLANO QUASAR @ 90,000">Comprar</button></td></tr>
+        <tr class="row"><td><span class="inm" style="color:var(--cyan)">Starbond<small>canjea Star License · un salto</small></span></td><td class="num mono buy">418,000</td><td class="num mono sell">431,000</td><td class="num mono" style="color:var(--faint)">fijo</td><td class="num mono" style="color:var(--muted)">9</td><td><button class="btn" data-toast="STARBOND COMPRADO · −431,000 CREDITS">Comprar</button></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============ KILLSCREEN ============ -->
+<div id="kill" role="dialog" aria-label="Nave destruida">
+  <div class="card">
+    <h2>NAVE DESTRUIDA</h2>
+    <p class="by">Tu ORION cayó ante <b>VITRON ELITE</b> · sector 4-4 · <span class="mono">19:47:12</span></p>
+    <div class="k-body">
+      <div class="k-row"><span class="k">Zona disputada — carga soltada</span><span class="v mono" style="color:var(--hostile)">100%</span></div>
+      <div class="blackbox">
+        ◆ Tu <b>Black Box</b> quedó en el sitio con <b>210 Coronium · 40 Aurorium · 2 SHELL-C</b>.<br>
+        Desaparece en <span class="cd" id="bbTimer">2:43</span> — quien llegue primero, la reclama.
+      </div>
+      <div class="k-row"><span class="k">Desgaste del equipo</span><span class="v mono">−2% · factura estimada 12,400 Credits</span></div>
+      <div class="k-row"><span class="k">Reaparición</span><span class="v" style="color:var(--hp)">Gratis e instantánea, en tu base</span></div>
+      <div class="k-actions">
+        <button class="btn" data-respawn>Reaparecer en base</button>
+        <button class="btn danger" data-toast="RUMBO A TU BLACK BOX — SUERTE, PILOTO" data-respawn>Volver por la Black Box</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LOGIN ============ -->
+<div id="login">
+  <div id="logo"><div class="disp">MEX<b>ORBIT</b></div><small>nombre temporal · prototipo b</small></div>
+  <div class="card">
+    <div class="field"><span class="lbl">Piloto</span><input type="text" value="odrack" autocomplete="username"></div>
+    <div class="field"><span class="lbl">Contraseña</span><input type="password" value="········" autocomplete="current-password"></div>
+    <div class="status"><span>Servidor: <b class="ok">EN LÍNEA</b></span><span class="mono">147 pilotos · v0.1</span></div>
+    <button class="btn" id="connect">Conectar</button>
+    <p class="foot">La temporada 1 está activa · próxima Escolta 19:42</p>
+  </div>
+</div>
+
+<div id="toast" role="status"></div>
+<div id="note">Propuesta B · Holo · militar-espacial 2026 · valores simulados</div>
+
+<script>
+  // ---- Starfield ----
+  const cv=document.getElementById('stars'),cx=cv.getContext('2d');
+  let W,H,stars=[];const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;
+    stars=Array.from({length:230},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.3+.2,s:Math.random()*.1+.02,tw:Math.random()*6.3}));}
+  addEventListener('resize',resize);resize();
+  (function draw(t){cx.clearRect(0,0,W,H);
+    for(const s of stars){cx.globalAlpha=.3+.5*Math.abs(Math.sin((t||0)/1500+s.tw));
+      cx.fillStyle=s.r>1?'#D6E2F0':'#7E8CA8';cx.beginPath();cx.arc(s.x,s.y,s.r,0,7);cx.fill();
+      if(!reduced){s.y+=s.s;if(s.y>H)s.y=0;}}
+    cx.globalAlpha=1;requestAnimationFrame(draw);})();
+
+  // ---- Minimapa ----
+  const mm=document.getElementById('minimap').getContext('2d');
+  mm.strokeStyle='rgba(0,229,255,.12)';
+  for(let x=0;x<=196;x+=24){mm.beginPath();mm.moveTo(x,0);mm.lineTo(x,146);mm.stroke();}
+  for(let y=0;y<=146;y+=24){mm.beginPath();mm.moveTo(0,y);mm.lineTo(196,y);mm.stroke();}
+  const dot=(x,y,c,r=2)=>{mm.fillStyle=c;mm.beginPath();mm.arc(x,y,r,0,7);mm.fill();};
+  dot(112,74,'#00E5FF',3);dot(136,50,'#FF3D6E');dot(152,58,'#FF3D6E');dot(38,108,'#FF3D6E');
+  dot(60,28,'#5EB9FF');dot(78,118,'#5EB9FF');dot(18,18,'#FFC85C',2.5);
+  mm.strokeStyle='rgba(0,229,255,.55)';mm.strokeRect(88,54,52,40);
+
+  // ---- Anillo de piezas del Eclipse (52 segmentos, 31 llenos) ----
+  const ring=document.getElementById('ring');
+  const gates={pen:{n:'PENUMBRA',tier:'La sombra parcial · entrada · T2',total:24,have:24,rew:'CEL-4 + insumos Ion',color:'#9FB6C9'},
+               umb:{n:'UMBRA',tier:'La sombra total · media · T3',total:52,have:31,rew:'CEL-4 + OVC-1 + insumos Photon',color:'#FFD262'},
+               ant:{n:'ANTUMBRA',tier:'Más allá de la sombra · alta · T3',total:86,have:4,rew:'CEL-4 + OVC-1 ++ · insumos Boson',color:'#FF9C6B'}};
+  function drawRing(g){
+    let s='';const R=44,C=50,gap=1.6,seg=360/g.total;
+    for(let i=0;i<g.total;i++){
+      const a0=(i*seg+gap/2)*Math.PI/180,a1=((i+1)*seg-gap/2)*Math.PI/180;
+      const x0=C+R*Math.cos(a0),y0=C+R*Math.sin(a0),x1=C+R*Math.cos(a1),y1=C+R*Math.sin(a1);
+      const on=i<g.have;
+      s+=`<path d="M${x0.toFixed(1)} ${y0.toFixed(1)} A${R} ${R} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}" stroke="${on?g.color:'rgba(76,86,112,.35)'}" stroke-width="6" fill="none"/>`;
+    }
+    ring.innerHTML=s;
+    document.getElementById('gname').textContent=g.n;
+    document.getElementById('gname').style.color=g.color;
+    document.getElementById('gtier').textContent=g.tier;
+    document.getElementById('gcount').textContent=g.have+'/'+g.total;
+    document.getElementById('grew').textContent=g.rew;
+    const btn=document.getElementById('enterBtn');
+    if(g.have>=g.total){btn.disabled=false;btn.textContent='ENTRAR AL '+g.n;}
+    else{btn.disabled=true;btn.textContent='Materializar '+(g.total-g.have)+' piezas más';}
+  }
+  let cur='umb';drawRing(gates.umb);
+  document.querySelectorAll('.ecl-tab').forEach(t=>t.addEventListener('click',()=>{
+    document.querySelectorAll('.ecl-tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');
+    cur=t.dataset.ecl;drawRing(gates[cur]);
+  }));
+
+  // ---- Materializar (simulado) ----
+  let flux=86;const fluxN=document.getElementById('fluxN'),log=document.getElementById('loglist');
+  const subs=['CEL-2 ×40','CEL-3 ×12','DRN-1 ×25','SHELL-C ×1','SHOCK-C ×1','VEIL-C ×1','Fuel ×60','Ion ×3','Photon ×2'];
+  document.querySelectorAll('[data-spin]').forEach(b=>b.addEventListener('click',()=>{
+    const n=+b.dataset.spin,cost=n*4;const g=gates[cur];
+    if(flux<cost||g.have>=g.total){showToast(flux<cost?'FLUX INSUFICIENTE':'ECLIPSE COMPLETO');return;}
+    flux-=cost;fluxN.textContent=flux;
+    const now=new Date(),t=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+    for(let i=0;i<n&&g.have<g.total;i++){
+      g.have++;
+      log.insertAdjacentHTML('afterbegin',`<li class="pieza"><span>+1 pieza · ${g.n}</span><span class="t">${t}</span></li>`);
+      log.insertAdjacentHTML('afterbegin',`<li class="sub"><span>${subs[Math.floor(Math.random()*subs.length)]}</span><span class="t">${t}</span></li>`);
+    }
+    drawRing(g);
+    while(log.children.length>14)log.lastElementChild.remove();
+  }));
+
+  // ---- Ventanas ----
+  const tasks=[...document.querySelectorAll('.dock-btn')];
+  const wins={hangar:g('win-hangar'),market:g('win-market'),mat:g('win-mat')};
+  function g(id){return document.getElementById(id)}
+  function toggle(id){const w=wins[id],open=w.classList.contains('open');
+    Object.values(wins).forEach(x=>x.classList.remove('open'));tasks.forEach(t=>t.classList.remove('on'));
+    if(!open){w.classList.add('open');tasks.find(t=>t.dataset.win===id).classList.add('on');}}
+  tasks.forEach(t=>t.addEventListener('click',()=>toggle(t.dataset.win)));
+  document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>{
+    b.closest('.win').classList.remove('open');tasks.forEach(t=>t.classList.remove('on'));}));
+  addEventListener('keydown',e=>{
+    if(e.key==='Escape'){Object.values(wins).forEach(x=>x.classList.remove('open'));tasks.forEach(t=>t.classList.remove('on'));
+      g('kill').classList.remove('open');}
+    const k=e.key.toLowerCase();
+    if(document.activeElement.tagName!=='INPUT'){if(k==='h')toggle('hangar');if(k==='m')toggle('market');if(k==='e')toggle('mat');}
+  });
+
+  // ---- Toast ----
+  const toast=g('toast');let tt;
+  function showToast(msg){toast.textContent=msg;toast.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>toast.classList.remove('show'),2600);}
+  document.querySelectorAll('[data-toast]').forEach(b=>b.addEventListener('click',()=>showToast(b.dataset.toast)));
+
+  // ---- Killscreen ----
+  let bbT=163,bbInt;
+  document.querySelectorAll('[data-kill]').forEach(b=>b.addEventListener('click',()=>{
+    g('kill').classList.add('open');bbT=163;clearInterval(bbInt);
+    bbInt=setInterval(()=>{bbT--;if(bbT<0){clearInterval(bbInt);return;}
+      g('bbTimer').textContent=Math.floor(bbT/60)+':'+String(bbT%60).padStart(2,'0');},1000);
+  }));
+  document.querySelectorAll('[data-respawn]').forEach(b=>b.addEventListener('click',()=>{
+    g('kill').classList.remove('open');clearInterval(bbInt);}));
+
+  // ---- Login ----
+  g('connect').addEventListener('click',()=>{g('login').classList.add('off');showToast('CONEXIÓN ESTABLECIDA · BIENVENIDO, PILOTO');});
+  document.querySelectorAll('#login input').forEach(i=>i.addEventListener('keydown',e=>{if(e.key==='Enter')g('connect').click();}));
+
+  // ---- Selección de munición ----
+  document.querySelectorAll('#actions .hex').forEach(s=>s.addEventListener('click',()=>{
+    if(s.querySelector('.code').textContent.startsWith('CEL')){
+      document.querySelectorAll('#actions .hex').forEach(x=>x.classList.remove('sel'));s.classList.add('sel');}
+  }));
+</script>
