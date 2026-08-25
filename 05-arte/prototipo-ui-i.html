@@ -91,6 +91,15 @@
   .ndot{position:absolute;top:7px;right:11px;width:7px;height:7px;border-radius:50%;background:var(--warn);
     box-shadow:0 0 8px rgba(255,200,92,.7);animation:ndot 1.8s ease-in-out infinite}
   @keyframes ndot{50%{opacity:.35}}
+  /* estados del menú: abierta (cian) · minimizada (ámbar) */
+  .dock-btn.on::after,.dock-btn.minz::after{content:"";position:absolute;right:6px;top:50%;transform:translateY(-50%);
+    width:5px;height:5px;border-radius:50%}
+  .dock-btn.on::after{background:var(--cyan);box-shadow:0 0 8px rgba(0,229,255,.8)}
+  .dock-btn.minz{color:var(--warn);border-left-color:var(--warn);background:rgba(255,200,92,.06)}
+  .dock-btn.minz svg{filter:drop-shadow(0 0 6px rgba(255,200,92,.5))}
+  .dock-btn.minz::after{background:var(--warn);box-shadow:0 0 8px rgba(255,200,92,.8)}
+  /* pasar el mouse por el botón ilumina su ventana: la conexión ventana↔menú, visible */
+  .win.hint{border-color:var(--cyan);box-shadow:0 0 34px rgba(0,229,255,.4), 0 26px 70px rgba(0,0,0,.55)}
 
   /* ============ HUD paneles (como B, paleta suave) ============ */
   #pilot{bottom:16px;left:104px;width:300px;padding:14px 16px}
@@ -231,7 +240,7 @@
   .odds b{color:var(--muted)}
 
   /* --- HANGAR / MERCADO --- */
-  #win-hangar{top:86px;left:50%;transform:translateX(-50%);width:720px;max-width:95vw}
+  #win-hangar{top:104px;left:43%;transform:translateX(-50%);width:720px;max-width:95vw}
   .hgrid{display:grid;grid-template-columns:240px 1fr;gap:16px}
   #shipbox{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px;background:var(--glass-2);border:1px solid var(--edge-soft)}
   #shipbox .nm{font-family:'Michroma';font-size:16px;letter-spacing:.18em}
@@ -245,7 +254,7 @@
   .sec .lbl{display:flex;justify-content:space-between;margin-bottom:6px}
   .dur{display:flex;align-items:center;gap:10px;margin-top:14px;padding:10px 12px;border:1px solid rgba(239,199,109,.32);background:rgba(239,199,109,.05);font-size:12px}
   .dur b{color:var(--warn)}
-  #win-market{top:82px;left:50%;transform:translateX(-50%);width:840px;max-width:96vw}
+  #win-market{top:128px;left:57%;transform:translateX(-50%);width:840px;max-width:96vw}
   table{width:100%;border-collapse:collapse;font-size:13px}
   th{font-family:'Michroma';font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--edge)}
   td{padding:9px 10px;border-bottom:1px solid var(--edge-soft)}
@@ -256,7 +265,7 @@
   .buy{color:var(--hp)} .sell{color:var(--hostile)}
 
   /* --- STUB (ventanas aún sin maquetar) --- */
-  .stub{top:120px;left:50%;transform:translateX(-50%);width:460px;max-width:92vw}
+  .stub{top:150px;left:50%;transform:translateX(-50%);width:460px;max-width:92vw}
   .stub .win-b{display:flex;flex-direction:column;align-items:center;gap:12px;padding:34px 24px;text-align:center}
   .stub .win-b svg{width:34px;height:34px;stroke:var(--faint);fill:none;stroke-width:1.4}
   .stub .win-b p{font-size:12.5px;color:var(--muted);line-height:1.6;max-width:320px}
@@ -729,36 +738,69 @@
     drawRing(g);while(log.children.length>14)log.lastElementChild.remove();
   }));
 
-  // ---- Ventanas + stubs ----
+  // ---- Multiventana: varias abiertas a la vez, el menú refleja sus estados ----
   const tasks=[...document.querySelectorAll('.dock-btn')];
   const wins={hangar:g('win-hangar'),market:g('win-market'),mat:g('win-mat'),stub:g('win-stub')};
   function g(id){return document.getElementById(id)}
-  function closeAll(){Object.values(wins).forEach(x=>x.classList.remove('open'));tasks.forEach(t=>t.classList.remove('on'));}
-  function toggle(id,btn){const w=wins[id],open=w.classList.contains('open')&&btn.classList.contains('on');
-    closeAll();if(!open){w.classList.remove('min');w.classList.add('open');btn.classList.add('on');
-      const mb=w.querySelector('[data-min]');if(mb)mb.textContent='–';}}
+  let zTop=30, stubOwner=null;
+  function btnFor(w){
+    if(w===wins.stub) return stubOwner;
+    return tasks.find(t=>t.dataset.win && wins[t.dataset.win]===w) || null;
+  }
+  function syncBtn(w){
+    const b=btnFor(w); if(!b) return;
+    b.classList.toggle('on', w.classList.contains('open') && !w.classList.contains('min'));
+    b.classList.toggle('minz', w.classList.contains('open') && w.classList.contains('min'));
+  }
+  function front(w){w.style.zIndex=++zTop;}
+  function restore(w){w.classList.remove('min');front(w);
+    const mb=w.querySelector('[data-min]');if(mb)mb.textContent='–';syncBtn(w);}
+  function openWin(w,btn){
+    if(w===wins.stub)stubOwner=btn;
+    w.classList.add('open');restore(w);
+  }
+  function closeWin(w){
+    w.classList.remove('open','min');
+    if(w===wins.stub){if(stubOwner)stubOwner.classList.remove('on','minz');stubOwner=null;}
+    else syncBtn(w);
+  }
   tasks.forEach(t=>t.addEventListener('click',()=>{
-    if(t.dataset.win){toggle(t.dataset.win,t);}
-    else{ // stub: hereda el chrome con su icono y título
-      const open=wins.stub.classList.contains('open')&&t.classList.contains('on');
-      closeAll();
-      if(!open){
-        g('stubTitle').textContent=t.dataset.stub;g('stubName').textContent=t.dataset.stub;
-        g('stubIcon').firstElementChild.setAttribute('href','#'+t.dataset.icon);
-        g('stubBigIcon').firstElementChild.setAttribute('href','#'+t.dataset.icon);
-        wins.stub.classList.add('open');t.classList.add('on');
+    if(t.dataset.win){
+      const w=wins[t.dataset.win];
+      if(!w.classList.contains('open'))openWin(w,t);
+      else if(w.classList.contains('min'))restore(w);
+      else closeWin(w);
+    }else{
+      const w=wins.stub;
+      if(w.classList.contains('open')&&stubOwner===t){
+        if(w.classList.contains('min'))restore(w); else closeWin(w);
+        return;
       }
+      if(stubOwner)stubOwner.classList.remove('on','minz');
+      g('stubTitle').textContent=t.dataset.stub;g('stubName').textContent=t.dataset.stub;
+      g('stubIcon').firstElementChild.setAttribute('href','#'+t.dataset.icon);
+      g('stubBigIcon').firstElementChild.setAttribute('href','#'+t.dataset.icon);
+      openWin(w,t);
     }
   }));
-  document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',closeAll));
+  document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeWin(b.closest('.win'))));
   document.querySelectorAll('[data-min]').forEach(b=>b.addEventListener('click',()=>{
     const w=b.closest('.win');w.classList.toggle('min');
-    b.textContent=w.classList.contains('min')?'+':'–';}));
+    b.textContent=w.classList.contains('min')?'+':'–';syncBtn(w);}));
+  // clic en una ventana la trae al frente
+  Object.values(wins).forEach(w=>w.addEventListener('mousedown',()=>front(w)));
+  // pasar el mouse por el botón del menú ilumina su ventana abierta
+  tasks.forEach(t=>{
+    t.addEventListener('mouseenter',()=>{
+      const w=t.dataset.win?wins[t.dataset.win]:(stubOwner===t?wins.stub:null);
+      if(w&&w.classList.contains('open'))w.classList.add('hint');});
+    t.addEventListener('mouseleave',()=>Object.values(wins).forEach(w=>w.classList.remove('hint')));
+  });
   addEventListener('keydown',e=>{
-    if(e.key==='Escape'){closeAll();g('kill').classList.remove('open');}
+    if(e.key==='Escape'){Object.values(wins).forEach(closeWin);g('kill').classList.remove('open');}
     const k=e.key.toLowerCase();
     if(document.activeElement.tagName!=='INPUT'){
-      if(k==='h')toggle('hangar',tasks[0]);if(k==='m')toggle('market',tasks[2]);if(k==='e')toggle('mat',tasks[3]);}
+      if(k==='h')tasks[0].click();if(k==='m')tasks[2].click();if(k==='e')tasks[3].click();}
   });
 
   // ---- Toast / Kill / Login / Munición ----
