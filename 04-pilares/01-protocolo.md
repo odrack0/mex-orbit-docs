@@ -1,6 +1,6 @@
 # Pilar 01 — El protocolo
 
-**Repo:** `mex-orbit-protocol` · **Estado:** decisiones base tomadas; diseño de mensajes por hacer.
+**Repo:** `mex-orbit-protocol` · **Estado:** **diseño v1 escrito en E1** → [`mex-orbit-protocol/docs/protocolo-v1.md`](https://github.com/odrack0/mex-orbit-protocol/blob/main/docs/protocolo-v1.md) (catálogo del slice ~35 mensajes, framing, sincronización, reconexión); pendiente el spike de codegen (iteración I2 de la etapa 1).
 
 ## Decisiones tomadas
 

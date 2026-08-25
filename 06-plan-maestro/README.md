@@ -9,7 +9,7 @@ El plan general de v1: **siete etapas, cada una con su meta comprobable (gate)**
 ### E0 — Fundaciones ✅ (esta)
 Biblia estructurada, 9 repos con propósito y fronteras, convenciones (español/inglés, mex-orbit, migraciones fechadas). **Gate: cumplido.**
 
-### E1 — Contratos
+### E1 — Contratos 🔄 (en progreso — [plan de etapa](etapa-1-contratos.md))
 Los dos pilares fundacionales pasan de decisiones a diseño completo:
 - Protocolo v1: catálogo de mensajes del slice, codegen elegido (spike protobuf vs propio), modelo de sincronización.
 - Esquema BD v1: dominios del slice (cuentas, naves/equipo, mundo, materiales) → migración `.1` en `mex-orbit-data-base`.

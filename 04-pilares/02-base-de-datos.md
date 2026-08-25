@@ -1,6 +1,6 @@
 # Pilar 02 — La base de datos
 
-**Repo:** `mex-orbit-data-base` · **Estado:** decisiones base tomadas; esquema por diseñar.
+**Repo:** `mex-orbit-data-base` · **Estado:** **esquema v1 diseñado en E1** → [`mex-orbit-data-base/docs/esquema-v1.md`](https://github.com/odrack0/mex-orbit-data-base/blob/main/docs/esquema-v1.md) + migración `2026.08.25.1` (25 tablas del slice + semillas); pendiente la corrida viva (iteración I3 de la etapa 1).
 
 ## Decisiones tomadas
 
