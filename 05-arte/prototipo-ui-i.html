@@ -920,8 +920,8 @@
     });
   }
   document.querySelectorAll('.win').forEach(w=>{const h=w.querySelector('.win-h');if(h)makeDrag(w,h);});
-  [['pilot','h1'],['zone','.lbl'],['target','h2'],['planos','.lbl'],['chat','.lbl'],['mapwrap','.mhead'],['top','.lbl']]
-    .forEach(([id,sel])=>{const p=g(id),h=p&&p.querySelector(sel);if(h)makeDrag(p,h);});
+  [['pilot','h1'],['zone','.lbl'],['target','h2'],['planos','.lbl'],['chat','.lbl'],['mapwrap','.mhead'],['top',null]]
+    .forEach(([id,sel])=>{const p=g(id),h=p&&(sel?p.querySelector(sel):p);if(h)makeDrag(p,h);});
   // ---- Fila II: activaciones simuladas ----
   document.querySelectorAll('#actions2 .hex').forEach(s=>s.addEventListener('click',()=>{
     showToast(s.querySelector('.code').textContent+' ACTIVADO');}));
