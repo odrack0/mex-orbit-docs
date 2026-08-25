@@ -52,17 +52,17 @@
     transition:color .12s,border-color .12s}
   .pmin:hover{color:var(--cyan);border-color:var(--edge)}
   .hid{display:none!important}
-  /* bandeja de paneles minimizados (arriba-izquierda) */
-  #htray{top:58px;left:72px;display:flex;gap:6px;z-index:21}
-  .htray-btn{width:34px;height:34px;background:var(--glass-2);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  /* bandeja de paneles minimizados: misma fila que el menú */
+  #htray{display:flex;gap:8px;align-items:center}
+  .htray-btn{width:52px;height:52px;background:var(--glass-2);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
     border:1px solid rgba(255,183,77,.4);color:var(--warn);cursor:pointer;position:relative;
     display:flex;align-items:center;justify-content:center;animation:trayIn .16s ease;
     transition:color .12s,border-color .12s,box-shadow .12s}
-  .htray-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .htray-btn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
   .htray-btn:hover{color:var(--cyan);border-color:var(--edge);box-shadow:0 0 10px rgba(0,229,255,.2)}
-  .htray-btn .tip{position:absolute;top:38px;left:0;font-family:'Michroma';font-size:7.5px;letter-spacing:.14em;color:var(--warn);
+  .htray-btn .tip{position:absolute;top:56px;left:0;font-family:'Michroma';font-size:7.5px;letter-spacing:.14em;color:var(--warn);
     background:rgba(10,13,24,.92);border:1px solid var(--edge-soft);padding:3px 7px;white-space:nowrap;
-    opacity:0;pointer-events:none;transition:opacity .12s}
+    opacity:0;pointer-events:none;transition:opacity .12s;z-index:5}
   .htray-btn:hover .tip{opacity:1;color:var(--cyan)}
   @keyframes trayIn{from{transform:translateY(-6px);opacity:0}to{transform:translateY(0);opacity:1}}
 
@@ -81,41 +81,42 @@
   #brandtag .disp b{color:var(--cyan);font-weight:400}
   #brandtag small{display:block;font-size:7.5px;letter-spacing:.3em;color:var(--faint);margin-top:3px;font-family:'Michroma';text-transform:uppercase}
 
-  /* ============ DOCK: el menú completo del juego (herencia B, expandido) ============ */
-  /* el menú, destacado: contenedor con identidad, botones legibles, estados con energía */
-  #dock{left:14px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;z-index:20;
+  /* ============ MENÚ SUPERIOR: dock horizontal + bandeja de paneles (una sola fila de iconos) ============ */
+  #topleft{top:52px;left:16px;display:flex;gap:10px;align-items:stretch;z-index:20}
+  #dock{display:flex;flex-direction:row;align-items:stretch;position:relative;
     background:var(--glass-2);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
     border:1px solid var(--edge);box-shadow:0 0 24px rgba(0,229,255,.08), 0 14px 40px rgba(0,0,0,.4)}
   #dock::before{content:"";position:absolute;top:-1px;left:-1px;width:13px;height:13px;
     border-top:1.5px solid var(--cyan);border-left:1.5px solid var(--cyan)}
   #dock::after{content:"";position:absolute;bottom:-1px;right:-1px;width:13px;height:13px;
     border-bottom:1.5px solid var(--cyan);border-right:1.5px solid var(--cyan)}
-  .dock-cap{font-family:'Michroma';font-size:7.5px;letter-spacing:.3em;color:var(--cyan);text-align:center;
-    padding:8px 0 7px;border-bottom:1px solid var(--edge-soft);
-    background:linear-gradient(180deg, rgba(0,229,255,.1), transparent);text-transform:uppercase}
-  .dock-sep{height:1px;margin:3px 10px;background:var(--edge-soft)}
+  .dock-cap{font-family:'Michroma';font-size:7.5px;letter-spacing:.3em;color:var(--cyan);
+    writing-mode:vertical-rl;transform:rotate(180deg);display:flex;align-items:center;justify-content:center;
+    padding:6px 0;width:22px;border-left:1px solid var(--edge-soft);
+    background:linear-gradient(90deg, transparent, rgba(0,229,255,.1));text-transform:uppercase}
+  .dock-sep{width:1px;margin:10px 4px;background:var(--edge-soft)}
   .dock-btn{
-    width:66px;height:52px;border:none;border-left:2px solid transparent;cursor:pointer;
+    width:66px;height:64px;border:none;border-top:2px solid transparent;cursor:pointer;
     background:transparent;color:#A9B6CC;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
-    position:relative;transition:color .14s,background .14s,transform .14s;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+    position:relative;transition:color .14s,background .14s;
   }
-  .dock-btn svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;
+  .dock-btn svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;
     filter:drop-shadow(0 0 6px rgba(0,229,255,0));transition:filter .14s}
-  .dock-btn span{font-family:'Michroma';font-size:6.4px;letter-spacing:.1em;text-transform:uppercase}
-  .dock-btn:hover{color:#fff;background:rgba(0,229,255,.07);transform:translateX(2px)}
+  .dock-btn span{font-family:'Michroma';font-size:6.8px;letter-spacing:.1em;text-transform:uppercase}
+  .dock-btn:hover{color:#fff;background:rgba(0,229,255,.07)}
   .dock-btn:hover svg{filter:drop-shadow(0 0 6px rgba(0,229,255,.6))}
-  .dock-btn.on{color:var(--cyan);border-left-color:var(--cyan);background:rgba(0,229,255,.1)}
+  .dock-btn.on{color:var(--cyan);border-top-color:var(--cyan);background:rgba(0,229,255,.1)}
   .dock-btn.on svg{filter:drop-shadow(0 0 8px rgba(0,229,255,.7))}
   .dock-btn:focus-visible{outline:1px solid var(--cyan);outline-offset:-3px}
-  .ndot{position:absolute;top:7px;right:11px;width:7px;height:7px;border-radius:50%;background:var(--warn);
+  .ndot{position:absolute;top:6px;right:9px;width:7px;height:7px;border-radius:50%;background:var(--warn);
     box-shadow:0 0 8px rgba(255,200,92,.7);animation:ndot 1.8s ease-in-out infinite}
   @keyframes ndot{50%{opacity:.35}}
   /* estados del menú: abierta (cian) · minimizada (ámbar) */
-  .dock-btn.on::after,.dock-btn.minz::after{content:"";position:absolute;right:6px;top:50%;transform:translateY(-50%);
+  .dock-btn.on::after,.dock-btn.minz::after{content:"";position:absolute;left:50%;bottom:5px;transform:translateX(-50%);
     width:5px;height:5px;border-radius:50%}
   .dock-btn.on::after{background:var(--cyan);box-shadow:0 0 8px rgba(0,229,255,.8)}
-  .dock-btn.minz{color:var(--warn);border-left-color:var(--warn);background:rgba(255,200,92,.06)}
+  .dock-btn.minz{color:var(--warn);border-top-color:var(--warn);background:rgba(255,200,92,.06)}
   .dock-btn.minz svg{filter:drop-shadow(0 0 6px rgba(255,200,92,.5))}
   .dock-btn.minz::after{background:var(--warn);box-shadow:0 0 8px rgba(255,200,92,.8)}
   /* pasar el mouse por el botón ilumina su ventana: la conexión ventana↔menú, visible */
@@ -129,10 +130,10 @@
   .prow .v{text-align:right;font-size:11.5px;color:var(--muted)}
   /* botones de sistema: ayuda · pantalla completa · salir */
   #sysbar{top:14px;right:16px;display:flex;gap:6px;z-index:21}
-  .sys-btn{width:32px;height:32px;background:var(--glass-2);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  .sys-btn{width:38px;height:38px;background:var(--glass-2);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
     border:1px solid var(--edge-soft);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;
     font-family:'JetBrains Mono';font-size:13px;transition:color .12s,border-color .12s,box-shadow .12s}
-  .sys-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .sys-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
   .sys-btn:hover{color:var(--cyan);border-color:var(--edge);box-shadow:0 0 10px rgba(0,229,255,.2)}
   .sys-btn.exit:hover{color:var(--hostile);border-color:rgba(255,61,110,.5);box-shadow:0 0 10px rgba(255,61,110,.25)}
   #zone{top:56px;right:16px;width:252px;padding:12px 16px}
@@ -433,11 +434,9 @@
   </button>
 </nav>
 
-<!-- bandeja de paneles del HUD minimizados -->
-<nav class="hud" id="htray" aria-label="Paneles minimizados"></nav>
-
 <!-- el menú completo del juego: todas las ventanas, abiertas o cerradas -->
-<nav class="hud" id="dock" aria-label="Menú de ventanas">
+<div class="hud" id="topleft">
+<nav id="dock" aria-label="Menú de ventanas">
   <div class="dock-cap">Menú</div>
   <button class="dock-btn" data-win="hangar" title="Hangar [H]"><svg><use href="#i-ship"/></svg><span>Hangar</span></button>
   <button class="dock-btn" data-stub="Almacén" data-icon="i-store" title="Almacén"><svg><use href="#i-store"/></svg><span>Almacén</span></button>
@@ -452,6 +451,9 @@
   <button class="dock-btn" data-stub="Mapa Estelar" data-icon="i-map" title="Mapa Estelar"><svg><use href="#i-map"/></svg><span>Mapa</span></button>
   <button class="dock-btn" data-stub="Ajustes" data-icon="i-gear" title="Ajustes"><svg><use href="#i-gear"/></svg><span>Ajustes</span></button>
 </nav>
+<!-- bandeja de paneles del HUD minimizados -->
+<nav id="htray" aria-label="Paneles minimizados"></nav>
+</div>
 
 <section class="hud glass" id="pilot" aria-label="Piloto">
   <button class="pmin" data-pmin aria-label="Minimizar panel">–</button>
