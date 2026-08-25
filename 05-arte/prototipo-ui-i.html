@@ -84,14 +84,20 @@
     background:linear-gradient(90deg, transparent, rgba(0,229,255,.1));text-transform:uppercase}
   .dock-sep{width:1px;margin:10px 4px;background:var(--edge-soft)}
   .dock-btn{
-    width:58px;height:64px;border:none;border-top:2px solid transparent;cursor:pointer;
+    width:50px;height:50px;border:none;border-top:2px solid transparent;cursor:pointer;
     background:transparent;color:#A9B6CC;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+    display:flex;align-items:center;justify-content:center;
     position:relative;transition:color .14s,background .14s;
   }
   .dock-btn svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;
     filter:drop-shadow(0 0 6px rgba(0,229,255,0));transition:filter .14s}
-  .dock-btn span{font-family:'Michroma';font-size:6.8px;letter-spacing:.1em;text-transform:uppercase}
+  /* solo iconos: el nombre (localizable) vive en un tooltip, nunca en el layout */
+  .dock-btn span{display:none}
+  .dock-btn::before{content:attr(title);position:absolute;top:54px;left:50%;transform:translateX(-50%);
+    font-family:'Michroma';font-size:7.5px;letter-spacing:.14em;color:var(--cyan);text-transform:uppercase;
+    background:rgba(10,13,24,.92);border:1px solid var(--edge-soft);padding:4px 8px;white-space:nowrap;
+    opacity:0;pointer-events:none;transition:opacity .12s;z-index:6}
+  .dock-btn:hover::before{opacity:1}
   .dock-btn:hover{color:#fff;background:rgba(0,229,255,.07)}
   .dock-btn:hover svg{filter:drop-shadow(0 0 6px rgba(0,229,255,.6))}
   .dock-btn:focus-visible{outline:1px solid var(--cyan);outline-offset:-3px}
