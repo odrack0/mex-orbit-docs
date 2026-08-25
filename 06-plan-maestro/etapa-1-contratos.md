@@ -23,9 +23,9 @@ Tres entregables, cada uno con documento propio en el repo que le corresponde:
 
 ## Iteraciones
 
-1. **I1 — Los tres documentos** (esta): investigación del prototipo/legado → redacción → revisión del usuario. Entregable observable: los tres docs en sus repos, con push.
-2. **I2 — Spike de codegen**: prototipo mínimo del generador (una definición → C# + GDScript compilando con 3 mensajes de muestra) para decidir protobuf vs esquema propio con evidencia. Entregable: el spike corriendo + decisión registrada en el doc del protocolo.
-3. **I3 — Migración viva**: aplicar `2026.08.25.1` a un MySQL limpio de dev, verificar rollout→rollback→rollout. Entregable: registro de la corrida en el doc del esquema.
+1. ✅ **I1 — Los tres documentos** (2026-08-25): los tres docs en sus repos, con push. Pendiente la revisión del usuario.
+2. ✅ **I2 — Spike de codegen** (2026-08-25): ambas rutas alcanzaron roundtrip byte-exacto C#↔GDScript; **decisión: esquema propio**, porque rangos y rate limits viven en el contrato (inexpresables en protobuf). Evidencia reproducible en `mex-orbit-protocol/spike/README.md`.
+3. **I3 — Migración viva**: aplicar `2026.08.25.1` al MySQL local de dev (`mexorbit_dev`), verificar rollout→rollback→rollout. Requiere credenciales del MySQL local del usuario. Entregable: registro de la corrida en el doc del esquema.
 
 ## Fuera de alcance (E3+)
 
