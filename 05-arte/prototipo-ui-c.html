@@ -1,0 +1,614 @@
+<title>MexOrbit Carbon</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  /* ============ PROPUESTA C — "CARBON": brutalismo industrial NASA-punk. Tema único oscuro ============ */
+  :root{
+    --bg:#0F1011;
+    --panel:#17181A;
+    --panel-2:#1E2023;
+    --ink:#EDEFF2;          /* texto principal: casi blanco */
+    --muted:#8A8F98;
+    --faint:#54585F;
+    --line:#2E3136;
+    --volt:#D8FF3A;         /* alta visibilidad — lo interactivo, lo tuyo */
+    --volt-ink:#0F1011;
+    --hp:#58D97B;
+    --shield:#4A9EFF;
+    --hostile:#FF5252;
+    --warn:#FFB03A;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--ink);font-family:'Archivo',system-ui,sans-serif;font-size:14px;overflow:hidden}
+  .mono{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums}
+  .xp{font-family:'Archivo';font-stretch:125%;font-weight:800;text-transform:uppercase}
+  .lbl{font-family:'Archivo';font-stretch:110%;font-weight:700;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+  /* ============ ESCENA ============ */
+  #scene{position:fixed;inset:0;z-index:0}
+  #stars{position:absolute;inset:0;width:100%;height:100%}
+  .vig{position:absolute;inset:0;background:radial-gradient(90% 90% at 50% 45%, transparent 55%, rgba(0,0,0,.5))}
+  .ship{position:absolute;filter:drop-shadow(0 4px 10px rgba(0,0,0,.6))}
+  #playerShip{left:45%;top:53%}
+  #enemyShip{left:63%;top:28%}
+  .tbrack{position:absolute;left:59.6%;top:22.8%;width:140px;height:140px;pointer-events:none}
+
+  /* ============ PANEL: opaco, borde 2px, etiqueta de cinta ============ */
+  .hud{position:fixed;z-index:10}
+  .panel{background:var(--panel);border:2px solid var(--line)}
+  .tape{ /* etiqueta superior tipo cinta de equipo */
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--line);color:var(--ink);
+    font-family:'Archivo';font-stretch:115%;font-weight:800;font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+    padding:4px 10px;margin:-2px 0 0 -2px;
+  }
+  .tape .idx{color:var(--volt)}
+  .pad{padding:12px 14px 14px}
+
+  /* barras: gruesas, sin glow */
+  .bar{height:10px;background:var(--bg);border:1px solid var(--line);position:relative}
+  .bar i{display:block;height:100%}
+  .bar.hp i{background:var(--hp)} .bar.sh i{background:var(--shield)}
+  .bar.en i{background:var(--volt)} .bar.hostile i{background:var(--hostile)}
+  .bar .ticks{position:absolute;inset:0;background:repeating-linear-gradient(90deg, transparent 0 24%, rgba(15,16,17,.55) 24% 25%)}
+
+  /* ============ TOP STRIP ============ */
+  #top{top:0;left:0;right:0;display:flex;align-items:stretch;background:var(--panel);border-bottom:2px solid var(--line);z-index:20}
+  #brand{display:flex;flex-direction:column;justify-content:center;padding:10px 18px;border-right:2px solid var(--line)}
+  #brand .xp{font-size:15px;letter-spacing:.06em}
+  #brand .xp b{color:var(--volt)}
+  #brand small{font-size:7.5px;letter-spacing:.3em;color:var(--faint);text-transform:uppercase;font-weight:700}
+  .wcell{display:flex;flex-direction:column;justify-content:center;padding:0 20px;border-right:1px solid var(--line);line-height:1.25}
+  .wcell b{font-family:'IBM Plex Mono';font-weight:600;font-size:14px}
+  #menu{margin-left:auto;display:flex}
+  .mbtn{
+    border:none;border-left:2px solid var(--line);background:var(--panel);cursor:pointer;
+    color:var(--muted);font-family:'Archivo';font-stretch:115%;font-weight:800;font-size:10px;
+    letter-spacing:.14em;text-transform:uppercase;padding:0 22px;transition:background .12s,color .12s;
+  }
+  .mbtn:hover{color:var(--ink)}
+  .mbtn.on{background:var(--volt);color:var(--volt-ink)}
+  .mbtn:focus-visible{outline:2px solid var(--volt);outline-offset:-4px}
+  .mbtn small{display:block;font-size:7px;color:inherit;opacity:.6;letter-spacing:.2em}
+
+  /* ============ PILOTO ============ */
+  #pilot{top:66px;left:14px;width:296px}
+  #pilot h1{font-family:'Archivo';font-stretch:120%;font-weight:800;font-size:16px;letter-spacing:.03em;text-transform:uppercase}
+  #pilot h1 span{color:var(--volt)}
+  .prow{display:grid;grid-template-columns:54px 1fr 80px;gap:10px;align-items:center;margin-top:10px}
+  .prow .v{text-align:right;font-size:12px;color:var(--muted)}
+
+  /* ============ ZONA / OBJETIVO ============ */
+  #zone{top:66px;right:14px;width:258px}
+  .hazard{ /* franja de peligro industrial */
+    margin-top:10px;border:2px solid var(--hostile);padding:7px 10px;
+    font-family:'Archivo';font-stretch:115%;font-weight:800;font-size:10px;letter-spacing:.1em;color:var(--hostile);
+    background:repeating-linear-gradient(-45deg, rgba(255,82,82,.12) 0 10px, transparent 10px 20px);
+  }
+  #zone .evt{margin-top:8px;font-size:12px;color:var(--muted)}
+  #zone .evt b{color:var(--warn)}
+  #target{top:206px;right:14px;width:258px}
+  #target h2{font-family:'Archivo';font-stretch:120%;font-weight:800;font-size:14px;text-transform:uppercase;color:var(--hostile)}
+  #target .trow{display:grid;grid-template-columns:1fr 74px;gap:8px;align-items:center;margin-top:8px}
+  #target .trow .v{text-align:right;font-size:11px;color:var(--muted)}
+
+  /* ============ PLANOS ============ */
+  #planos{top:296px;left:14px;width:212px}
+  .plano{margin-top:10px}
+  .plano .r{display:flex;justify-content:space-between;align-items:baseline}
+  .plano .nm{font-family:'Archivo';font-stretch:118%;font-weight:800;font-size:11px;letter-spacing:.06em}
+  .pips{display:flex;gap:2px;margin-top:5px}
+  .pip{flex:1;height:6px;background:var(--bg);border:1px solid var(--line)}
+  .pip.f{background:var(--volt);border-color:var(--volt)}
+
+  /* ============ CHAT ============ */
+  #chat{bottom:14px;left:14px;width:330px;font-size:12.5px}
+  #chat .msg{margin-top:5px;line-height:1.45}
+  #chat .ch{color:var(--faint)} #chat .who{color:var(--warn)} #chat .sys{color:var(--volt)}
+
+  /* ============ ACTION BAR: celdas cuadradas con índice ============ */
+  #actions{bottom:14px;left:50%;transform:translateX(-50%);display:flex;z-index:12;border:2px solid var(--line);background:var(--panel)}
+  .cell{
+    width:60px;height:62px;border:none;border-right:1px solid var(--line);background:var(--panel);
+    cursor:pointer;color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    position:relative;transition:background .12s;
+  }
+  .cell:last-child{border-right:none}
+  .cell:hover{background:var(--panel-2)}
+  .cell:focus-visible{outline:2px solid var(--volt);outline-offset:-4px}
+  .cell .code{font-family:'Archivo';font-stretch:115%;font-weight:800;font-size:10px;letter-spacing:.03em}
+  .cell .n{font-family:'IBM Plex Mono';font-size:10px;color:var(--muted)}
+  .cell .key{position:absolute;top:3px;left:5px;font-size:8px;color:var(--faint);font-family:'IBM Plex Mono'}
+  .cell.sel{background:var(--volt);color:var(--volt-ink)}
+  .cell.sel .n{color:rgba(15,16,17,.7)}
+  .cell.gap{width:10px;background:var(--bg);pointer-events:none;border-right:1px solid var(--line)}
+  .cell.cd::after{content:"";position:absolute;left:0;right:0;bottom:0;height:58%;background:rgba(15,16,17,.75)}
+
+  /* ============ MINIMAPA ============ */
+  #mapwrap{bottom:14px;right:14px;width:226px}
+  #minimap{width:100%;height:148px;display:block;background:var(--bg);border-top:1px solid var(--line)}
+
+  /* ============ VENTANAS ============ */
+  .win{position:fixed;z-index:30;display:none;flex-direction:column;background:var(--panel);border:2px solid var(--ink);
+    box-shadow:10px 10px 0 rgba(0,0,0,.45)}
+  .win.open{display:flex}
+  .win-h{display:flex;align-items:center;gap:14px;padding:0;border-bottom:2px solid var(--ink)}
+  .win-h h2{font-family:'Archivo';font-stretch:125%;font-weight:900;font-size:15px;letter-spacing:.05em;text-transform:uppercase;
+    background:var(--ink);color:var(--bg);padding:10px 18px}
+  .win-h .sub{font-size:11px;color:var(--muted)}
+  .win-h button{margin-left:auto;background:none;border:none;border-left:2px solid var(--line);color:var(--muted);
+    font-family:'IBM Plex Mono';font-size:14px;width:42px;align-self:stretch;cursor:pointer}
+  .win-h button:hover{background:var(--hostile);color:var(--ink)}
+  .win-b{padding:16px;overflow:auto}
+  .btn{
+    font-family:'Archivo';font-stretch:118%;font-weight:800;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    background:var(--volt);color:var(--volt-ink);border:2px solid var(--volt);padding:10px 20px;cursor:pointer;
+    transition:filter .12s;
+  }
+  .btn:hover{filter:brightness(1.08)}
+  .btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+  .btn.ghost{background:none;color:var(--ink);border-color:var(--line)}
+  .btn.ghost:hover{border-color:var(--ink);filter:none}
+  .btn.danger{background:none;color:var(--hostile);border-color:var(--hostile)}
+  .btn[disabled]{background:none;color:var(--faint);border-color:var(--line);pointer-events:none}
+
+  /* --- MATERIALIZADOR --- */
+  #win-mat{top:66px;left:50%;transform:translateX(-50%);width:920px;max-width:97vw}
+  .mat-grid{display:grid;grid-template-columns:270px 1fr 250px;gap:14px}
+  #machine{border:2px solid var(--line);padding:14px;display:flex;flex-direction:column;align-items:center;gap:12px}
+  #core{width:168px;height:168px;position:relative;display:flex;align-items:center;justify-content:center;border:2px solid var(--line);border-radius:50%}
+  #core .flux{font-family:'IBM Plex Mono';font-weight:600;font-size:30px}
+  #core .flbl{position:absolute;bottom:28px;font-size:8px;letter-spacing:.3em;color:var(--muted);font-weight:800;text-transform:uppercase}
+  #core .ring2{position:absolute;inset:10px;border:1px dashed var(--faint);border-radius:50%}
+  .spin-row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+  #machine .note{font-size:11px;color:var(--muted);text-align:center;line-height:1.5}
+  #machine .note b{color:var(--ink)}
+  .ecl-tabs{display:flex;border:2px solid var(--line);margin-bottom:12px}
+  .ecl-tab{flex:1;padding:10px;border:none;border-right:1px solid var(--line);background:var(--panel);cursor:pointer;
+    font-family:'Archivo';font-stretch:118%;font-weight:800;font-size:10px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+  .ecl-tab:last-child{border-right:none}
+  .ecl-tab.on{background:var(--ink);color:var(--bg)}
+  #gate-view{border:2px solid var(--line);padding:16px;text-align:center}
+  #gate-view h3{font-family:'Archivo';font-stretch:125%;font-weight:900;font-size:20px;letter-spacing:.04em;text-transform:uppercase}
+  #gate-view .tier{font-size:10px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;font-weight:700;margin-top:2px}
+  #ringwrap{width:190px;height:190px;margin:12px auto;position:relative}
+  #ringwrap svg{width:100%;height:100%;transform:rotate(-90deg)}
+  #ringwrap .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+  #ringwrap .ctr b{font-family:'IBM Plex Mono';font-weight:600;font-size:24px}
+  #gate-view .gsub{font-size:12px;color:var(--muted)}
+  #gate-view .gsub b{color:var(--ink)}
+  #matlog{border:2px solid var(--line);padding:12px;display:flex;flex-direction:column}
+  #matlog ul{list-style:none;display:flex;flex-direction:column;gap:5px;margin-top:10px;font-size:12px;max-height:300px;overflow:auto}
+  #matlog li{display:flex;justify-content:space-between;gap:8px;padding:6px 8px;background:var(--bg);border-left:3px solid var(--line)}
+  #matlog li.pieza{border-left-color:var(--volt)}
+  #matlog li.sub{color:var(--muted)}
+  #matlog li .t{font-family:'IBM Plex Mono';font-size:10px;color:var(--faint)}
+  .odds{margin-top:10px;font-size:10.5px;color:var(--faint);line-height:1.6}
+  .odds b{color:var(--muted)}
+
+  /* --- HANGAR --- */
+  #win-hangar{top:82px;left:50%;transform:translateX(-50%);width:740px;max-width:95vw}
+  .hgrid{display:grid;grid-template-columns:250px 1fr;gap:14px}
+  #shipbox{border:2px solid var(--line);padding:16px;display:flex;flex-direction:column;align-items:center;gap:8px}
+  #shipbox .nm{font-family:'Archivo';font-stretch:125%;font-weight:900;font-size:19px;text-transform:uppercase}
+  #shipbox .cls{font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-weight:700}
+  .sgrid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}
+  .sslot{aspect-ratio:1;background:var(--bg);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+    font-family:'Archivo';font-stretch:110%;font-weight:800;font-size:8.5px;cursor:pointer}
+  .sslot:hover{border-color:var(--muted)}
+  .sslot.x{border-color:var(--shield);color:var(--shield)}
+  .sec{margin-top:12px}
+  .sec .lbl{display:flex;justify-content:space-between;margin-bottom:6px}
+  .dur{display:flex;align-items:center;gap:10px;margin-top:14px;padding:10px 12px;border:2px solid var(--warn);font-size:12px;
+    background:repeating-linear-gradient(-45deg, rgba(255,176,58,.07) 0 10px, transparent 10px 20px)}
+  .dur b{color:var(--warn)}
+
+  /* --- MERCADO --- */
+  #win-market{top:80px;left:50%;transform:translateX(-50%);width:850px;max-width:96vw}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{font-family:'Archivo';font-stretch:115%;font-weight:800;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+    text-align:left;padding:8px 10px;border-bottom:2px solid var(--ink)}
+  td{padding:9px 10px;border-bottom:1px solid var(--line)}
+  td.num,th.num{text-align:right}
+  tr.row:hover td{background:var(--panel-2)}
+  .inm{font-weight:700}
+  .inm small{display:block;font-weight:400;font-size:10.5px;color:var(--faint)}
+  .buy{color:var(--hp)} .sell{color:var(--hostile)}
+
+  /* --- KILLSCREEN --- */
+  #kill{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;background:rgba(15,16,17,.88)}
+  #kill.open{display:flex}
+  #kill .card{width:540px;max-width:92vw;background:var(--panel);border:3px solid var(--hostile);box-shadow:12px 12px 0 rgba(0,0,0,.5)}
+  #kill h2{font-family:'Archivo';font-stretch:125%;font-weight:900;font-size:26px;letter-spacing:.04em;color:var(--bg);
+    background:var(--hostile);padding:16px 20px;text-transform:uppercase;text-align:center}
+  #kill .by{text-align:center;font-size:12.5px;color:var(--muted);padding:12px;border-bottom:1px solid var(--line)}
+  #kill .by b{color:var(--ink)}
+  .k-body{padding:16px 24px 22px;display:flex;flex-direction:column;gap:13px}
+  .k-row{display:flex;justify-content:space-between;gap:10px;font-size:13px}
+  .k-row .k{color:var(--muted)} .k-row .v{text-align:right}
+  .blackbox{padding:12px 14px;border:2px dashed var(--warn);font-size:12.5px;line-height:1.55}
+  .blackbox b{color:var(--warn)}
+  .blackbox .cd{font-family:'IBM Plex Mono';color:var(--ink);font-weight:600}
+  .k-actions{display:flex;gap:10px;justify-content:center;margin-top:2px}
+
+  /* --- LOGIN --- */
+  #login{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:30px;background:var(--bg)}
+  #login.off{display:none}
+  #logo{text-align:center}
+  #logo .xp{font-size:38px;letter-spacing:.02em}
+  #logo .xp b{color:var(--volt)}
+  #logo .rule{width:220px;height:3px;background:var(--volt);margin:12px auto 0}
+  #logo small{display:block;margin-top:10px;font-size:8px;letter-spacing:.34em;color:var(--faint);text-transform:uppercase;font-weight:700}
+  #login .card{width:370px;background:var(--panel);border:2px solid var(--ink);padding:0;box-shadow:10px 10px 0 rgba(0,0,0,.45)}
+  #login .card .tape2{background:var(--ink);color:var(--bg);font-family:'Archivo';font-stretch:120%;font-weight:900;
+    font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:9px 16px}
+  #login .inner{padding:20px 22px;display:flex;flex-direction:column;gap:14px}
+  .field{display:flex;flex-direction:column;gap:5px}
+  .field input{background:var(--bg);border:2px solid var(--line);color:var(--ink);font-family:'IBM Plex Mono');font-size:14px;padding:10px 12px}
+  .field input{font-family:'IBM Plex Mono',monospace}
+  .field input:focus{outline:none;border-color:var(--volt)}
+  #login .status{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
+  #login .status .ok{color:var(--hp);font-weight:700}
+  #login .btn{width:100%;padding:13px}
+  #login .foot{font-size:10px;color:var(--faint);text-align:center}
+
+  #toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:65;
+    font-family:'Archivo';font-stretch:115%;font-weight:800;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    background:var(--volt);color:var(--volt-ink);padding:11px 22px;opacity:0;pointer-events:none;transition:opacity .2s}
+  #toast.show{opacity:1}
+  #note{position:fixed;bottom:3px;left:50%;transform:translateX(-50%);z-index:45;
+    font-size:8px;letter-spacing:.24em;color:var(--faint);text-transform:uppercase;font-weight:700}
+  #devkill{position:fixed;top:70px;right:288px;z-index:15}
+
+  @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+  @media (max-width:960px){#chat,#planos{display:none}.mat-grid{grid-template-columns:1fr}.hgrid{grid-template-columns:1fr}}
+</style>
+
+<!-- ============ ESCENA ============ -->
+<div id="scene" aria-hidden="true">
+  <canvas id="stars"></canvas>
+  <div class="vig"></div>
+  <svg id="playerShip" class="ship" width="110" height="110" viewBox="0 0 100 100">
+    <g transform="rotate(34 50 50)">
+      <path d="M50 6 L60 30 L82 44 L70 52 L74 78 L58 66 L50 92 L42 66 L26 78 L30 52 L18 44 L40 30 Z"
+            fill="#1E2023" stroke="#EDEFF2" stroke-width="1.6"/>
+      <path d="M50 22 L56 40 L50 62 L44 40 Z" fill="#D8FF3A"/>
+      <circle cx="50" cy="46" r="4.5" fill="#4A9EFF"/>
+    </g>
+  </svg>
+  <svg id="enemyShip" class="ship" width="86" height="86" viewBox="0 0 100 100">
+    <g transform="rotate(-14 50 50)">
+      <path d="M50 8 L72 34 L64 70 L50 92 L36 70 L28 34 Z" fill="#201416" stroke="#FF5252" stroke-width="1.6"/>
+      <path d="M50 22 L61 38 L57 62 L50 74 L43 62 L39 38 Z" fill="none" stroke="#FF9C9C" stroke-width="1" opacity=".6"/>
+    </g>
+  </svg>
+  <div class="tbrack">
+    <svg viewBox="0 0 100 100" fill="none" stroke="#FF5252" stroke-width="2.2">
+      <path d="M4 22 V4 H22 M78 4 H96 V22 M96 78 V96 H78 M22 96 H4 V78"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ============ TOP STRIP ============ -->
+<div class="hud" id="top">
+  <div id="brand"><span class="xp">MEX<b>ORBIT</b></span><small>propuesta c · carbon</small></div>
+  <div class="wcell"><span class="lbl">Credits</span><b class="mono">1,245,300</b></div>
+  <div class="wcell"><span class="lbl">Flux</span><b class="mono" style="color:var(--volt)">86</b></div>
+  <div class="wcell"><span class="lbl">License</span><b class="mono" style="color:var(--hp)">23d</b></div>
+  <nav id="menu" aria-label="Ventanas">
+    <button class="mbtn" data-win="hangar">Hangar<small>H</small></button>
+    <button class="mbtn" data-win="market">Mercado<small>M</small></button>
+    <button class="mbtn" data-win="mat">Materializador<small>E</small></button>
+  </nav>
+</div>
+<button class="hud btn ghost" id="devkill" style="font-size:9px;padding:7px 12px">Simular destrucción</button>
+
+<!-- ============ PILOTO ============ -->
+<section class="hud panel" id="pilot" aria-label="Piloto">
+  <span class="tape"><span class="idx">01</span> PILOTO</span>
+  <div class="pad">
+    <h1>ODRACK <span>· ORION</span></h1>
+    <div class="prow"><span class="lbl">Casco</span><div class="bar hp"><i style="width:88%"></i><span class="ticks"></span></div><span class="v mono">225,280</span></div>
+    <div class="prow"><span class="lbl">Escudo</span><div class="bar sh"><i style="width:64%"></i><span class="ticks"></span></div><span class="v mono">160,000</span></div>
+    <div class="prow"><span class="lbl">Carga</span><div class="bar en"><i style="width:34%"></i><span class="ticks"></span></div><span class="v mono">340/1,000</span></div>
+  </div>
+</section>
+
+<!-- ============ ZONA ============ -->
+<section class="hud panel" id="zone" aria-label="Zona">
+  <span class="tape"><span class="idx">02</span> SECTOR 4-4 · VORAGO</span>
+  <div class="pad">
+    <div class="hazard">RIESGO DE CARGA — 100%</div>
+    <div class="evt">Evento: <b>LA ESCOLTA vs MORDAX</b> <span class="mono">19:42</span></div>
+  </div>
+</section>
+
+<!-- ============ OBJETIVO ============ -->
+<section class="hud panel" id="target" aria-label="Objetivo">
+  <span class="tape"><span class="idx">03</span> OBJETIVO</span>
+  <div class="pad">
+    <h2>VITRON ELITE</h2>
+    <div class="trow"><div class="bar hostile"><i style="width:41%"></i><span class="ticks"></span></div><span class="v mono">82,000</span></div>
+    <div class="trow"><div class="bar sh"><i style="width:23%"></i><span class="ticks"></span></div><span class="v mono">36,800</span></div>
+    <div class="trow" style="grid-template-columns:1fr auto"><span class="lbl">Distancia</span><span class="v mono">412 m</span></div>
+  </div>
+</section>
+
+<!-- ============ PLANOS ============ -->
+<section class="hud panel" id="planos" aria-label="Planos">
+  <span class="tape"><span class="idx">04</span> PLANOS</span>
+  <div class="pad">
+    <div class="plano" style="margin-top:0"><div class="r"><span class="nm">QUASAR</span><span class="mono" style="font-size:11px;color:var(--muted)">7/10</span></div>
+      <div class="pips"><span class="pip f"></span><span class="pip f"></span><span class="pip f"></span><span class="pip f"></span><span class="pip f"></span><span class="pip f"></span><span class="pip f"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></div></div>
+    <div class="plano"><div class="r"><span class="nm">NOVA</span><span class="mono" style="font-size:11px;color:var(--muted)">2/8</span></div>
+      <div class="pips"><span class="pip f"></span><span class="pip f"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></div></div>
+  </div>
+</section>
+
+<!-- ============ CHAT ============ -->
+<section class="hud panel" id="chat" aria-label="Comms">
+  <span class="tape"><span class="idx">05</span> COMMS</span>
+  <div class="pad" style="padding-top:8px">
+    <div class="msg"><span class="ch">[Global]</span> <span class="who">Kaira:</span> vendo Coronium, órdenes arriba del piso</div>
+    <div class="msg"><span class="ch">[Clan]</span> <span class="who">Vex_Hunter:</span> FAUCES en 10, falta Ursa</div>
+    <div class="msg"><span class="sys">◆ El Hexon Titan apareció en 4-5.</span></div>
+  </div>
+</section>
+
+<!-- ============ ACTION BAR ============ -->
+<nav class="hud" id="actions" aria-label="Acciones">
+  <button class="cell"><span class="key">1</span><span class="code">CEL-1</span><span class="n">∞</span></button>
+  <button class="cell sel"><span class="key">2</span><span class="code">CEL-2</span><span class="n">4,180</span></button>
+  <button class="cell"><span class="key">3</span><span class="code">CEL-3</span><span class="n">960</span></button>
+  <button class="cell"><span class="key">4</span><span class="code">CEL-4</span><span class="n">1,240</span></button>
+  <span class="cell gap"></span>
+  <button class="cell"><span class="key">R</span><span class="code">TOR-3</span><span class="n">312</span></button>
+  <span class="cell gap"></span>
+  <button class="cell"><span class="key">Q</span><span class="code" style="color:var(--shield)">SHELL</span><span class="n">×12</span></button>
+  <button class="cell cd"><span class="key">W</span><span class="code">VEIL</span><span class="n">×5</span></button>
+  <button class="cell"><span class="key">X</span><span class="code">WARP</span><span class="n">×2</span></button>
+</nav>
+
+<!-- ============ MINIMAPA ============ -->
+<section class="hud panel" id="mapwrap" aria-label="Minimapa">
+  <span class="tape"><span class="idx">06</span> 4-4 · DISPUTADA</span>
+  <canvas id="minimap" width="222" height="148"></canvas>
+</section>
+
+<!-- ============ VENTANA: MATERIALIZADOR ============ -->
+<div class="win" id="win-mat" role="dialog" aria-label="Materializador">
+  <div class="win-h"><h2>Materializador</h2><span class="sub">generador de Eclipses · límite diario 2/3</span><button data-close aria-label="Cerrar">×</button></div>
+  <div class="win-b">
+    <div class="mat-grid">
+      <div id="machine">
+        <div id="core"><div class="ring2"></div>
+          <div style="text-align:center"><div class="flux mono" id="fluxN">86</div></div>
+          <span class="flbl">FLUX</span>
+        </div>
+        <div class="spin-row">
+          <button class="btn" data-spin="1">×1 · 4</button>
+          <button class="btn ghost" data-spin="5">×5 · 20</button>
+          <button class="btn ghost" data-spin="10">×10 · 40</button>
+        </div>
+        <p class="note">Cada activación: <b>1 pieza garantizada</b> del Eclipse elegido + subproducto de la tabla publicada.</p>
+      </div>
+      <div>
+        <div class="ecl-tabs">
+          <button class="ecl-tab" data-ecl="pen">Penumbra</button>
+          <button class="ecl-tab on" data-ecl="umb">Umbra</button>
+          <button class="ecl-tab" data-ecl="ant">Antumbra</button>
+        </div>
+        <div id="gate-view">
+          <h3 id="gname">UMBRA</h3>
+          <div class="tier" id="gtier">La sombra total · media · T3</div>
+          <div id="ringwrap">
+            <svg viewBox="0 0 100 100" id="ring"></svg>
+            <div class="ctr"><b class="mono" id="gcount">31/52</b><span class="lbl">piezas</span></div>
+          </div>
+          <p class="gsub">Recompensa al entrar: <b id="grew">CEL-4 + OVC-1 + insumos Photon</b></p>
+          <div style="margin-top:12px"><button class="btn" id="enterBtn" disabled>Materializar 21 piezas más</button></div>
+        </div>
+      </div>
+      <div id="matlog">
+        <span class="lbl">Registro</span>
+        <ul id="loglist">
+          <li class="pieza"><span>+1 pieza · UMBRA</span><span class="t">19:31</span></li>
+          <li class="sub"><span>CEL-2 ×40</span><span class="t">19:31</span></li>
+          <li class="pieza"><span>+1 pieza · UMBRA</span><span class="t">19:30</span></li>
+          <li class="sub"><span>SHELL-C ×1</span><span class="t">19:30</span></li>
+          <li class="sub"><span>Fuel ×60</span><span class="t">19:28</span></li>
+          <li class="pieza"><span>+1 pieza · UMBRA</span><span class="t">19:28</span></li>
+        </ul>
+        <p class="odds">Subproductos (tabla publicada): <b>munición 62%</b> · <b>Cargas 18%</b> · <b>Fuel 12%</b> · <b>partículas 8%</b></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ VENTANA: HANGAR ============ -->
+<div class="win" id="win-hangar" role="dialog" aria-label="Hangar">
+  <div class="win-h"><h2>Hangar</h2><span class="sub">ORION · nave de batalla · 15/15/3</span><button data-close aria-label="Cerrar">×</button></div>
+  <div class="win-b">
+    <div class="hgrid">
+      <div id="shipbox">
+        <svg width="128" height="128" viewBox="0 0 100 100" aria-hidden="true">
+          <path d="M50 4 L61 29 L85 44 L71 53 L76 82 L58 68 L50 96 L42 68 L24 82 L29 53 L15 44 L39 29 Z" fill="#1E2023" stroke="#EDEFF2" stroke-width="1.8"/>
+          <path d="M50 20 L57 40 L50 64 L43 40 Z" fill="#D8FF3A"/>
+          <circle cx="50" cy="45" r="5" fill="#4A9EFF"/>
+        </svg>
+        <div class="nm">ORION</div><div class="cls">El buque insignia</div>
+        <div style="width:100%;display:flex;flex-direction:column;gap:8px;margin-top:6px">
+          <div class="prow" style="grid-template-columns:40px 1fr 72px"><span class="lbl">HP</span><div class="bar hp"><i style="width:100%"></i><span class="ticks"></span></div><span class="v mono">256,000</span></div>
+          <div class="prow" style="grid-template-columns:40px 1fr 72px"><span class="lbl">Vel</span><div class="bar sh"><i style="width:62%"></i><span class="ticks"></span></div><span class="v mono">300</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="sec" style="margin-top:0"><div class="lbl"><span>Láseres · 15</span><span class="mono" style="letter-spacing:0;font-size:10px;text-transform:none">PB-3 ×15 · Tachyon 84%</span></div>
+          <div class="sgrid">
+            <div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div>
+            <div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div><div class="sslot">PB3</div>
+          </div></div>
+        <div class="sec"><div class="lbl"><span>Generadores · 15</span><span class="mono" style="letter-spacing:0;font-size:10px;text-transform:none">DF-B2 ×11 · ION-6 ×4</span></div>
+          <div class="sgrid">
+            <div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">DFB2</div>
+            <div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">DFB2</div><div class="sslot">ION6</div><div class="sslot">ION6</div><div class="sslot">ION6</div><div class="sslot">ION6</div>
+          </div></div>
+        <div class="sec"><div class="lbl"><span>Extras · 3</span></div>
+          <div class="sgrid"><div class="sslot x">SHELL</div><div class="sslot x">VEIL</div><div class="sslot x">WARPX</div></div></div>
+        <div class="dur">⚠ Durabilidad <b>91%</b> · reparación <span class="mono">12,400 Credits</span>
+          <button class="btn" style="margin-left:auto" data-toast="Equipo reparado · −12,400 Credits">Reparar</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ VENTANA: MERCADO ============ -->
+<div class="win" id="win-market" role="dialog" aria-label="Mercado">
+  <div class="win-h"><h2>Mercado</h2><span class="sub">órdenes de compra y venta · global · comisión 5%</span><button data-close aria-label="Cerrar">×</button></div>
+  <div class="win-b">
+    <div style="overflow-x:auto">
+    <table>
+      <thead><tr><th>Item</th><th class="num">Compra</th><th class="num">Venta</th><th class="num">Piso NPC</th><th class="num">Vol. diario</th><th></th></tr></thead>
+      <tbody>
+        <tr class="row"><td><span class="inm">Coronium<small>crudo · zona disputada</small></span></td><td class="num mono buy">74</td><td class="num mono sell">81</td><td class="num mono" style="color:var(--faint)">25</td><td class="num mono" style="color:var(--muted)">12,800</td><td><button class="btn ghost" data-toast="Orden de venta · 500 Coronium @ 80">Vender</button></td></tr>
+        <tr class="row"><td><span class="inm">Tachyon<small>ápice · cae de Titans</small></span></td><td class="num mono buy">9,200</td><td class="num mono sell">9,850</td><td class="num mono" style="color:var(--faint)">6,000</td><td class="num mono" style="color:var(--muted)">410</td><td><button class="btn ghost" data-toast="Orden de compra · 10 Tachyon @ 9,500">Comprar</button></td></tr>
+        <tr class="row"><td><span class="inm">Plano Quasar<small>legendario · incursiones</small></span></td><td class="num mono buy">86,000</td><td class="num mono sell">94,000</td><td class="num mono" style="color:var(--faint)">—</td><td class="num mono" style="color:var(--muted)">36</td><td><button class="btn ghost" data-toast="Orden de compra · 1 Plano Quasar @ 90,000">Comprar</button></td></tr>
+        <tr class="row"><td><span class="inm" style="color:var(--volt)">Starbond<small>canjea Star License · un salto</small></span></td><td class="num mono buy">418,000</td><td class="num mono sell">431,000</td><td class="num mono" style="color:var(--faint)">fijo</td><td class="num mono" style="color:var(--muted)">9</td><td><button class="btn" data-toast="Starbond comprado · −431,000 Credits">Comprar</button></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============ KILLSCREEN ============ -->
+<div id="kill" role="dialog" aria-label="Nave destruida">
+  <div class="card">
+    <h2>Nave destruida</h2>
+    <p class="by">Tu ORION cayó ante <b>VITRON ELITE</b> · sector 4-4 · <span class="mono">19:47:12</span></p>
+    <div class="k-body">
+      <div class="k-row"><span class="k">Zona disputada — carga soltada</span><span class="v mono" style="color:var(--hostile)">100%</span></div>
+      <div class="blackbox">◆ Tu <b>Black Box</b> quedó en el sitio con <b>210 Coronium · 40 Aurorium · 2 SHELL-C</b>.<br>
+        Desaparece en <span class="cd" id="bbTimer">2:43</span> — quien llegue primero, la reclama.</div>
+      <div class="k-row"><span class="k">Desgaste del equipo</span><span class="v mono">−2% · factura 12,400 Credits</span></div>
+      <div class="k-row"><span class="k">Reaparición</span><span class="v" style="color:var(--hp)">Gratis e instantánea, en tu base</span></div>
+      <div class="k-actions">
+        <button class="btn" data-respawn>Reaparecer en base</button>
+        <button class="btn danger" data-toast="Rumbo a tu Black Box — suerte, piloto" data-respawn>Volver por la Black Box</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LOGIN ============ -->
+<div id="login">
+  <div id="logo"><span class="xp">MEX<b>ORBIT</b></span><div class="rule"></div><small>nombre temporal · prototipo c</small></div>
+  <div class="card">
+    <div class="tape2">Acceso de piloto</div>
+    <div class="inner">
+      <div class="field"><span class="lbl">Piloto</span><input type="text" value="odrack" autocomplete="username"></div>
+      <div class="field"><span class="lbl">Contraseña</span><input type="password" value="········" autocomplete="current-password"></div>
+      <div class="status"><span>Servidor: <span class="ok">EN LÍNEA</span></span><span class="mono">147 pilotos · v0.1</span></div>
+      <button class="btn" id="connect">Conectar</button>
+      <p class="foot">Temporada 1 activa · próxima Escolta 19:42</p>
+    </div>
+  </div>
+</div>
+
+<div id="toast" role="status"></div>
+<div id="note">Propuesta C · Carbon · militar-espacial 2026 · valores simulados</div>
+
+<script>
+  // ---- Starfield (estático con titileo mínimo — el brutalismo no flota) ----
+  const cv=document.getElementById('stars'),cx=cv.getContext('2d');
+  let W,H,stars=[];const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;
+    stars=Array.from({length:200},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.2+.2,tw:Math.random()*6.3}));}
+  addEventListener('resize',resize);resize();
+  (function draw(t){cx.clearRect(0,0,W,H);
+    for(const s of stars){cx.globalAlpha=reduced? .5 : .3+.4*Math.abs(Math.sin((t||0)/2000+s.tw));
+      cx.fillStyle=s.r>0.9?'#EDEFF2':'#8A8F98';cx.beginPath();cx.arc(s.x,s.y,s.r,0,7);cx.fill();}
+    cx.globalAlpha=1;requestAnimationFrame(draw);})();
+
+  // ---- Minimapa ----
+  const mm=document.getElementById('minimap').getContext('2d');
+  mm.strokeStyle='rgba(138,143,152,.15)';
+  for(let x=0;x<=222;x+=28){mm.beginPath();mm.moveTo(x,0);mm.lineTo(x,148);mm.stroke();}
+  for(let y=0;y<=148;y+=28){mm.beginPath();mm.moveTo(0,y);mm.lineTo(222,y);mm.stroke();}
+  const dot=(x,y,c,r=2.4)=>{mm.fillStyle=c;mm.beginPath();mm.arc(x,y,r,0,7);mm.fill();};
+  dot(122,76,'#D8FF3A',3.2);dot(146,50,'#FF5252');dot(162,60,'#FF5252');dot(42,110,'#FF5252');
+  dot(64,30,'#4A9EFF');dot(84,120,'#4A9EFF');dot(20,20,'#FFB03A',2.6);
+  mm.strokeStyle='rgba(216,255,58,.6)';mm.lineWidth=1.5;mm.strokeRect(96,54,54,42);
+
+  // ---- Anillo de piezas ----
+  const ring=document.getElementById('ring');
+  const gates={pen:{n:'PENUMBRA',tier:'La sombra parcial · entrada · T2',total:24,have:24,rew:'CEL-4 + insumos Ion',color:'#9AA6B4'},
+               umb:{n:'UMBRA',tier:'La sombra total · media · T3',total:52,have:31,rew:'CEL-4 + OVC-1 + insumos Photon',color:'#D8FF3A'},
+               ant:{n:'ANTUMBRA',tier:'Más allá de la sombra · alta · T3',total:86,have:4,rew:'CEL-4 + OVC-1 ++ · insumos Boson',color:'#FFB03A'}};
+  function drawRing(g){
+    let s='';const R=44,C=50,gap=1.8,seg=360/g.total;
+    for(let i=0;i<g.total;i++){
+      const a0=(i*seg+gap/2)*Math.PI/180,a1=((i+1)*seg-gap/2)*Math.PI/180;
+      const x0=C+R*Math.cos(a0),y0=C+R*Math.sin(a0),x1=C+R*Math.cos(a1),y1=C+R*Math.sin(a1);
+      s+=`<path d="M${x0.toFixed(1)} ${y0.toFixed(1)} A${R} ${R} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}" stroke="${i<g.have?g.color:'#2E3136'}" stroke-width="7" fill="none"/>`;
+    }
+    ring.innerHTML=s;
+    const el=id=>document.getElementById(id);
+    el('gname').textContent=g.n;el('gname').style.color=g.color;
+    el('gtier').textContent=g.tier;el('gcount').textContent=g.have+'/'+g.total;el('grew').textContent=g.rew;
+    const btn=el('enterBtn');
+    if(g.have>=g.total){btn.disabled=false;btn.textContent='ENTRAR AL '+g.n;}
+    else{btn.disabled=true;btn.textContent='Materializar '+(g.total-g.have)+' piezas más';}
+  }
+  let cur='umb';drawRing(gates.umb);
+  document.querySelectorAll('.ecl-tab').forEach(t=>t.addEventListener('click',()=>{
+    document.querySelectorAll('.ecl-tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');
+    cur=t.dataset.ecl;drawRing(gates[cur]);}));
+
+  // ---- Materializar ----
+  let flux=86;const fluxN=document.getElementById('fluxN'),log=document.getElementById('loglist');
+  const subs=['CEL-2 ×40','CEL-3 ×12','DRN-1 ×25','SHELL-C ×1','SHOCK-C ×1','VEIL-C ×1','Fuel ×60','Ion ×3','Photon ×2'];
+  document.querySelectorAll('[data-spin]').forEach(b=>b.addEventListener('click',()=>{
+    const n=+b.dataset.spin,cost=n*4,g=gates[cur];
+    if(flux<cost||g.have>=g.total){showToast(flux<cost?'Flux insuficiente':'Eclipse completo');return;}
+    flux-=cost;fluxN.textContent=flux;
+    const now=new Date(),t=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+    for(let i=0;i<n&&g.have<g.total;i++){g.have++;
+      log.insertAdjacentHTML('afterbegin',`<li class="pieza"><span>+1 pieza · ${g.n}</span><span class="t">${t}</span></li>`);
+      log.insertAdjacentHTML('afterbegin',`<li class="sub"><span>${subs[Math.floor(Math.random()*subs.length)]}</span><span class="t">${t}</span></li>`);}
+    drawRing(g);while(log.children.length>14)log.lastElementChild.remove();
+  }));
+
+  // ---- Ventanas ----
+  const tasks=[...document.querySelectorAll('.mbtn')];
+  const wins={hangar:g2('win-hangar'),market:g2('win-market'),mat:g2('win-mat')};
+  function g2(id){return document.getElementById(id)}
+  function toggle(id){const w=wins[id],open=w.classList.contains('open');
+    Object.values(wins).forEach(x=>x.classList.remove('open'));tasks.forEach(t=>t.classList.remove('on'));
+    if(!open){w.classList.add('open');tasks.find(t=>t.dataset.win===id).classList.add('on');}}
+  tasks.forEach(t=>t.addEventListener('click',()=>toggle(t.dataset.win)));
+  document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>{
+    b.closest('.win').classList.remove('open');tasks.forEach(t=>t.classList.remove('on'));}));
+  addEventListener('keydown',e=>{
+    if(e.key==='Escape'){Object.values(wins).forEach(x=>x.classList.remove('open'));tasks.forEach(t=>t.classList.remove('on'));
+      g2('kill').classList.remove('open');}
+    const k=e.key.toLowerCase();
+    if(document.activeElement.tagName!=='INPUT'){if(k==='h')toggle('hangar');if(k==='m')toggle('market');if(k==='e')toggle('mat');}
+  });
+
+  // ---- Toast / Killscreen / Login / Munición ----
+  const toast=g2('toast');let tt;
+  function showToast(m){toast.textContent=m;toast.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>toast.classList.remove('show'),2600);}
+  document.querySelectorAll('[data-toast]').forEach(b=>b.addEventListener('click',()=>showToast(b.dataset.toast)));
+  let bbT=163,bbInt;
+  g2('devkill').addEventListener('click',()=>{g2('kill').classList.add('open');bbT=163;clearInterval(bbInt);
+    bbInt=setInterval(()=>{bbT--;if(bbT<0){clearInterval(bbInt);return;}
+      g2('bbTimer').textContent=Math.floor(bbT/60)+':'+String(bbT%60).padStart(2,'0');},1000);});
+  document.querySelectorAll('[data-respawn]').forEach(b=>b.addEventListener('click',()=>{g2('kill').classList.remove('open');clearInterval(bbInt);}));
+  g2('connect').addEventListener('click',()=>{g2('login').classList.add('off');showToast('Conexión establecida · bienvenido, piloto');});
+  document.querySelectorAll('#login input').forEach(i=>i.addEventListener('keydown',e=>{if(e.key==='Enter')g2('connect').click();}));
+  document.querySelectorAll('#actions .cell').forEach(s=>{
+    const code=s.querySelector('.code');if(!code)return;
+    s.addEventListener('click',()=>{if(code.textContent.startsWith('CEL')){
+      document.querySelectorAll('#actions .cell').forEach(x=>x.classList.remove('sel'));s.classList.add('sel');}});
+  });
+</script>
