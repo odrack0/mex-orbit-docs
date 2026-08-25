@@ -9,15 +9,15 @@ El plan general de v1: **siete etapas, cada una con su meta comprobable (gate)**
 ### E0 — Fundaciones ✅ (esta)
 Biblia estructurada, 9 repos con propósito y fronteras, convenciones (español/inglés, mex-orbit, migraciones fechadas). **Gate: cumplido.**
 
-### E1 — Contratos 🔄 (en progreso — [plan de etapa](etapa-1-contratos.md))
+### E1 — Contratos ✅ ([plan de etapa](etapa-1-contratos.md))
 Los dos pilares fundacionales pasan de decisiones a diseño completo:
 - Protocolo v1: catálogo de mensajes del slice, codegen elegido (spike protobuf vs propio), modelo de sincronización.
 - Esquema BD v1: dominios del slice (cuentas, naves/equipo, mundo, materiales) → migración `.1` en `mex-orbit-data-base`.
 - Diseño de auth (api emite, game server valida).
 
-**Gate:** los tres documentos revisados + el contrato compilando en C# y GDScript + la migración inicial aplicable y reversible.
+**Gate: cumplido (2026-08-25)** — los tres documentos revisados y validados por el usuario + roundtrip byte-exacto C#↔GDScript del contrato (spike, decisión: esquema propio) + migración `2026.08.25.1` verificada viva (rollout→rollback→rollout en MySQL 8.4.11 local).
 
-### E2 — El vertical slice
+### E2 — El vertical slice 🔄 (en progreso — [plan de etapa](etapa-2-vertical-slice.md))
 El corazón de la fase 1, a través de TODOS los repos:
 
 > **login → conectar → volar → matar un Vex → recoger su carga → volver a base → refinado automático → almacén → vender al NPC**
