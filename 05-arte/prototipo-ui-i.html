@@ -46,6 +46,16 @@
   .glass::after{bottom:-1px;right:-1px;border-bottom:1.5px solid var(--cyan);border-right:1.5px solid var(--cyan)}
   .hud{position:fixed;z-index:10}
 
+  /* minimizar paneles del HUD: la pantalla se limpia hasta dejar solo las barras de acción */
+  .pmin{position:absolute;top:7px;right:7px;width:20px;height:20px;background:none;border:1px solid var(--edge-soft);
+    color:var(--muted);font-family:'JetBrains Mono';font-size:11px;line-height:1;cursor:pointer;z-index:2;
+    transition:color .12s,border-color .12s}
+  .pmin:hover{color:var(--cyan);border-color:var(--edge)}
+  .glass.col{padding-top:8px;padding-bottom:8px}
+  .glass.col .prow,.glass.col .plano,.glass.col .msg,.glass.col .risk,.glass.col .evt,
+  #target.col .trow,.glass.col #coating{display:none}
+  .glass.col::before{border-top-color:var(--warn);border-left-color:var(--warn)}
+
   .bar{height:7px;background:rgba(7,9,16,.85);border:1px solid var(--edge-soft);position:relative;overflow:hidden}
   .bar i{display:block;height:100%}
   .bar.hp i{background:var(--hp)} .bar.sh i{background:var(--shield)}
@@ -107,13 +117,21 @@
   #pilot h1 span{color:var(--cyan)}
   .prow{display:grid;grid-template-columns:52px 1fr 78px;gap:10px;align-items:center;margin-top:9px}
   .prow .v{text-align:right;font-size:11.5px;color:var(--muted)}
-  #zone{top:14px;right:16px;width:252px;padding:12px 16px}
+  /* botones de sistema: ayuda · pantalla completa · salir */
+  #sysbar{top:14px;right:16px;display:flex;gap:6px;z-index:21}
+  .sys-btn{width:32px;height:32px;background:var(--glass-2);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    border:1px solid var(--edge-soft);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;
+    font-family:'JetBrains Mono';font-size:13px;transition:color .12s,border-color .12s,box-shadow .12s}
+  .sys-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .sys-btn:hover{color:var(--cyan);border-color:var(--edge);box-shadow:0 0 10px rgba(0,229,255,.2)}
+  .sys-btn.exit:hover{color:var(--hostile);border-color:rgba(255,61,110,.5);box-shadow:0 0 10px rgba(255,61,110,.25)}
+  #zone{top:56px;right:16px;width:252px;padding:12px 16px}
   #zone .risk{margin-top:8px;font-family:'Michroma';font-size:9px;letter-spacing:.14em;color:var(--hostile);
     border:1px solid rgba(242,99,127,.4);padding:7px 10px;
     background:repeating-linear-gradient(-45deg, rgba(242,99,127,.08) 0 8px, transparent 8px 16px)}
   #zone .evt{margin-top:8px;font-size:12px;color:var(--muted)}
   #zone .evt b{color:var(--warn);font-weight:600}
-  #target{top:150px;right:16px;width:252px;padding:12px 16px}
+  #target{top:196px;right:16px;width:252px;padding:12px 16px}
   #target h2{font-family:'Michroma';font-size:12px;letter-spacing:.1em;color:var(--hostile)}
   #target h2 em{font-style:normal;display:block;font-size:8px;letter-spacing:.24em;color:var(--muted);margin-bottom:3px}
   #target .trow{display:grid;grid-template-columns:1fr 72px;gap:8px;align-items:center;margin-top:8px}
@@ -129,8 +147,12 @@
   #chat .msg{margin-top:5px;line-height:1.45}
   #chat .ch{color:var(--faint)} #chat .who{color:var(--violet)} #chat .sys{color:var(--cyan)}
 
-  /* action bar hexagonal (B) */
-  #actions{bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:8px;align-items:flex-end;z-index:12}
+  /* action bars hexagonales (B) — dos filas */
+  #actions,#actions2{left:50%;transform:translateX(-50%);display:flex;gap:8px;align-items:flex-end;z-index:12}
+  #actions{bottom:14px}
+  #actions2{bottom:86px}
+  .abar-tag{align-self:center;font-family:'Michroma';font-size:8px;letter-spacing:.2em;color:var(--faint);
+    width:18px;text-align:center}
   .hex{width:56px;height:62px;border:0;outline:1px solid var(--edge-soft);cursor:pointer;position:relative;color:var(--txt);
     clip-path:polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
     background:linear-gradient(180deg, rgba(19,25,42,.94), rgba(9,12,21,.94));
@@ -390,6 +412,17 @@
 </div>
 <button class="hud btn ghost" id="devkill" style="font-size:8px;padding:8px 12px">Simular destrucción</button>
 
+<!-- sistema: ayuda · pantalla completa · salir -->
+<nav class="hud" id="sysbar" aria-label="Sistema">
+  <button class="sys-btn" id="btnHelp" title="Ayuda [F1]">?</button>
+  <button class="sys-btn" id="btnFull" title="Pantalla completa">
+    <svg viewBox="0 0 24 24"><path d="M4 9 V4 H9 M15 4 H20 V9 M20 15 V20 H15 M9 20 H4 V15"/></svg>
+  </button>
+  <button class="sys-btn exit" id="btnExit" title="Cerrar sesión">
+    <svg viewBox="0 0 24 24"><path d="M9 4 H5 V20 H9 M14 8 L18 12 L14 16 M18 12 H9"/></svg>
+  </button>
+</nav>
+
 <!-- el menú completo del juego: todas las ventanas, abiertas o cerradas -->
 <nav class="hud" id="dock" aria-label="Menú de ventanas">
   <div class="dock-cap">Menú</div>
@@ -408,6 +441,7 @@
 </nav>
 
 <section class="hud glass" id="pilot" aria-label="Piloto">
+  <button class="pmin" data-pmin aria-label="Minimizar panel">–</button>
   <h1>ODRACK <span>· ORION</span></h1>
   <div class="prow"><span class="lbl">Casco</span><div class="bar hp"><i style="width:88%"></i></div><span class="v mono">225,280</span></div>
   <div class="prow"><span class="lbl">Escudo</span><div class="bar sh"><i style="width:64%"></i></div><span class="v mono">160,000</span></div>
@@ -415,12 +449,14 @@
 </section>
 
 <section class="hud glass" id="zone" aria-label="Zona">
+  <button class="pmin" data-pmin aria-label="Minimizar panel">–</button>
   <span class="lbl">Sector 4-4 · Vorago</span>
   <div class="risk">RIESGO DE CARGA · 100%</div>
   <div class="evt">Evento: <b>LA ESCOLTA vs MORDAX</b> <span class="mono">19:42</span></div>
 </section>
 
 <section class="hud glass" id="target" aria-label="Objetivo">
+  <button class="pmin" data-pmin aria-label="Minimizar panel">–</button>
   <h2><em>Objetivo fijado</em>VITRON ELITE</h2>
   <div class="trow"><div class="bar hostile"><i style="width:41%"></i></div><span class="v mono">82,000</span></div>
   <div class="trow"><div class="bar sh"><i style="width:23%"></i></div><span class="v mono">36,800</span></div>
@@ -428,6 +464,7 @@
 </section>
 
 <section class="hud glass" id="planos" aria-label="Planos">
+  <button class="pmin" data-pmin aria-label="Minimizar panel">–</button>
   <span class="lbl">Planos</span>
   <div class="plano"><div class="r"><span class="nm">QUASAR</span><span class="mono" style="font-size:10.5px;color:var(--muted)">7/10</span></div>
     <div class="pips"><span class="pip f"></span><span class="pip f"></span><span class="pip f"></span><span class="pip f"></span><span class="pip f"></span><span class="pip f"></span><span class="pip f"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></div></div>
@@ -436,13 +473,27 @@
 </section>
 
 <section class="hud glass" id="chat" aria-label="Comms">
+  <button class="pmin" data-pmin aria-label="Minimizar panel">–</button>
   <span class="lbl">Comms</span>
   <div class="msg"><span class="ch">[Global]</span> <span class="who">Kaira:</span> vendo Coronium, órdenes arriba del piso</div>
   <div class="msg"><span class="ch">[Clan]</span> <span class="who">Vex_Hunter:</span> FAUCES en 10, falta Ursa</div>
   <div class="msg"><span class="sys">◆ El Hexon Titan apareció en 4-5.</span></div>
 </section>
 
+<nav class="hud" id="actions2" aria-label="Acciones fila 2">
+  <span class="abar-tag">II</span>
+  <button class="hex"><span class="key">5</span><span class="code">MIN-2</span><span class="n">×8</span></button>
+  <button class="hex"><span class="key">6</span><span class="code" style="color:var(--violet)">EMP-1</span><span class="n">×4</span></button>
+  <button class="hex"><span class="key">7</span><span class="code" style="color:var(--violet)">STS-1</span><span class="n">×6</span></button>
+  <span style="width:12px"></span>
+  <button class="hex"><span class="key">8</span><span class="code" style="color:var(--warn)">AMP-DMG</span><span class="n">6.2h</span></button>
+  <button class="hex"><span class="key">9</span><span class="code" style="color:var(--warn)">AMP-XP</span><span class="n">2.4h</span></button>
+  <span style="width:12px"></span>
+  <button class="hex"><span class="key">F</span><span class="code">MOTH</span><span class="n">form.</span></button>
+</nav>
+
 <nav class="hud" id="actions" aria-label="Acciones">
+  <span class="abar-tag">I</span>
   <button class="hex"><span class="key">1</span><span class="code">CEL-1</span><span class="n">∞</span></button>
   <button class="hex sel"><span class="key">2</span><span class="code">CEL-2</span><span class="n">4,180</span></button>
   <button class="hex"><span class="key">3</span><span class="code">CEL-3</span><span class="n">960</span></button>
@@ -817,4 +868,18 @@
   document.querySelectorAll('#actions .hex').forEach(s=>s.addEventListener('click',()=>{
     if(s.querySelector('.code').textContent.startsWith('CEL')){
       document.querySelectorAll('#actions .hex').forEach(x=>x.classList.remove('sel'));s.classList.add('sel');}}));
+  // ---- Minimizar paneles del HUD (la pantalla se limpia hasta dejar solo las barras) ----
+  document.querySelectorAll('[data-pmin]').forEach(b=>b.addEventListener('click',()=>{
+    const p=b.closest('.glass');p.classList.toggle('col');
+    b.textContent=p.classList.contains('col')?'+':'–';}));
+  // ---- Fila II: activaciones simuladas ----
+  document.querySelectorAll('#actions2 .hex').forEach(s=>s.addEventListener('click',()=>{
+    showToast(s.querySelector('.code').textContent+' ACTIVADO');}));
+  // ---- Botones de sistema: ayuda · pantalla completa · salir ----
+  g('btnHelp').addEventListener('click',()=>showToast('AYUDA · MANUAL DEL PILOTO [F1] — PRÓXIMAMENTE'));
+  g('btnFull').addEventListener('click',()=>{
+    if(document.fullscreenElement){document.exitFullscreen();}
+    else{document.documentElement.requestFullscreen().catch(()=>showToast('PANTALLA COMPLETA NO DISPONIBLE AQUÍ'));}});
+  g('btnExit').addEventListener('click',()=>{
+    g('login').classList.remove('off');showToast('SESIÓN CERRADA · HASTA PRONTO, PILOTO');});
 </script>
