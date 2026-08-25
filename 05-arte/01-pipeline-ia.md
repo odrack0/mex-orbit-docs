@@ -1,6 +1,17 @@
-# El pipeline de arte con IA — propuesta
+# El pipeline de arte con IA
 
-**Estado: propuesta para dictamen** — las decisiones marcadas ⚠️ (Q1–Q8) están abiertas y cambian el diseño del pipeline.
+**Estado: DISEÑO CERRADO** (dictamen Q1–Q8 del 25-ago-2026):
+
+| Decisión | Dictamen |
+|---|---|
+| Q1 Perspectiva | **Top-down puro: 1 frame por entidad, la rotación la hace el motor** |
+| Q2 Estilo | **Vectorial** (flat/estilizado, fuente SVG) |
+| Q3 Facciones | Identidad por facción en **estaciones y fondos de mapa**; las **naves son idénticas** para todos |
+| Q4 Tiers de alien | Elite/Titan = **escala + tinte + VFX** (cero arte nuevo); **Imperators con arte único, renovados por temporada** (3 por ciclo, junto a sus incursiones — §18 de los Guidelines) |
+| Q5 Mapas | **Se hereda el grafo del prototipo** (bajos, altos, PvP 4-x) con sus ~17 fondos |
+| Q6 Audio | **También con IA** (SFX y música) |
+| Q7 Herramientas | Set recomendado abajo (Recraft + Gemini + ElevenLabs + Suno) |
+| Q8 Resolución | **1080p nativo con soporte 1440p**; 4K después |
 
 ## Mi opinión honesta: viable en 2026, con tres condiciones
 
@@ -10,14 +21,9 @@ Crear todo el arte con IA es alcanzable hoy — las herramientas de 2025-2026 (G
 2. **La Biblia de estilo antes que el primer asset.** Un documento con: paleta maestra, reglas de forma por familia (los aliens comparten ADN visual; las naves de una facción comparten lenguaje), iluminación canónica, nivel de detalle, y **los prompts maestros con imágenes de referencia** que anclan cada generación. Sin esto, el asset 200 no se parece al asset 1.
 3. **Derivar antes que generar.** Generar desde cero produce inconsistencia; **derivar de una referencia aprobada** (la fortaleza de Gemini: "esta misma nave, vista superior" / "este mismo alien, versión colosal") produce familias coherentes. Cada familia tiene UN hero aprobado del que desciende todo.
 
-## La decisión que define todo el pipeline ⚠️ Q1: la perspectiva
+## La perspectiva (Q1 ✅ cerrada): top-down puro
 
-| Opción | Cómo se produce | Costo por nave/alien |
-|---|---|---|
-| **A. Top-down puro** (recomendada) | 1 imagen por entidad; **la rotación la hace el motor gratis** (rotar el nodo). La profundidad se simula con sombreado/luz en el sprite | **1 frame** |
-| B. Perspectiva 3/4 estilo DO | La rotación cambia la silueta → 32 frames por entidad. Ruta: hero IA → imagen-a-3D (Tripo/Rodin) → limpieza → render de 32 rotaciones en Blender ortográfico | **32 frames + un modelo 3D intermedio** |
-
-Mi recomendación es **A**: el pipeline es ~10× más simple, el estilo top-down limpio es moderno (y más legible en combate), y elimina la mayor fuente de inconsistencia (32 frames coherentes). La B es viable si la identidad visual de DO (naves "de ladito") es irrenunciable — pero cada entidad costará un ciclo de 3D.
+**1 frame por entidad; la rotación la hace el motor.** La profundidad se simula con sombreado/luz dentro del sprite. Consecuencias: pipeline ~10× más simple que la alternativa de 32 frames, máxima legibilidad en combate, cero paso de 3D intermedio, y el estilo vectorial (Q2) encaja natural — un SVG top-down rota sin perder nitidez a cualquier resolución (Q8 resuelta de paso: el vector es resolution-independent; 4K será re-export, no re-trabajo).
 
 ## Los cinco carriles del pipeline (cada tipo de asset tiene el suyo)
 
@@ -36,18 +42,20 @@ La lección más importante del censo del prototipo: el Flash necesitaba sprites
 ### Carril 5 — UI
 La IA diseña (mockups de dirección: ⚠️ el prototipo de UI "militar-espacial 2026" es el siguiente entregable) y genera la iconografía de sistema; la implementación es **Godot Theme** (paneles nine-patch, estilos de control) — la UI vive como theme, no como imágenes sueltas. Tipografía: fuente licenciada/libre, no generada.
 
-## Las herramientas candidatas (a validar con spikes)
+## El set de herramientas (Q7 ✅ — las suscripciones recomendadas)
 
-| Rol | Candidatas | Nota |
+| Herramienta | Rol en el pipeline | Suscripción |
 |---|---|---|
-| Heroes y arte clave | Gemini (Imagen), Midjourney | Calidad tope; curaduría fuerte |
-| **Derivación consistente** | **Gemini (edición con imagen de referencia)** | La pieza clave del pipeline — variantes, poses, facciones sin perder identidad |
-| Vector nativo | Recraft | Si Q2 = estilo flat: genera SVG real (iconos, UI) |
-| Imagen → 3D | Tripo / Rodin / Meta 3D | Solo si Q1 = perspectiva 3/4 |
-| Normalización | rembg (alfa), scripts propios (registro, atlas) | Vive en `mex-orbit-art/pipeline/` |
-| Audio (⚠️ Q6) | ElevenLabs SFX, Suno/Udio música | Si el audio entra al pipeline IA |
+| **Recraft** | **La herramienta principal**: generación vectorial nativa (SVG real) — naves, aliens, iconos, elementos de UI. Estilos custom entrenables (nuestra Biblia de estilo como estilo propio) | Sí (Pro) — la inversión #1 |
+| **Gemini** (ya la tienes) | Exploración de conceptos, derivación por referencia ("este mismo alien, colosal"), composiciones para fondos, iteración rápida antes de vectorizar | Ya cubierta |
+| **ElevenLabs** | SFX (láseres, explosiones, UI) — generación por descripción | Sí |
+| **Suno** | Música (menú, biomas, combate, Imperator) | Sí |
+| Inkscape + SVGO | Limpieza/edición de SVG y optimización — **gratis** | — |
+| Scripts propios | Normalización, registro, export SVG→texturas 1080/1440, atlas, catálogo JSON | `mex-orbit-art/pipeline/` |
 
-**⚠️ Licencias**: antes de producir en serio, verificar los términos comerciales de cada herramienta elegida (uso comercial de outputs). Va en la Biblia de estilo como checklist.
+Sin herramienta 3D (Q1 la eliminó), sin Midjourney por ahora (con estilo vectorial, Recraft+Gemini cubren; sumable después para arte de marketing). **Total: 3 suscripciones nuevas.**
+
+**Checklist de licencias (antes de producir en serie):** verificar los términos de uso comercial de Recraft, ElevenLabs y Suno en sus planes de pago — documentar en la Biblia de estilo qué plan otorga qué derechos sobre los outputs.
 
 ## Riesgos honestos y sus mitigaciones
 

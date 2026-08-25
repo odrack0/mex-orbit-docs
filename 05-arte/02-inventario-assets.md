@@ -1,6 +1,8 @@
-# Inventario de assets de v1 — borrador para dictamen
+# Inventario de assets de v1
 
-**Fuentes:** el censo real del prototipo (~330 piezas que un cliente funcional consume — `inventario-assets.md` del repo legado) cruzado con el roster de los Guidelines (§10–§11, naves, taxonomía, contenido §13–§15). **Las cantidades marcadas ⚠️ dependen de las preguntas Q1–Q8 del [pipeline](01-pipeline-ia.md).**
+**Estado: CERRADO** con el dictamen Q1–Q8 (ver [pipeline](01-pipeline-ia.md)): top-down 1 frame · estilo vectorial (fuente SVG) · naves sin variantes de facción · Elite/Titan por tinte+escala+VFX · Imperators con arte único **renovados por temporada** · grafo de mapas heredado del prototipo (~17 fondos) · audio con IA · export a 1080p con soporte 1440 (el SVG hace el 4K futuro un re-export).
+
+**Fuentes:** el censo real del prototipo (~330 piezas que un cliente funcional consume — `inventario-assets.md` del repo legado) cruzado con el roster de los Guidelines (§10–§11, naves, taxonomía, contenido §13–§15).
 
 **Prioridades:** 🟥 P1 = vertical slice (E2) · 🟧 P2 = economía y carril solitario (E3–E4) · 🟨 P3 = grupo y lanzamiento (E5–E6).
 
@@ -15,9 +17,9 @@
 | Aquila, Cygnus, Ursa | 🟨 | Trío de rol (siluetas MUY distintas entre sí: se leen en combate) |
 | Pegasus, Orion | 🟨 | Las metas; Orion = la silueta más imponente del juego |
 
-- Formato: ⚠️ Q1 — 1 frame top-down c/u, o 32 frames vía 3D.
+- Formato ✅: **1 frame top-down por nave, fuente SVG** — la rotación la hace el motor.
 - Motores encendidos, estelas, daño acumulado: **procedural** (carril 4), no arte por nave.
-- ⚠️ Q3: ¿variante visual por facción (×3) o una skin por nave? (el prototipo tenía variantes mmo/eic/vru para el trío de rol).
+- Facciones ✅: **las naves son idénticas para todas las facciones** — la identidad de facción vive en estaciones y fondos, no en los cascos.
 - Sin variantes Veteran/Elite al lanzamiento (decidido, Guidelines §11).
 - PET: fase 2 — fuera de este inventario.
 
@@ -29,8 +31,8 @@
 | Vexor, Skarn, Ferox, Mordax | 4 | 🟧 | Zona baja/media |
 | Skarnox, Vorax, Gravit, Gravon, Vitrin, Vitron, Custit | 7 | 🟧 | Media/alta |
 | Hexon | 1 | 🟧 | El cubo colosal — landmark del mundo |
-| **Elite / Titan por especie** | ⚠️ Q4 | 🟧 | Opción barata: escala + tinte + VFX de corona (0 arte nuevo) · opción cara: arte propio por tier |
-| Imperators (Vexor, Vorax, Vitron) | 3 | 🟨 | Jefes de incursión — arte único, los villanos del trimestre |
+| **Elite / Titan por especie** ✅ | 0 arte nuevo | 🟧 | **Escala + tinte + VFX de corona** (shader compartido) |
+| Imperators (T1: Vexor, Vorax, Vitron) ✅ | 3 **por temporada** | 🟨 | Arte único — los villanos del ciclo, renovados con cada trío de incursiones (§18) |
 | Disparo firma por especie | ~6 texturas | 🟧 | Shader + textura (el prototipo usaba 5 sprites de disparo NPC) |
 
 ## 3. Drones y sus diseños
@@ -47,11 +49,11 @@
 
 | Asset | Piezas | Prioridad | Notas |
 |---|---|---|---|
-| Fondos de mapa | ⚠️ Q5 (prototipo: 17) | 🟥 1 → resto 🟧/🟨 | Por zona/bioma, no por mapa: N biomas × variaciones |
+| Fondos de mapa ✅ | ~17 (grafo heredado del prototipo: bajos, altos, PvP 4-x) | 🟥 1 → resto 🟧/🟨 | Por bioma con identidad de facción en zonas natales (Q3) |
 | Tiles: campo estelar, nubes, asteroides | ~12 | 🟥 básico | Paralaje |
 | Planetas y decoraciones | ~20–30 (prototipo: 53) | 🟧 | Sprites sueltos, la IA brilla aquí |
 | Portal/jumpgate | 1 set (+ variante Eclipse) | 🟥 | Base, activo, vórtice — animación procedural/shader |
-| Estaciones de facción | ⚠️ Q3 — 1 estación modular ×3 facciones | 🟥 (1) | El prototipo: 4 edificios ×3 facciones |
+| Estaciones de facción ✅ | 1 estación modular **×3 facciones con identidad propia** | 🟥 (1) | El prototipo: 4 edificios ×3 facciones |
 | **El Materializador** | 1 estructura | 🟧 | Edificio nuevo — no existe en DO: identidad propia |
 | Pods (cápsulas) | 1 (+variante rica de zona alta) | 🟧 | |
 | Caja de carga de alien | 1 | 🟥 | El loot del slice |
@@ -109,7 +111,7 @@ La lista exacta sale del roster §11 de los Guidelines:
 | Iconos de sistema UI | ~30 | 🟥 básico |
 | Pantalla de carga, splash (sin logo definitivo — nombre temporal) | 2 | 🟧 |
 
-## 8. Audio ⚠️ Q6 (¿entra al pipeline IA?)
+## 8. Audio ✅ (con IA: ElevenLabs para SFX, Suno para música)
 
 | Grupo | Piezas (referencia: prototipo usó 55 SFX + 1 pista) |
 |---|---|
@@ -119,13 +121,12 @@ La lista exacta sale del roster §11 de los Guidelines:
 
 ---
 
-## Totales estimados (escenario Q1 = top-down, Q4 = tinte/escala)
+## Totales (cerrados con el dictamen)
 
 | Bloque | Piezas |
 |---|---|
-| 🟥 P1 — el vertical slice completo | **~45 piezas + theme base + 4 shaders** |
-| v1 completo (E2→E6) | **~320–350 piezas + librería de ~12 shaders** (+ audio si Q6 = sí) |
-
-Con el escenario Q1 = perspectiva 3/4, sumar ~29 entidades × ciclo 3D (naves+aliens+drones).
+| 🟥 P1 — el vertical slice completo | **~45 piezas + theme base + 4 shaders + ~10 SFX** |
+| v1 completo (E2→E6) | **~320–350 piezas + librería de ~12 shaders + ~45 SFX + ~7 pistas** |
+| Por temporada (recurrente, desde T2) | 3 Imperators + arte de 3 incursiones + cosméticos del ciclo |
 
 **Convención de nombres**: cada archivo se llama por su código del juego (`pb-1`, `vex`, `orion`, `flux`) — el catálogo JSON del cliente los referencia igual que los Guidelines. Un nombre, tres lugares: diseño, arte, código.
