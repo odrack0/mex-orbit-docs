@@ -120,6 +120,7 @@
   .sys-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
   .sys-btn:hover{color:var(--cyan);border-color:var(--edge);box-shadow:0 0 10px rgba(0,229,255,.2)}
   .sys-btn.exit:hover{color:var(--hostile);border-color:rgba(255,61,110,.5);box-shadow:0 0 10px rgba(255,61,110,.25)}
+  .sys-btn.on{color:var(--warn);border-color:rgba(255,200,92,.55);box-shadow:0 0 10px rgba(255,200,92,.25)}
   #zone{top:56px;right:16px;width:252px;padding:12px 16px}
   #zone .risk{margin-top:8px;font-family:'Michroma';font-size:9px;letter-spacing:.14em;color:var(--hostile);
     border:1px solid rgba(242,99,127,.4);padding:7px 10px;
@@ -423,6 +424,7 @@
 
 <!-- sistema: ayuda · pantalla completa · salir -->
 <nav class="hud" id="sysbar" aria-label="Sistema">
+  <button class="sys-btn" data-stub="Ajustes" data-icon="i-gear" title="Ajustes"><svg><use href="#i-gear"/></svg></button>
   <button class="sys-btn" id="btnHelp" title="Ayuda [F1]">?</button>
   <button class="sys-btn" id="btnFull" title="Pantalla completa">
     <svg viewBox="0 0 24 24"><path d="M4 9 V4 H9 M15 4 H20 V9 M20 15 V20 H15 M9 20 H4 V15"/></svg>
@@ -455,7 +457,6 @@
   <button class="dock-btn" data-hud="mapwrap" title="Radar"><svg><use href="#i-radar"/></svg><span>Radar</span></button>
   <div class="dock-sep"></div>
   <button class="dock-btn" data-stub="Mapa Estelar" data-icon="i-map" title="Mapa Estelar"><svg><use href="#i-map"/></svg><span>Mapa</span></button>
-  <button class="dock-btn" data-stub="Ajustes" data-icon="i-gear" title="Ajustes"><svg><use href="#i-gear"/></svg><span>Ajustes</span></button>
 </nav>
 </div>
 
@@ -807,7 +808,7 @@
   }));
 
   // ---- Multiventana: varias abiertas a la vez, el menú refleja sus estados ----
-  const tasks=[...document.querySelectorAll('.dock-btn')];
+  const tasks=[...document.querySelectorAll('#dock .dock-btn'),...document.querySelectorAll('#sysbar [data-stub]')];
   const wins={hangar:g('win-hangar'),market:g('win-market'),mat:g('win-mat'),stub:g('win-stub')};
   function g(id){return document.getElementById(id)}
   let zTop=30, stubOwner=null;
