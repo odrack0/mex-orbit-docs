@@ -1,0 +1,817 @@
+<title>MexOrbit M</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+<style>
+  /* ============================================================
+     PROPUESTA M — la UI/UX del cliente Godot actual, modernizada.
+     Herencia: chrome teal con degradado en barra de título, esquina
+     achaflanada, taskbar 38x38 con estado por marco, etiquetas frías
+     + números ámbar, barras segmentadas, dos barras de 10 slots.
+     ============================================================ */
+  :root{
+    --space:#0d0e10;
+    --winbg:rgba(22,27,34,.88);
+    --chrome:#0e2430;
+    --teal:#2e6b7f;
+    --teal-soft:rgba(46,107,127,.55);
+    --accent:#8fd8ef;
+    --accent2:#2E84A5;
+    --amber:#f5b955;
+    --gold:#ffd24a;
+    --lbl:#cfd6dd;
+    --muted:rgba(255,255,255,.55);
+    --hp:#49be40; --sh:#338fcc; --nano:#fdfd3e; --track:#6d6d6d;
+    --slotbg:#141c26;
+    --red:#d94038;
+    --mapborder:rgba(77,128,230,.8);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{background:var(--space);overflow:hidden;font-family:'Inter','Segoe UI',sans-serif;color:var(--lbl);
+    font-variant-numeric:tabular-nums;user-select:none}
+  button{font-family:inherit}
+
+  /* ---- espacio ---- */
+  #space{position:fixed;inset:0}
+  #neb{position:fixed;inset:0;pointer-events:none;
+    background:
+      radial-gradient(52% 40% at 68% 30%, rgba(46,132,165,.10), transparent 70%),
+      radial-gradient(45% 55% at 22% 76%, rgba(84,58,26,.10), transparent 70%)}
+
+  .hud{position:fixed;z-index:10}
+
+  /* ============ VENTANA FLOTANTE (herencia FloatingPanel) ============ */
+  .fp{position:fixed;z-index:20;background:var(--winbg);
+    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    border:1px solid var(--teal);border-radius:5px 3px 3px 3px;
+    box-shadow:0 0 0 2px rgba(14,36,48,.7), 0 14px 34px rgba(0,0,0,.5);
+    display:flex;flex-direction:column}
+  .fp.off{display:none}
+  .fp header{display:flex;align-items:center;gap:6px;height:22px;flex-shrink:0;
+    padding:0 6px;border-radius:4px 2px 0 0;cursor:move;
+    background:linear-gradient(90deg,#0f1c26 0%, #24404f 55%, #6f9cb4 130%);
+    border-bottom:1px solid var(--teal-soft)}
+  .fp header .wt{flex:1;font-size:11px;font-weight:600;letter-spacing:.05em;color:#dfeaf2;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .fp header .wx{width:16px;height:16px;background:none;border:none;color:rgba(255,255,255,.8);
+    font-size:12px;line-height:1;cursor:pointer;flex-shrink:0;padding:0}
+  .fp header .wx:hover{color:#fff;text-shadow:0 0 6px rgba(143,216,239,.8)}
+  .fp header .zbtn{width:14px;height:14px;background:rgba(255,255,255,.08);border:1px solid var(--teal-soft);
+    border-radius:2px;color:var(--accent);font-size:10px;line-height:1;cursor:pointer;flex-shrink:0;padding:0}
+  .fp header .zbtn:hover{background:rgba(143,216,239,.18)}
+  .fp .fb{padding:6px 8px 10px;flex:1;overflow:auto;font-size:11px}
+  /* asa de la esquina inferior derecha: la diagonal, herencia del arte */
+  .fp .grip{position:absolute;right:1px;bottom:1px;width:13px;height:13px;pointer-events:none;opacity:.7;
+    background:repeating-linear-gradient(135deg, transparent 0 3px, var(--teal-soft) 3px 4.5px);
+    clip-path:polygon(100% 0,100% 100%,0 100%)}
+
+  /* filas etiqueta fría + número ámbar: la firma del cliente */
+  .r{display:flex;align-items:center;gap:6px;margin-top:5px}
+  .r .k{font-size:11px;color:var(--lbl);flex:1;white-space:nowrap}
+  .r .v{font-size:10px;color:var(--amber);font-weight:600}
+  .r svg{width:14px;height:14px;stroke:#93aabb;fill:none;stroke-width:1.6;flex-shrink:0}
+  /* barra segmentada 96x12 (herencia bar_green/blue/yellow 62x13) */
+  .seg{width:96px;height:12px;background:rgba(0,0,0,.5);border:1px solid rgba(109,109,109,.55);
+    border-radius:2px;position:relative;overflow:hidden;flex-shrink:0}
+  .seg i{position:absolute;inset:1px auto 1px 1px;
+    background:repeating-linear-gradient(90deg, var(--c) 0 4px, rgba(0,0,0,.55) 4px 6px)}
+
+  /* ============ TASKBAR (esquina sup-izq, botones 38x38) ============ */
+  #taskbar{top:6px;left:6px;display:flex;gap:2px;z-index:26}
+  .tb{width:38px;height:38px;position:relative;cursor:pointer;padding:0;
+    background:linear-gradient(180deg,#131c26,#0d141c);
+    border:1px solid rgba(115,140,166,.5);border-radius:3px;
+    color:#9fb4c4;display:flex;align-items:center;justify-content:center;
+    transition:border-color .12s, box-shadow .12s, background .12s}
+  .tb svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.6;
+    stroke-linecap:round;stroke-linejoin:round}
+  .tb:hover{border-color:rgba(143,216,239,.7)}
+  /* estado por marco, no por color del icono (herencia del bug querido del Flash) */
+  .tb.open{border-color:var(--accent);box-shadow:0 0 8px rgba(143,216,239,.35), inset 0 0 8px rgba(143,216,239,.12)}
+  .tb::after{content:attr(data-tip);position:absolute;top:42px;left:0;z-index:9;
+    font-size:9px;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;
+    background:rgba(5,10,14,.95);border:1px solid var(--teal-soft);border-radius:2px;
+    padding:3px 6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .12s}
+  .tb:hover::after{opacity:1}
+
+  /* ============ SYSBAR (sup-der) ============ */
+  #sysbar{top:6px;right:6px;display:flex;gap:2px;z-index:26}
+  #target{top:52px;right:10px;font-size:13px;color:#e8f0f5;text-align:right;text-shadow:0 1px 3px #000}
+  #target b{color:var(--amber);font-weight:600}
+
+  /* ============ TOAST + recompensas (centro-sup) ============ */
+  #toast{top:84px;left:50%;transform:translateX(-50%);font-size:14px;color:#ffd24a;font-weight:600;
+    text-shadow:0 0 4px #000,0 0 10px #000;opacity:0;transition:opacity .25s;pointer-events:none;z-index:40}
+  #toast.show{opacity:1}
+  #rewards{top:112px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;
+    align-items:center;gap:2px;pointer-events:none;z-index:39}
+  #rewards div{font-size:13px;color:#ffe9a8;text-shadow:0 0 4px #000,0 0 8px #000;animation:rw 3.1s forwards}
+  @keyframes rw{0%{opacity:0;transform:translateY(4px)}12%{opacity:1;transform:none}84%{opacity:1}100%{opacity:0}}
+  #devrow{top:50px;left:50%;transform:translateX(-50%);z-index:26}
+  #devkill{font-size:10px;color:var(--muted);background:rgba(22,27,34,.7);border:1px solid var(--teal-soft);
+    border-radius:3px;padding:4px 10px;cursor:pointer}
+  #devkill:hover{color:var(--accent);border-color:var(--accent2)}
+
+  /* ============ BARRAS DE ACCIÓN (dos de 10 slots) ============ */
+  #bars{bottom:8px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;
+    align-items:center;gap:4px;z-index:24}
+  .abar{display:flex;gap:2px;align-items:center}
+  .slot{width:38px;height:38px;position:relative;cursor:pointer;border-radius:3px;
+    border:1px solid rgba(88,123,189,.55);
+    background:repeating-linear-gradient(0deg,#10161f 0 2px,#151d29 2px 4px);
+    transition:border-color .1s, box-shadow .1s}
+  .slot:hover{border-color:rgba(140,191,255,.85)}
+  .slot.sel{border-color:var(--gold);box-shadow:0 0 7px rgba(255,210,74,.4)}
+  .slot.blocked{opacity:.5}
+  .slot.blocked::before{content:"";position:absolute;inset:0;border-radius:2px;
+    background:linear-gradient(135deg, transparent 44%, rgba(217,64,56,.7) 44% 56%, transparent 56%)}
+  .slot .ab{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-size:8.5px;font-weight:700;letter-spacing:.02em;color:#c8d6e4;text-shadow:0 1px 2px #000}
+  .slot .n{position:absolute;left:3px;bottom:2px;font-size:8px;font-weight:700;color:var(--cnt,#587bbd)}
+  .slot .key{position:absolute;right:3px;bottom:2px;font-size:8px;color:rgba(191,204,217,.9)}
+  .slot .cbar{position:absolute;top:2px;left:3px;width:32px;height:3px;border-radius:1px;
+    background:rgba(0,0,0,.6);overflow:hidden}
+  .slot .cbar i{display:block;height:100%;background:var(--cnt,#587bbd)}
+  .slot .cd{position:absolute;left:0;right:0;bottom:0;height:0;background:rgba(0,0,0,.55);
+    border-radius:0 0 2px 2px;pointer-events:none}
+  .slot .cds{position:absolute;left:4px;top:12px;font-size:11px;color:#ffcc33;font-weight:600;display:none}
+  /* flecha de la paleta */
+  #palArrow{width:26px;height:32px;margin-left:4px;background:linear-gradient(180deg,#131c26,#0d141c);
+    border:1px solid rgba(115,140,166,.5);border-radius:3px;color:#9fb4c4;font-size:11px;cursor:pointer}
+  #palArrow:hover{border-color:rgba(143,216,239,.7);color:var(--accent)}
+  #palette{display:none;gap:2px;align-self:flex-start}
+  #palette.open{display:flex}
+  #palItems{display:none;gap:2px;align-self:flex-start}
+  #palItems.open{display:flex}
+  .cat{width:38px;height:38px;background:linear-gradient(180deg,#131c26,#0d141c);
+    border:1px solid rgba(115,140,166,.5);border-radius:3px;color:#9fb4c4;
+    font-size:8px;font-weight:700;letter-spacing:.02em;cursor:pointer}
+  .cat:hover,.cat.on{border-color:var(--accent);color:var(--accent)}
+
+  /* ============ contenidos específicos ============ */
+  /* minimapa */
+  #w-mapa .fb{padding:5px}
+  #mmc{display:block;border:1.5px solid var(--mapborder);border-radius:2px;background:rgba(9,9,9,.9)}
+  /* chat */
+  #w-chat .tabs{display:flex;gap:2px;margin-bottom:4px}
+  #w-chat .tab{width:104px;height:17px;font-size:9px;letter-spacing:.04em;color:#cfe3ea;cursor:pointer;
+    background:linear-gradient(180deg,#2a5b6c,#1c4553);border:none;border-radius:2px 2px 0 0}
+  #w-chat .tab.on{color:#8fd8ef;background:linear-gradient(180deg,#356e82,#22505f);font-weight:600}
+  #chatlog{width:352px;height:126px;overflow-y:auto;font-size:12px;line-height:1.45;
+    background:rgba(3,5,8,.55);border-radius:2px;padding:4px 6px}
+  #chatlog .who{color:var(--amber);cursor:pointer}
+  #chatlog .who:hover{text-decoration:underline}
+  #chatlog .sys{color:#8fd8ef}
+  #chatin{width:100%;margin-top:4px;background:#05080b;border:1px solid #294a5c;border-radius:2px;
+    color:#e8f0f5;font-size:12px;font-family:inherit;padding:4px 6px;outline:none}
+  #chatin::placeholder{color:rgba(255,255,255,.35)}
+  #chatin:focus{border-color:var(--accent2)}
+  /* registro */
+  #reglog{width:352px;height:88px;overflow-y:auto;font-size:12px;line-height:1.4;color:#cfd6dd}
+  #reglog .t{color:var(--muted)}
+  #reglog .ok{color:#8ee08a} #reglog .warn{color:#ffd966}
+  /* boosters */
+  .boost{display:flex;align-items:center;gap:8px;margin-top:4px;padding:5px 7px;border-radius:3px;
+    background:rgba(255,255,255,.04)}
+  .boost .bicon{width:30px;height:30px;flex-shrink:0;border:1px solid rgba(88,123,189,.6);border-radius:3px;
+    display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#9cc3ff;
+    background:#0e1520}
+  .boost .bn{flex:1;font-size:11px}
+  .boost .bn small{display:block;font-size:9px;color:var(--muted)}
+  .boost .bp{font-size:12px;font-weight:700;color:var(--amber)}
+  /* misiones */
+  #w-msn .dots{text-align:center;font-size:14px;color:#7d95a8;letter-spacing:.3em;margin:2px 0 4px}
+  #w-msn h3{font-size:12px;color:#ffd966;margin-bottom:4px}
+  #w-msn .obj{font-size:11px;margin-top:3px}
+  #w-msn .obj b{color:var(--amber);font-weight:600}
+  #w-msn .rw{margin-top:6px;font-size:10px;color:var(--muted)}
+  /* grupo */
+  .gm{display:flex;align-items:center;gap:6px;margin-top:5px}
+  .gm .gn{font-size:11px;flex:1}
+  .gm .gn small{color:var(--muted)}
+  .gm .gb{width:64px}
+  .gm .gb i{display:block;height:3px;border-radius:1px;margin-top:2px}
+  /* pet */
+  #w-pet .phead{display:flex;align-items:center;gap:8px}
+  #w-pet .pportrait{width:44px;height:44px;border:1px solid var(--teal);border-radius:4px;background:#0e1520;
+    position:relative;display:flex;align-items:center;justify-content:center;color:var(--accent)}
+  #w-pet .pportrait svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.6}
+  #w-pet .plvl{position:absolute;right:-5px;top:-5px;background:#ffcc22;color:#20180a;font-size:8px;
+    font-weight:700;border-radius:2px;padding:1px 3px}
+  #w-pet .pbtns{display:flex;gap:4px;margin-top:7px}
+  #w-pet .pbtns button{flex:1;font-size:9px;padding:4px 0;background:#13202b;color:var(--lbl);
+    border:1px solid var(--teal-soft);border-radius:3px;cursor:pointer}
+  #w-pet .pbtns button:hover{border-color:var(--accent2);color:var(--accent)}
+  /* lab */
+  .ltabs{display:flex;gap:2px;margin-bottom:6px}
+  .ltab{font-size:11px;padding:4px 12px;cursor:pointer;border-radius:3px 3px 0 0;color:#9aa6b2;
+    background:#12171e;border:1px solid #38454f;border-bottom:none}
+  .ltab.on{color:#f0f4f8;background:#293039;border-color:#596b80}
+  .ore{display:inline-flex;flex-direction:column;width:76px;margin:0 4px 6px 0;border:1px solid #333d4a;
+    border-radius:3px;overflow:hidden;vertical-align:top}
+  .ore .oh{font-size:9px;text-align:center;padding:2px 0;background:#1b2430;color:var(--lbl)}
+  .ore .ob{height:44px;display:flex;align-items:center;justify-content:center}
+  .ore .oc{font-size:10px;text-align:center;padding:2px 0;background:#050508;border-top:1px solid #333d4a;
+    color:#f0f4f8}
+  .ore .dot{width:16px;height:16px;border-radius:50%}
+  .lbtn{width:100%;margin-top:2px;font-size:10px;padding:4px 0;background:#1c4553;color:#dff2f8;
+    border:1px solid var(--teal);border-radius:3px;cursor:pointer}
+  .lbtn:hover{background:#22505f}
+  /* hangar */
+  .htabs{display:flex;gap:2px;margin-bottom:6px}
+  .htab{font-size:11px;padding:4px 10px;cursor:pointer;border-radius:3px;color:#9aa6b2;
+    background:#12171e;border:1px solid #38454f}
+  .htab.on{color:#8fd8ef;background:#1a2733;border-color:#596b80}
+  .hgrid{display:grid;grid-template-columns:repeat(6,42px);gap:4px}
+  .hslot{width:42px;height:42px;border:1px solid rgba(115,140,166,.5);border-radius:3px;
+    background:rgba(20,28,38,.85);display:flex;align-items:center;justify-content:center;
+    font-size:8px;font-weight:700;color:#c8d6e4;cursor:pointer;position:relative}
+  .hslot:hover{border-color:rgba(140,191,255,.85)}
+  .hslot.sel{background:rgba(115,191,255,.28);border:1.5px solid rgba(140,217,255,.9)}
+  .hslot .q{position:absolute;right:2px;bottom:1px;font-size:8px;color:var(--amber)}
+  .hsec{font-size:10px;color:var(--muted);margin:8px 0 4px;text-transform:uppercase;letter-spacing:.06em}
+  /* tienda */
+  .card{display:flex;gap:8px;margin-top:6px;padding:7px;border-radius:4px;
+    background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.12)}
+  .card .cicon{width:40px;height:40px;flex-shrink:0;border:1px solid rgba(88,123,189,.6);border-radius:3px;
+    background:#0e1520;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;
+    color:#9cc3ff}
+  .card .cn{flex:1}
+  .card .cn b{font-size:13px;color:#e8f0f5;font-weight:600}
+  .card .cn p{font-size:10px;color:var(--muted);margin-top:2px}
+  .card .buy{align-self:center;text-align:right}
+  .card .buy .price{font-size:11px;color:var(--amber);font-weight:700}
+  .card .buy button{margin-top:4px;font-size:10px;padding:4px 12px;border-radius:3px;cursor:pointer;
+    background:linear-gradient(180deg,#2f7a17,#7cc63a 55%,#2f7a17);border:1px solid #1e5410;color:#eaffe0;
+    font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+  .card .buy button:hover{filter:brightness(1.15)}
+  .chip{display:inline-block;font-size:9px;color:rgba(255,255,255,.75);background:rgba(255,255,255,.06);
+    border-radius:3px;padding:1px 6px;margin:3px 3px 0 0}
+  .rowbad{background:rgba(217,64,56,.22)!important}
+
+  /* ============ KILLSCREEN / LOGOUT / AJUSTES ============ */
+  #veil{position:fixed;inset:0;background:#050d0f;z-index:60;display:none}
+  #veil.open{display:block}
+  #kill{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:61;width:360px;display:none}
+  #kill.open{display:block}
+  #kill h2{font-size:15px;color:#ff7359;text-align:center;margin-bottom:2px}
+  #kill .cause{font-size:11px;color:var(--muted);text-align:center;margin-bottom:12px}
+  .krow{display:flex;align-items:center;gap:10px;margin-top:8px}
+  .krow .ki{width:40px;height:40px;flex-shrink:0;border:1px solid var(--teal-soft);border-radius:3px;
+    background:#0e1a22;display:flex;align-items:center;justify-content:center;color:var(--accent)}
+  .krow .ki svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6}
+  .krow button{flex:1;height:32px;font-size:11px;font-weight:600;color:#eaffe0;cursor:pointer;
+    background:linear-gradient(180deg,#2f7a17,#7cc63a 55%,#2f7a17);border:1px solid #1e5410;border-radius:4px;
+    text-shadow:0 1px 2px rgba(0,0,0,.6)}
+  .krow button:hover{filter:brightness(1.15)}
+  .krow button small{font-weight:400;opacity:.85}
+  #logout{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:62;width:240px;display:none;
+    text-align:center}
+  #logout.open{display:block}
+  #logout .big{font-size:26px;color:var(--amber);font-weight:700;margin:6px 0}
+  #logout p{font-size:12px}
+  #logout button{margin-top:10px;font-size:11px;padding:6px 18px;border-radius:3px;cursor:pointer;
+    background:linear-gradient(180deg,#7a2017,#c63a3a 55%,#7a2017);border:1px solid #541010;color:#ffe0e0;font-weight:600}
+
+  /* ============ LOGIN ============ */
+  #login{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(70% 60% at 50% 38%, rgba(46,132,165,.12), transparent 70%), #0d0e10}
+  #login.off{display:none}
+  #login .panel{width:420px;background:var(--winbg);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+    border:1px solid var(--teal);border-radius:6px;box-shadow:0 0 0 2px rgba(14,36,48,.7),0 22px 60px rgba(0,0,0,.6);
+    overflow:hidden}
+  #login .lh{height:26px;background:linear-gradient(90deg,#0f1c26,#24404f 55%,#6f9cb4 130%);
+    display:flex;align-items:center;padding:0 10px;font-size:11px;font-weight:600;letter-spacing:.08em;color:#dfeaf2}
+  #login .li{padding:18px 22px 20px;display:flex;flex-direction:column;gap:10px}
+  #login h1{font-size:20px;font-weight:700;color:#e8f0f5;text-align:center;letter-spacing:.12em}
+  #login h1 b{color:var(--accent);font-weight:700}
+  #login label{font-size:12px;color:var(--lbl)}
+  #login input{width:100%;margin-top:3px;background:#05080b;border:1px solid #294a5c;border-radius:3px;
+    color:#e8f0f5;font-size:12px;font-family:inherit;padding:7px 9px;outline:none}
+  #login input:focus{border-color:var(--accent2)}
+  #enter{width:100%;height:34px;font-size:12px;font-weight:700;letter-spacing:.1em;color:#dff5fc;cursor:pointer;
+    background:linear-gradient(180deg,#1c4553,#2E84A5 55%,#1c4553);border:1px solid var(--teal);border-radius:4px}
+  #enter:hover{filter:brightness(1.15)}
+  #lstatus{font-size:11px;color:var(--muted);min-height:30px}
+
+  #sig{bottom:8px;right:12px;font-size:9px;letter-spacing:.14em;color:rgba(255,255,255,.3);z-index:5;
+    text-transform:uppercase}
+
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-thumb{background:#2a3a48;border-radius:4px}
+  ::-webkit-scrollbar-track{background:transparent}
+</style>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+  <symbol id="m-log" viewBox="0 0 24 24"><path d="M5 4 H19 V20 H5 Z M8 8 H16 M8 12 H16 M8 16 H13"/></symbol>
+  <symbol id="m-map" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="1"/><circle cx="12" cy="12" r="2.4"/><path d="M12 4 V8 M12 16 V20 M4 12 H8 M16 12 H20"/></symbol>
+  <symbol id="m-ship" viewBox="0 0 24 24"><path d="M12 3 L16 13 L12 10.5 L8 13 Z M12 10.5 V17 M8 19.5 H16"/></symbol>
+  <symbol id="m-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21 C4 16 8 14 12 14 C16 14 20 16 20 21"/></symbol>
+  <symbol id="m-boost" viewBox="0 0 24 24"><path d="M13 2 L6 13 H11 L9 22 L18 10 H12 Z"/></symbol>
+  <symbol id="m-lab" viewBox="0 0 24 24"><path d="M10 3 V10 L4 19 C3.4 20 4 21 5 21 H19 C20 21 20.6 20 20 19 L14 10 V3 M8 3 H16"/></symbol>
+  <symbol id="m-sist" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="8" r="2.4"/><circle cx="12" cy="18" r="2.4"/><path d="M8 7 L15.5 8 M16.5 10 L13 16 M7.5 8 L11 16"/></symbol>
+  <symbol id="m-hgr" viewBox="0 0 24 24"><path d="M4 9 L4 20 L20 20 L20 9 M2 9 L4 4 L20 4 L22 9 Z M9 20 V14 H15 V20"/></symbol>
+  <symbol id="m-tnd" viewBox="0 0 24 24"><path d="M4 19 L4 12 M9 19 L9 7 M14 19 L14 10 M19 19 L19 4"/></symbol>
+  <symbol id="m-ens" viewBox="0 0 24 24"><path d="M14 6 A4 4 0 1 0 17.8 11 L21 14 L18 17 L14.6 13.6 A4 4 0 0 1 10 10"/><circle cx="7" cy="17" r="3"/></symbol>
+  <symbol id="m-clan" viewBox="0 0 24 24"><path d="M6 21 V4 M6 4 H18 L15 8 L18 12 H6"/></symbol>
+  <symbol id="m-pil" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2 V6 M12 18 V22 M2 12 H6 M18 12 H22 M5.5 5.5 L8 8 M16 16 L18.5 18.5 M18.5 5.5 L16 8 M8 16 L5.5 18.5"/></symbol>
+  <symbol id="m-msn" viewBox="0 0 24 24"><path d="M9 6 H20 M9 12 H20 M9 18 H20 M4 6 L5 7 L7 4.5 M4 12 L5 13 L7 10.5 M4 18 L5 19 L7 16.5"/></symbol>
+  <symbol id="m-grp" viewBox="0 0 24 24"><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M2 20 C2 16 5 14.5 8 14.5 C11 14.5 14 16 14 20 M13 15 C15.5 14.6 22 15.5 22 20"/></symbol>
+  <symbol id="m-pet" viewBox="0 0 24 24"><circle cx="12" cy="13" r="6"/><path d="M8 8 L6 4 M16 8 L18 4 M10 13 H10.01 M14 13 H14.01"/></symbol>
+  <symbol id="m-chat" viewBox="0 0 24 24"><path d="M4 5 H20 V16 H10.5 L6.5 20 V16 H4 Z"/></symbol>
+  <symbol id="m-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2 V5 M12 19 V22 M2 12 H5 M19 12 H22 M4.9 4.9 L7 7 M17 17 L19.1 19.1 M19.1 4.9 L17 7 M7 17 L4.9 19.1"/></symbol>
+  <symbol id="m-full" viewBox="0 0 24 24"><path d="M4 9 V4 H9 M15 4 H20 V9 M20 15 V20 H15 M9 20 H4 V15"/></symbol>
+  <symbol id="m-off" viewBox="0 0 24 24"><path d="M12 3 V11 M6.3 6.5 A8 8 0 1 0 17.7 6.5"/></symbol>
+  <symbol id="m-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5 A2.5 2.5 0 1 1 12 12.5 V14 M12 17 H12.01"/></symbol>
+  <symbol id="m-wrench" viewBox="0 0 24 24"><path d="M14 6 A4 4 0 1 0 17.8 11 L21 14 L18 17 L14.6 13.6 A4 4 0 0 1 10 10 L4 16 L8 20 L14 14"/></symbol>
+  <symbol id="m-portal" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="5" ry="8"/><ellipse cx="12" cy="12" rx="9" ry="8"/></symbol>
+  <symbol id="m-pin" viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.5 5 9.5 A7 7 0 0 1 19 9.5 C19 14.5 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></symbol>
+</defs></svg>
+
+<canvas id="space"></canvas>
+<div id="neb"></div>
+
+<!-- ============ TASKBAR ============ -->
+<nav class="hud" id="taskbar" aria-label="Ventanas">
+  <button class="tb" data-w="w-reg"  data-tip="Registro"><svg><use href="#m-log"/></svg></button>
+  <button class="tb" data-w="w-mapa" data-tip="Minimapa"><svg><use href="#m-map"/></svg></button>
+  <button class="tb" data-w="w-nave" data-tip="Nave"><svg><use href="#m-ship"/></svg></button>
+  <button class="tb" data-w="w-usr"  data-tip="Usuario"><svg><use href="#m-user"/></svg></button>
+  <button class="tb" data-w="w-bst"  data-tip="Boosters"><svg><use href="#m-boost"/></svg></button>
+  <button class="tb" data-w="w-lab"  data-tip="Laboratorio"><svg><use href="#m-lab"/></svg></button>
+  <button class="tb" data-w="w-sist" data-tip="Sistema estelar"><svg><use href="#m-sist"/></svg></button>
+  <button class="tb" data-w="w-hgr"  data-tip="Hangar"><svg><use href="#m-hgr"/></svg></button>
+  <button class="tb" data-w="w-tnd"  data-tip="Tienda"><svg><use href="#m-tnd"/></svg></button>
+  <button class="tb" data-w="w-ens"  data-tip="Ensamblaje"><svg><use href="#m-ens"/></svg></button>
+  <button class="tb" data-w="w-clan" data-tip="Clan"><svg><use href="#m-clan"/></svg></button>
+  <button class="tb" data-w="w-pil"  data-tip="Piloto"><svg><use href="#m-pil"/></svg></button>
+  <button class="tb" data-w="w-msn"  data-tip="Misiones"><svg><use href="#m-msn"/></svg></button>
+  <button class="tb" data-w="w-grp"  data-tip="Grupo"><svg><use href="#m-grp"/></svg></button>
+  <button class="tb" data-w="w-pet"  data-tip="P.E.T."><svg><use href="#m-pet"/></svg></button>
+  <button class="tb" data-w="w-chat" data-tip="Chat"><svg><use href="#m-chat"/></svg></button>
+</nav>
+
+<!-- ============ SYSBAR + objetivo ============ -->
+<nav class="hud" id="sysbar" aria-label="Sistema">
+  <button class="tb" id="btnCfg"  data-tip="Ajustes"><svg><use href="#m-gear"/></svg></button>
+  <button class="tb" id="btnHelp" data-tip="Ayuda"><svg><use href="#m-help"/></svg></button>
+  <button class="tb" id="btnFull" data-tip="Pantalla completa"><svg><use href="#m-full"/></svg></button>
+  <button class="tb" id="btnOff"  data-tip="Cerrar sesión"><svg><use href="#m-off"/></svg></button>
+</nav>
+<div class="hud" id="target">Vexor Elite &nbsp;·&nbsp; vida <b>82.000</b> / 328.000</div>
+
+<div class="hud" id="devrow"><button id="devkill">Simular destrucción</button></div>
+<div class="hud" id="toast"></div>
+<div class="hud" id="rewards"></div>
+
+<!-- ============ VENTANAS ============ -->
+<section class="fp" id="w-nave" style="left:12px;top:84px;width:214px">
+  <header><button class="wx" data-close>≡</button><span class="wt">Nave</span><button class="wx" data-close>–</button></header>
+  <div class="fb">
+    <div class="r"><span class="k">Vida</span><span class="seg"><i style="--c:var(--hp);width:88%"></i></span><span class="v">225.280/256.000</span></div>
+    <div class="r"><span class="k">Escudo</span><span class="seg"><i style="--c:var(--sh);width:64%"></i></span><span class="v">160.000/250.000</span></div>
+    <div class="r"><span class="k">Nanocasco</span><span class="seg"><i style="--c:var(--nano);width:30%"></i></span><span class="v">21.600/72.000</span></div>
+    <div class="r"><span class="k">Bodega</span><span class="seg"><i style="--c:#d9b23e;width:34%"></i></span><span class="v">340/1.000</span></div>
+    <div class="r"><span class="k">Velocidad</span><span class="v">386</span></div>
+    <div class="r"><span class="k">Configuración</span><span class="v">1</span></div>
+  </div>
+  <span class="grip"></span>
+</section>
+
+<section class="fp" id="w-usr" style="left:320px;top:84px;width:206px">
+  <header><button class="wx" data-close>≡</button><span class="wt">Usuario</span><button class="wx" data-close>–</button></header>
+  <div class="fb">
+    <div class="r"><span class="k">Experiencia</span><span class="v">1.245.300</span></div>
+    <div class="r"><span class="k">Nivel</span><span class="v">12</span></div>
+    <div class="r"><span class="k">Honor</span><span class="v">23.480</span></div>
+    <div class="r"><span class="k">Jackpot</span><span class="v">112</span></div>
+    <div class="r"><span class="k">Créditos</span><span class="v">8.421.900</span></div>
+    <div class="r"><span class="k">Uridium</span><span class="v">14.860</span></div>
+    <div class="r"><span class="k">Bonos de salto</span><span class="v">3</span></div>
+    <div class="r"><span class="k">Llaves de botín</span><span class="v">7</span></div>
+  </div>
+  <span class="grip"></span>
+</section>
+
+<section class="fp" id="w-bst" style="right:56px;top:84px;width:250px">
+  <header><button class="wx" data-close>≡</button><span class="wt">Boosters</span><button class="wx" data-close>–</button></header>
+  <div class="fb">
+    <div class="boost"><span class="bicon">DMG</span><span class="bn">Booster de daño<small>DMG-B01 · 6h 12m</small></span><span class="bp">+10%</span></div>
+    <div class="boost"><span class="bicon">EXP</span><span class="bn">Booster de experiencia<small>EXP-B02 · 2h 24m</small></span><span class="bp">+20%</span></div>
+    <div class="boost"><span class="bicon">SHD</span><span class="bn">Booster de escudo<small>SHD-B01 · 44m</small></span><span class="bp">+10%</span></div>
+  </div>
+  <span class="grip"></span>
+</section>
+
+<section class="fp off" id="w-msn" style="right:330px;top:84px;width:246px">
+  <header><button class="wx" data-close>≡</button><span class="wt">Misiones</span><button class="wx" data-close>–</button></header>
+  <div class="fb">
+    <div class="dots">● ○ ○</div>
+    <h3>Limpieza del sector</h3>
+    <div class="obj">Destruye Vexor <b>14/25</b></div>
+    <div class="obj">Recoge Asterium <b>620/1.000</b></div>
+    <div class="rw">Recompensa: 120.000 créditos · 4.200 EXP · 300 honor</div>
+  </div>
+  <span class="grip"></span>
+</section>
+
+<section class="fp" id="w-lab" style="right:56px;top:236px;width:268px">
+  <header><button class="wx" data-close>≡</button><span class="wt">Laboratorio</span><button class="wx" data-close>–</button></header>
+  <div class="fb">
+    <div class="ltabs"><span class="ltab on">Refinamiento</span><span class="ltab">Potenciación</span></div>
+    <div>
+      <span class="ore"><span class="oh">Prometium</span><span class="ob"><span class="dot" style="background:#c23a2c"></span></span><span class="oc">12.480</span></span>
+      <span class="ore"><span class="oh">Endurium</span><span class="ob"><span class="dot" style="background:#3a76c2"></span></span><span class="oc">9.815</span></span>
+      <span class="ore"><span class="oh">Terbium</span><span class="ob"><span class="dot" style="background:#c2a13a"></span></span><span class="oc">4.102</span></span>
+    </div>
+    <span class="ore" style="width:100%;margin-right:0">
+      <span class="oh">Promerium</span>
+      <span class="ob" style="height:30px"><span class="dot" style="background:#7ae08a;box-shadow:0 0 8px rgba(122,224,138,.6)"></span></span>
+      <span class="oc">1.204</span>
+    </span>
+    <button class="lbtn">Refinar</button>
+  </div>
+  <span class="grip"></span>
+</section>
+
+<section class="fp" id="w-grp" style="right:56px;bottom:214px;width:236px">
+  <header><button class="wx" data-close>≡</button><span class="wt">Grupo</span><button class="wx" data-close>–</button></header>
+  <div class="fb">
+    <div class="gm"><span class="gn">Kaira_MX <small>· 4-4</small></span>
+      <span class="gb"><i style="background:#22cc22;width:92%"></i><i style="background:#2255ee;width:71%"></i></span></div>
+    <div class="gm"><span class="gn">Vex_Hunter <small>· 4-4</small></span>
+      <span class="gb"><i style="background:#22cc22;width:45%"></i><i style="background:#2255ee;width:12%"></i></span></div>
+  </div>
+  <span class="grip"></span>
+</section>
+
+<section class="fp" id="w-pet" style="right:330px;top:236px;width:236px">
+  <header><button class="wx" data-close>≡</button><span class="wt">P.E.T.</span><button class="wx" data-close>–</button></header>
+  <div class="fb">
+    <div class="phead">
+      <span class="pportrait"><svg><use href="#m-pet"/></svg><span class="plvl">7</span></span>
+      <div style="flex:1">
+        <div style="text-align:center;font-size:11px;margin-bottom:4px">G3N-3SIS</div>
+        <div class="gm" style="margin-top:2px"><span class="gb" style="width:100%"><i style="background:#00ee00;width:84%"></i><i style="background:#2244ee;width:60%"></i><i style="background:#f2f2f2;width:52%"></i><i style="background:#ee2222;width:31%"></i></span></div>
+      </div>
+    </div>
+    <div class="pbtns"><button>Lanzar</button><button>Guardar</button><button>Reparar</button><button>Combustible</button></div>
+  </div>
+  <span class="grip"></span>
+</section>
+
+<section class="fp" id="w-chat" style="left:12px;bottom:214px;width:372px">
+  <header><button class="wx" data-close>≡</button><span class="wt">Chat</span><button class="wx" data-close>–</button></header>
+  <div class="fb">
+    <div class="tabs"><button class="tab on">Global</button><button class="tab">MMO</button><button class="tab">Clan Search</button></div>
+    <div id="chatlog">
+      <div><span class="who">Kaira_MX:</span> vendo promerium, susurren</div>
+      <div><span class="who">Vex_Hunter:</span> grupo para 4-5, faltan 2</div>
+      <div><span class="sys">◆ El servidor se reiniciará en 60 minutos.</span></div>
+    </div>
+    <input id="chatin" placeholder="Escribe… (/w nombre mensaje para susurrar)">
+  </div>
+  <span class="grip"></span>
+</section>
+
+<section class="fp" id="w-reg" style="left:12px;bottom:64px;width:372px">
+  <header><button class="wx" data-close>≡</button><span class="wt">Registro</span><button class="wx" data-close>–</button></header>
+  <div class="fb"><div id="reglog"></div></div>
+  <span class="grip"></span>
+</section>
+
+<section class="fp" id="w-mapa" style="right:12px;bottom:64px">
+  <header><button class="wx" data-close>≡</button><span class="wt" id="mapTitle">Vorago 4-4 · (1240, 800)</span>
+    <button class="zbtn" id="zout">−</button><button class="zbtn" id="zin">+</button>
+    <button class="wx" data-close>–</button></header>
+  <div class="fb"><canvas id="mmc" width="300" height="185"></canvas></div>
+  <span class="grip"></span>
+</section>
+
+<section class="fp off" id="w-hgr" style="left:220px;top:120px;width:470px">
+  <header><button class="wx" data-close>≡</button><span class="wt">Hangar — Orion · Config 1</span><button class="wx" data-close>–</button></header>
+  <div class="fb">
+    <div class="htabs"><span class="htab on">Nave</span><span class="htab">Munición</span><span class="htab">Drones</span><span class="htab">Potenciadores</span></div>
+    <div class="hsec">Láseres equipados</div>
+    <div class="hgrid">
+      <span class="hslot sel">LF-3</span><span class="hslot sel">LF-3</span><span class="hslot sel">LF-3</span>
+      <span class="hslot">LF-2</span><span class="hslot"></span><span class="hslot"></span>
+    </div>
+    <div class="hsec">Inventario</div>
+    <div class="hgrid">
+      <span class="hslot">LF-3<span class="q">×2</span></span><span class="hslot">SG3N<span class="q">×4</span></span>
+      <span class="hslot">SP-1</span><span class="hslot">G3N</span><span class="hslot">LF-1<span class="q">×6</span></span><span class="hslot"></span>
+    </div>
+  </div>
+  <span class="grip"></span>
+</section>
+
+<section class="fp off" id="w-tnd" style="left:280px;top:150px;width:430px">
+  <header><button class="wx" data-close>≡</button><span class="wt">Tienda — Comprar</span><button class="wx" data-close>–</button></header>
+  <div class="fb">
+    <div class="card"><span class="cicon">LF-3</span>
+      <span class="cn"><b>Láser LF-3</b><p>Cañón láser de tercera generación.</p><span class="chip">daño 150</span><span class="chip">élite</span></span>
+      <span class="buy"><span class="price">10.000 U</span><br><button>Comprar</button></span></div>
+    <div class="card"><span class="cicon">SG3N</span>
+      <span class="cn"><b>Generador SG3N-B02</b><p>Generador de escudo de gama alta.</p><span class="chip">escudo 5.000</span></span>
+      <span class="buy"><span class="price">8.000 U</span><br><button>Comprar</button></span></div>
+    <div class="card rowbad"><span class="cicon">R-310</span>
+      <span class="cn"><b>Cohete R-310</b><p>Saldo insuficiente para el paquete ×100.</p><span class="chip">daño 1.000</span></span>
+      <span class="buy"><span class="price">100 C</span><br><button>Comprar</button></span></div>
+  </div>
+  <span class="grip"></span>
+</section>
+
+<section class="fp off" id="w-sist" style="left:340px;top:180px;width:320px">
+  <header><button class="wx" data-close>≡</button><span class="wt">Sistema estelar</span><button class="wx" data-close>–</button></header>
+  <div class="fb" style="font-size:11px;color:var(--muted);padding:14px">
+    Grafo de mapas 1-1 … 4-5 con miniaturas, marcador parpadeante del mapa
+    actual y barra de salto (requiere AJP-01). <span style="color:var(--amber)">Maqueta pendiente.</span>
+  </div>
+  <span class="grip"></span>
+</section>
+
+<section class="fp off" id="w-ens" style="left:360px;top:200px;width:340px">
+  <header><button class="wx" data-close>≡</button><span class="wt">Ensamblaje — Recetas</span><button class="wx" data-close>–</button></header>
+  <div class="fb">
+    <div class="card"><span class="cicon">AJP</span>
+      <span class="cn"><b>AJP-01</b><p>Procesador de salto avanzado.</p><span class="chip">4h de encargo</span></span>
+      <span class="buy"><button>Encargar</button></span></div>
+    <div class="card rowbad"><span class="cicon">CL04</span>
+      <span class="cn"><b>CL04K-M</b><p>Falta: 120 × Seprom.</p></span>
+      <span class="buy"><button>Encargar</button></span></div>
+  </div>
+  <span class="grip"></span>
+</section>
+
+<section class="fp off" id="w-clan" style="left:400px;top:220px;width:330px">
+  <header><button class="wx" data-close>≡</button><span class="wt">Clan</span><button class="wx" data-close>–</button></header>
+  <div class="fb" style="font-size:11px;color:var(--muted);padding:14px">
+    Mi clan / Buscar / Fundar · Información, miembros, solicitudes y diplomacia.
+    <span style="color:var(--amber)">Maqueta pendiente.</span>
+  </div>
+  <span class="grip"></span>
+</section>
+
+<section class="fp off" id="w-pil" style="left:420px;top:240px;width:340px">
+  <header><button class="wx" data-close>≡</button><span class="wt">Piloto — Árbol de habilidades</span><button class="wx" data-close>–</button></header>
+  <div class="fb" style="font-size:11px;color:var(--muted);padding:14px">
+    Tres ramas con celdas de habilidad, puntos de piloto (máx. 50) y reinicio.
+    <span style="color:var(--amber)">Maqueta pendiente.</span>
+  </div>
+  <span class="grip"></span>
+</section>
+
+<section class="fp off" id="w-cfg" style="left:50%;top:50%;transform:translate(-50%,-50%);width:340px">
+  <header><button class="wx" data-close>≡</button><span class="wt">Ajustes</span><button class="wx" data-close>–</button></header>
+  <div class="fb">
+    <div class="ltabs"><span class="ltab on">Pantalla</span><span class="ltab">Jugabilidad</span><span class="ltab">Sonido</span><span class="ltab">Teclado</span></div>
+    <div class="r"><span class="k">Calidad</span><span class="v">Alta</span></div>
+    <div class="r"><span class="k">Fondo del minimapa</span><span class="v">Sí</span></div>
+    <div class="r"><span class="k">Mostrar FPS</span><span class="v">No</span></div>
+    <div class="r"><span class="k">Volumen efectos</span><span class="v">80</span></div>
+  </div>
+  <span class="grip"></span>
+</section>
+
+<!-- ============ BARRAS DE ACCIÓN ============ -->
+<div class="hud" id="bars">
+  <nav class="abar" id="palItems"></nav>
+  <nav class="abar" id="palette"></nav>
+  <nav class="abar" id="barStd" aria-label="Barra estándar"></nav>
+  <div style="display:flex;align-items:center">
+    <nav class="abar" id="barPre" aria-label="Barra premium"></nav>
+    <button id="palArrow" title="Paleta de categorías">▲</button>
+  </div>
+</div>
+
+<!-- ============ KILLSCREEN / LOGOUT ============ -->
+<div id="veil"></div>
+<div id="kill">
+  <h2>Tu nave ha sido destruida</h2>
+  <div class="cause">Destruida por Vexor Elite en Vorago 4-4</div>
+  <div class="krow"><span class="ki"><svg><use href="#m-hgr"/></svg></span><button data-respawn>Reparar en la base <small>· gratis</small></button></div>
+  <div class="krow"><span class="ki"><svg><use href="#m-portal"/></svg></span><button data-respawn>Portal más cercano <small>· 250 U</small></button></div>
+  <div class="krow"><span class="ki"><svg><use href="#m-pin"/></svg></span><button data-respawn>En este punto <small>· 500 U</small></button></div>
+  <div class="krow"><span class="ki"><svg><use href="#m-wrench"/></svg></span><button data-respawn>Reparación completa <small>· 750 U</small></button></div>
+</div>
+<div id="logout">
+  <p>Cerrando sesión en</p>
+  <div class="big" id="offN">10</div>
+  <p>segundos</p>
+  <button id="offCancel">CANCELAR</button>
+</div>
+
+<!-- ============ LOGIN ============ -->
+<div id="login">
+  <div class="panel">
+    <div class="lh">MEXORBIT · CLIENTE</div>
+    <div class="li">
+      <h1>MEX<b>ORBIT</b></h1>
+      <div><label>API base URL<input value="https://api.turname.mx"></label></div>
+      <div><label>GameServer host<input value="game.turname.mx"></label></div>
+      <div><label>Usuario<input value="odrack"></label></div>
+      <div><label>Contraseña<input type="password" value="········"></label></div>
+      <button id="enter">ENTRAR</button>
+      <div id="lstatus"></div>
+    </div>
+  </div>
+</div>
+
+<div class="hud" id="sig">Propuesta M · herencia del cliente Godot, modernizada</div>
+
+<script>
+  const g=id=>document.getElementById(id);
+
+  /* ---- starfield ---- */
+  const sc=g('space'),sx=sc.getContext('2d');let stars=[];
+  function sizeSpace(){sc.width=innerWidth;sc.height=innerHeight;
+    stars=Array.from({length:210},()=>({x:Math.random()*sc.width,y:Math.random()*sc.height,
+      r:Math.random()*1.3+.2,s:Math.random()*.25+.05}));}
+  sizeSpace();addEventListener('resize',sizeSpace);
+  (function tick(){sx.clearRect(0,0,sc.width,sc.height);
+    for(const st of stars){st.x-=st.s;if(st.x<0)st.x=sc.width;
+      sx.globalAlpha=.35+st.r*.4;sx.fillStyle='#cfe3ea';sx.fillRect(st.x,st.y,st.r,st.r);}
+    sx.globalAlpha=1;requestAnimationFrame(tick);})();
+
+  /* ---- toast + recompensas ---- */
+  const toast=g('toast');let tt;
+  function showToast(m){toast.textContent=m;toast.classList.add('show');
+    clearTimeout(tt);tt=setTimeout(()=>toast.classList.remove('show'),2600);}
+  const RW=['+ 240 × Prometium','+ 120 × Endurium','+ 1.200 créditos','+ 80 × Terbium','+ 2 × Llave de botín'];
+  setInterval(()=>{if(document.hidden)return;
+    const d=document.createElement('div');d.textContent=RW[Math.floor(Math.random()*RW.length)];
+    g('rewards').appendChild(d);setTimeout(()=>d.remove(),3200);
+    if(g('rewards').children.length>8)g('rewards').firstElementChild.remove();},4200);
+
+  /* ---- registro ---- */
+  const REG=[["ok","Sesión iniciada. Bienvenido, ODRACK."],
+    ["t","Cargando Vorago 4-4…"],
+    ["","Munición LCB-10 seleccionada."],
+    ["warn","Zona de carga al 100%: suelta tu bodega antes de arriesgarte."],
+    ["","Autopiloto hacia (1240, 800)."]];
+  const reg=g('reglog');
+  REG.forEach(([c,m])=>{const d=document.createElement('div');if(c)d.className=c;d.textContent=m;reg.appendChild(d);});
+
+  /* ---- ventanas flotantes: taskbar toggle + cierre + arrastre ---- */
+  let zTop=30;
+  function syncTb(id){const b=document.querySelector('.tb[data-w="'+id+'"]');if(!b)return;
+    b.classList.toggle('open',!g(id).classList.contains('off'));}
+  document.querySelectorAll('.tb[data-w]').forEach(b=>{
+    b.addEventListener('click',()=>{const w=g(b.dataset.w);w.classList.toggle('off');
+      if(!w.classList.contains('off'))w.style.zIndex=++zTop;syncTb(b.dataset.w);});
+    syncTb(b.dataset.w);});
+  document.querySelectorAll('.fp [data-close]').forEach(x=>x.addEventListener('click',()=>{
+    const w=x.closest('.fp');w.classList.add('off');syncTb(w.id);}));
+  document.querySelectorAll('.fp').forEach(w=>{
+    w.addEventListener('mousedown',()=>{w.style.zIndex=++zTop;});
+    const h=w.querySelector('header');
+    h.addEventListener('mousedown',e=>{
+      if(e.target.closest('button'))return;e.preventDefault();
+      const r=w.getBoundingClientRect();
+      w.style.left=r.left+'px';w.style.top=r.top+'px';
+      w.style.right='auto';w.style.bottom='auto';w.style.transform='none';
+      const ox=e.clientX-r.left,oy=e.clientY-r.top;
+      const vw=()=>innerWidth||document.documentElement.clientWidth||1e9;
+      const vh=()=>innerHeight||document.documentElement.clientHeight||1e9;
+      const mv=ev=>{w.style.left=Math.max(0,Math.min(vw()-60,ev.clientX-ox))+'px';
+        w.style.top=Math.max(0,Math.min(vh()-30,ev.clientY-oy))+'px';};
+      const up=()=>{removeEventListener('mousemove',mv);removeEventListener('mouseup',up);};
+      addEventListener('mousemove',mv);addEventListener('mouseup',up);});});
+
+  /* ---- barras de acción ---- */
+  const CNT={azul:'#587bbd',rojo:'#b13a3a',verde:'#00a600',ambar:'#ffcb01',cian:'#00ffff',naranja:'#ff6633'};
+  const STD=[
+    {ab:'LCB-10',n:'12.4k',c:CNT.azul,f:.86,sel:1},{ab:'MCB-25',n:'8.1k',c:CNT.verde,f:.62},
+    {ab:'MCB-50',n:'2.3k',c:CNT.ambar,f:.31},{ab:'SAB-50',n:'940',c:CNT.cian,f:.55},
+    {ab:'R-310',n:'640',c:CNT.azul,f:.7},{ab:'PLT-26',n:'210',c:CNT.naranja,f:.4},
+    {ab:'ACM-1',n:'8',c:CNT.rojo,f:.2},{ab:'SMB-01',n:'14',c:CNT.verde,f:.9},
+    {ab:'ISH-01',n:'22',c:CNT.verde,f:.95},{ab:'CLK',n:'3',c:CNT.cian,f:.3}];
+  const PRE=[
+    {ab:'AIM-02',n:'∞',c:CNT.azul},{ab:'AJP-01',n:'6',c:CNT.ambar},{ab:'REP-3',n:'CD',c:CNT.verde,cd:1},
+    {},{},{},{},{},{blocked:1},{blocked:1}];
+  function slotEl(s,i,keys){
+    const b=document.createElement('button');b.className='slot';
+    if(s.sel)b.classList.add('sel');if(s.blocked)b.classList.add('blocked');
+    if(s.c)b.style.setProperty('--cnt',s.c);
+    b.innerHTML=(s.f!=null?'<span class="cbar"><i style="width:'+Math.round(s.f*100)+'%"></i></span>':'')+
+      (s.ab?'<span class="ab">'+s.ab+'</span>':'')+
+      (s.n?'<span class="n">'+s.n+'</span>':'')+
+      '<span class="key">'+keys[i]+'</span><span class="cd"></span><span class="cds"></span>';
+    b.addEventListener('click',()=>{
+      if(s.blocked||!s.ab)return;
+      if(b.dataset.cd){return;}
+      if(/LCB|MCB|SAB/.test(s.ab)){
+        document.querySelectorAll('#barStd .slot').forEach(x=>x.classList.remove('sel'));
+        b.classList.add('sel');showToast('Munición '+s.ab+' seleccionada');return;}
+      startCd(b,8);showToast(s.ab+' activado');});
+    return b;}
+  function startCd(b,secs){b.dataset.cd='1';
+    const cd=b.querySelector('.cd'),cds=b.querySelector('.cds');cds.style.display='block';
+    let left=secs;cds.textContent=left;cd.style.height='100%';
+    const iv=setInterval(()=>{left--;
+      if(left<=0){clearInterval(iv);cd.style.height='0';cds.style.display='none';delete b.dataset.cd;return;}
+      cds.textContent=left;cd.style.height=Math.round(left/secs*100)+'%';},1000);}
+  const K1=['1','2','3','4','5','6','7','8','9','0'];
+  const KF=['F1','F2','F3','F4','F5','F6','F7','F8','F9','F10'];
+  STD.forEach((s,i)=>g('barStd').appendChild(slotEl(s,i,K1)));
+  PRE.forEach((s,i)=>{const el=slotEl(s,i,KF);g('barPre').appendChild(el);
+    if(s.cd)setTimeout(()=>startCd(el,34),800);});
+
+  /* paleta de categorías */
+  const CATS=['LÁSER','COHET','LANZA','ESPEC','MINAS','CPUS','COMPR','TECH','HABIL','FORMA'];
+  CATS.forEach(c=>{const b=document.createElement('button');b.className='cat';b.textContent=c;
+    b.addEventListener('click',()=>{
+      document.querySelectorAll('.cat').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+      const it=g('palItems');it.innerHTML='';it.classList.add('open');
+      ['A','B','C','D'].forEach((s,i)=>{const d=document.createElement('button');d.className='slot';
+        d.innerHTML='<span class="ab">'+c.slice(0,3)+'-'+(i+1)+'</span>';it.appendChild(d);});});
+    g('palette').appendChild(b);});
+  g('palArrow').addEventListener('click',()=>{
+    const open=g('palette').classList.toggle('open');
+    if(!open){g('palItems').classList.remove('open');
+      document.querySelectorAll('.cat').forEach(x=>x.classList.remove('on'));}
+    g('palArrow').textContent=open?'▼':'▲';});
+
+  /* ---- minimapa ---- */
+  const WIDTHS=[180,238,300,380,460];let wi=2;
+  const mm=g('mmc'),mx=mm.getContext('2d');
+  const RATIO=20800/12800;
+  let P={x:.42,y:.55},dest=null,auto=null,t0=performance.now();
+  const dots=Array.from({length:16},()=>({x:Math.random(),y:Math.random(),
+    c:Math.random()<.4?'#cc0000':(Math.random()<.5?'#33ff33':'#eeeeee')}));
+  const ports=[{x:.06,y:.08},{x:.94,y:.9}];
+  function sizeMap(){const w=WIDTHS[wi];mm.width=w;mm.height=Math.round(w/RATIO);}
+  sizeMap();
+  g('zin').addEventListener('click',()=>{wi=Math.min(WIDTHS.length-1,wi+1);sizeMap();});
+  g('zout').addEventListener('click',()=>{wi=Math.max(0,wi-1);sizeMap();});
+  mm.addEventListener('click',e=>{const r=mm.getBoundingClientRect();
+    auto={x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height};
+    const d=document.createElement('div');d.textContent='Autopiloto hacia ('+Math.round(auto.x*20800)+', '+Math.round(auto.y*12800)+')';
+    reg.appendChild(d);reg.scrollTop=1e5;});
+  function drawMap(now){
+    const w=mm.width,h=mm.height,t=(now-t0)/1000;
+    mx.clearRect(0,0,w,h);
+    mx.strokeStyle='rgba(77,128,230,.16)';mx.lineWidth=1;
+    for(let i=1;i<5;i++){mx.beginPath();mx.moveTo(i*w/5,0);mx.lineTo(i*w/5,h);mx.stroke();
+      if(i<4){mx.beginPath();mx.moveTo(0,i*h/4);mx.lineTo(w,i*h/4);mx.stroke();}}
+    for(const p of ports){mx.strokeStyle='rgba(143,216,239,.9)';mx.lineWidth=1.2;
+      mx.beginPath();mx.ellipse(p.x*w,p.y*h,4.5,3,0,0,7);mx.stroke();}
+    for(const d of dots){mx.fillStyle=d.c;mx.beginPath();mx.arc(d.x*w,d.y*h,2,0,7);mx.fill();}
+    P.x+=Math.sin(t*.13)*.00025;P.y+=Math.cos(t*.11)*.0002;
+    if(auto){
+      const dx=auto.x-P.x,dy=auto.y-P.y,dist=Math.hypot(dx,dy);
+      if(dist<.004)auto=null;else{P.x+=dx/dist*.0009;P.y+=dy/dist*.0009;}
+      if(auto){mx.strokeStyle='rgba(255,230,77,.9)';mx.lineWidth=1.5;mx.setLineDash([4,4]);
+        mx.lineDashOffset=-t*14;
+        mx.beginPath();mx.moveTo(P.x*w,P.y*h);mx.lineTo(auto.x*w,auto.y*h);mx.stroke();mx.setLineDash([]);
+        mx.strokeStyle='rgba(255,230,77,.95)';mx.lineWidth=1.4;const ax=auto.x*w,ay=auto.y*h;
+        mx.beginPath();mx.moveTo(ax-4,ay-4);mx.lineTo(ax+4,ay+4);mx.moveTo(ax+4,ay-4);mx.lineTo(ax-4,ay+4);mx.stroke();}}
+    mx.fillStyle='#fff';mx.beginPath();mx.arc(P.x*w,P.y*h,3,0,7);mx.fill();
+    mx.strokeStyle='rgba(255,255,255,.5)';mx.beginPath();mx.arc(P.x*w,P.y*h,5.5+Math.sin(t*3)*1.2,0,7);mx.stroke();
+    g('mapTitle').textContent='Vorago 4-4 · ('+Math.round(P.x*20800)+', '+Math.round(P.y*12800)+')';
+    requestAnimationFrame(drawMap);}
+  requestAnimationFrame(drawMap);
+
+  /* ---- chat ---- */
+  g('chatin').addEventListener('keydown',e=>{
+    if(e.key==='Enter'&&g('chatin').value.trim()){
+      const d=document.createElement('div');
+      d.innerHTML='<span class="who">ODRACK:</span> ';
+      d.appendChild(document.createTextNode(g('chatin').value));
+      g('chatlog').appendChild(d);g('chatlog').scrollTop=1e5;g('chatin').value='';}});
+  document.querySelectorAll('#w-chat .tab').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('#w-chat .tab').forEach(x=>x.classList.remove('on'));b.classList.add('on');}));
+
+  /* ---- sysbar ---- */
+  g('btnCfg').addEventListener('click',()=>{const w=g('w-cfg');w.classList.toggle('off');
+    w.style.zIndex=++zTop;g('btnCfg').classList.toggle('open',!w.classList.contains('off'));});
+  g('btnHelp').addEventListener('click',()=>showToast('Manual del piloto — próximamente'));
+  g('btnFull').addEventListener('click',()=>{
+    if(document.fullscreenElement)document.exitFullscreen();
+    else document.documentElement.requestFullscreen().catch(()=>showToast('Pantalla completa no disponible aquí'));});
+  let offIv=null;
+  g('btnOff').addEventListener('click',()=>{g('logout').classList.add('open');
+    let n=10;g('offN').textContent=n;clearInterval(offIv);
+    offIv=setInterval(()=>{n--;g('offN').textContent=n;
+      if(n<=0){clearInterval(offIv);g('logout').classList.remove('open');
+        g('login').classList.remove('off');}},1000);});
+  g('offCancel').addEventListener('click',()=>{clearInterval(offIv);g('logout').classList.remove('open');});
+
+  /* ---- killscreen ---- */
+  g('devkill').addEventListener('click',()=>{g('veil').classList.add('open');g('kill').classList.add('open');});
+  document.querySelectorAll('[data-respawn]').forEach(b=>b.addEventListener('click',()=>{
+    g('veil').classList.remove('open');g('kill').classList.remove('open');
+    showToast('Nave reparada. De vuelta al sector.');}));
+
+  /* ---- login ---- */
+  g('enter').addEventListener('click',()=>{
+    const st=g('lstatus');st.textContent='Autenticando contra la API…';
+    setTimeout(()=>{st.textContent='Sesión HTTP OK (userId 7). Conectando al GameServer…';},600);
+    setTimeout(()=>{st.textContent='Socket abierto. Enviando login del juego…';},1200);
+    setTimeout(()=>{g('login').classList.add('off');
+      showToast('Conexión establecida · Bienvenido, ODRACK');},1750);});
+  document.querySelectorAll('#login input').forEach(i=>i.addEventListener('keydown',e=>{
+    if(e.key==='Enter')g('enter').click();}));
+</script>
