@@ -36,7 +36,7 @@
 | `--hostile` | `#FF3D6E` | enemigos, peligro, salir, killscreen |
 | `--hp` | `#3DF58C` | vida |
 | `--shield` | `#4DA6FF` | escudo |
-| `--nano` | `#F5F03E` | nanocasco |
+| ~~`--nano`~~ | ~~`#F5F03E`~~ | ~~nanocasco~~ — **v1 no tiene nano-casco** (ver abajo); el token queda retirado |
 | `--txt` | `#E8F0FF` | texto principal |
 | `--muted` | `#8A97B8` | etiquetas frías (la pareja del ámbar: etiqueta fría + número ámbar) |
 | `--faint` | `#5A6784` | texto terciario, teclas |
@@ -86,12 +86,23 @@ Anatomía (ver `.fp` en el prototipo):
 
 ## 7. Ventanas del juego (inventario)
 
-Visibles al entrar: **Nave** (vida/escudo/nanocasco/bodega en barras segmentadas + velocidad/configuración), **Usuario** (experiencia, nivel, honor, jackpot, créditos, Flux, bonos de salto, llaves), **Boosters** (filas icono + nombre/código + `+N%` ámbar), **Laboratorio** (pestañas Refinamiento/Potenciación; Asterium/Nebulium/Coronium → Aurorium), **Grupo**, **P.E.T.** (retrato + badge de nivel + 4 barras finas + acciones), **Chat** (pestañas Global/Facción/Clan, nombres clicables, input con susurros), **Registro** (log con clases ok/warn), **Minimapa**.
+Visibles al entrar: **Nave** (vida/escudo/bodega en barras segmentadas + velocidad/configuración), **Usuario** (experiencia, nivel, honor, jackpot, créditos, Flux, bonos de salto, llaves), **Boosters** (filas icono + nombre/código + `+N%` ámbar), **Laboratorio** (pestañas Refinamiento/Potenciación; Asterium/Nebulium/Coronium → Aurorium), **Grupo**, **P.E.T.** (retrato + badge de nivel + 4 barras finas + acciones), **Chat** (pestañas Global/Facción/Clan, nombres clicables, input con susurros), **Registro** (log con clases ok/warn), **Minimapa**.
 
 Cerradas al entrar: **Misiones** (tracker de una misión con page-dots), **Hangar** (pestañas + ranuras equipadas + inventario en grid 42×42), **Tienda/Mercado** (tarjetas con chips y fila roja si no alcanza), **Ensamblaje**, **Clan**, **Piloto**, **Sistema estelar**, **Ajustes** (desde ⚙).
 
 - **Barras segmentadas**: 96×11, relleno a rayas verticales de 4px del color de la stat sobre negro.
 - **Fila insuficiente/roja**: fondo `rgba(255,61,110,.1)`, borde `rgba(255,61,110,.35)`.
+
+### Solo dos barras de estado: casco y escudo
+
+**v1 no tiene nano-casco.** El original apilaba tres barras (vida, escudo y la
+amarilla del nano-casco); aquí son **dos y solo dos** — `--hp` para el casco y
+`--shield` para el escudo — tanto en la ventana Nave como sobre las naves en el
+mundo. El token `--nano` queda retirado de la paleta.
+
+Sobre la nave, el orden es **escudo arriba, casco abajo**, y el nombre va debajo
+del casco. Cada stat se lee contra **su propio máximo**: nunca se suman casco y
+escudo en una sola barra, porque esconde cuál de los dos se está gastando.
 
 ## 8. Minimapa
 
