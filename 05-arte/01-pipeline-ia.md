@@ -31,7 +31,7 @@ Crear todo el arte con IA es alcanzable hoy — las herramientas de 2025-2026 (G
 `Biblia de estilo → hero por familia (generación + curaduría) → derivados por edición con referencia (Gemini: variantes de especie, escalas Elite/Titan, facciones) → normalización (alfa, centrado, registro, tamaño estándar) → atlas + catálogo JSON → QA in-engine`
 
 ### Carril 2 — Iconografía de items (~110 iconos)
-El carril más amigable a IA: estilo flat/semi-flat con **plantilla de prompt única** (mismo encuadre, mismo fondo, misma luz) + generación **vectorial nativa si el estilo lo permite** (⚠️ Q2). Los iconos se nombran por su código (`pb-1`, `df-b2`, `cel-4`) — el catálogo §11 de los Guidelines ES la lista de trabajo.
+El carril más amigable a IA: estilo flat/semi-flat con **plantilla de prompt única** (mismo encuadre, mismo fondo, misma luz) y **generación vectorial nativa en Recraft** (Q2 ✅: SVG como fuente). Los iconos se nombran por su código (`pb-1`, `df-b2`, `cel-4`) — el catálogo §11 de los Guidelines ES la lista de trabajo.
 
 ### Carril 3 — Mundo (fondos, planetas, tiles)
 Fondos de mapa por zona (la IA es excelente en esto — nebulosas, campos estelares), planetas/decoraciones como sprites sueltos, tiles de asteroides/nubes. Los **minimapas no son arte**: se generan desde el editor de mapas (modernización sobre el prototipo, que usaba JPGs prerrenderizados).
@@ -63,7 +63,7 @@ Sin herramienta 3D (Q1 la eliminó), sin Midjourney por ahora (con estilo vector
 |---|---|
 | Inconsistencia entre sesiones/meses | La Biblia de estilo + derivar siempre del hero aprobado + carpeta de referencias canónicas en `mex-orbit-art/brand/` |
 | Animación cuadro-a-cuadro (lo más débil de la IA) | Carril 4: procedural. Lo poco animado por sprites (¿idle de aliens?) se decide por costo |
-| "Vectorial" vs detalle | ⚠️ Q2 decide: estilo flat vectorizable vs raster renderizado |
+| "Vectorial" vs detalle | Q2 ✅ cerrada: estilo flat/estilizado con fuente SVG — el detalle se gana con forma y luz, no con textura fotográfica |
 | Legibilidad en juego (assets bellos que no se leen a 64px) | QA in-engine obligatorio: el visor de assets en Godot sobre fondos reales es parte del pipeline, no un extra |
 | El nombre temporal | Cero logos/branding definitivo (regla de 01-vision) |
 
