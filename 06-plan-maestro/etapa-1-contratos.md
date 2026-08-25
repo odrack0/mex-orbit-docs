@@ -25,7 +25,9 @@ Tres entregables, cada uno con documento propio en el repo que le corresponde:
 
 1. ✅ **I1 — Los tres documentos** (2026-08-25): los tres docs en sus repos, con push. Pendiente la revisión del usuario.
 2. ✅ **I2 — Spike de codegen** (2026-08-25): ambas rutas alcanzaron roundtrip byte-exacto C#↔GDScript; **decisión: esquema propio**, porque rangos y rate limits viven en el contrato (inexpresables en protobuf). Evidencia reproducible en `mex-orbit-protocol/spike/README.md`.
-3. **I3 — Migración viva**: aplicar `2026.08.25.1` al MySQL local de dev (`mexorbit_dev`), verificar rollout→rollback→rollout. Requiere credenciales del MySQL local del usuario. Entregable: registro de la corrida en el doc del esquema.
+3. ✅ **I3 — Migración viva** (2026-08-25): MySQL 8.4.11 portable instalado en dev local (3307, junto a la MariaDB legada de 3306 que no se toca); ciclo rollout→rollback→rollout verificado sin residuos (29→0→29 tablas, semillas íntegras). Corrida registrada en `mex-orbit-data-base/docs/esquema-v1.md`.
+
+**La etapa 1 queda con sus tres iteraciones completas; el gate solo espera la revisión de los tres documentos por el usuario.**
 
 ## Fuera de alcance (E3+)
 
