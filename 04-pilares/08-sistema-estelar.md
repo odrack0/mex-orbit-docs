@@ -69,12 +69,60 @@ Dos indicios independientes:
 No coinciden en el factor exacto, pero coinciden en el hecho. **Hay que decidir su tamaño real**, y de
 esa decisión dependen sus coordenadas.
 
-## Dónde el legado se contradice con el arte
+## Los errores del legado, uno a uno
 
-El legado dice que `4-4` conecta con `1-6`, `2-6` y `3-6`. **El arte dice `1-5`, `2-5` y `3-5`**, y el
-arte manda. Hay además una señal de que ese dato del legado está podrido: sus tres portales de vuelta
-aterrizan **los tres en la misma coordenada** (`10400, 6300`), cosa que no puede ser correcta para tres
-puertas distintas.
+Comparado mapa a mapa contra el arte. No es una impresión: es la lista.
+
+### En los mapas bajos — el peor de todos
+
+| Mapa | Qué le pasa |
+|---|---|
+| `4-1` | le falta la puerta a **`1-4`** |
+| `4-2` | le falta la puerta a **`2-4`** |
+| `4-3` | le falta la puerta a **`3-4`** |
+
+**Al cluster `4-x` le faltan sus tres entradas.** En el legado no se puede llegar a `4-1`, `4-2` ni
+`4-3` desde los mapas de facción: solo desde ellos mismos y desde `4-4`. Y a `4-4` se entra únicamente
+por `1-6`/`2-6`/`3-6`, que son justo las puertas que el arte dice que **no existen**. Es decir: la
+única forma de entrar a la zona `4-x` es por una puerta equivocada.
+
+Los otros once mapas bajos (`1-1`…`1-4`, `2-1`…`2-4`, `3-1`…`3-4`) no tienen ningún dato.
+
+### En los mapas altos
+
+| Mapa | Le faltan | Sobran (no están en el arte) |
+|---|---|---|
+| `1-6` | `1-5` | `4-4` |
+| `2-6` | `2-5` | `4-4` |
+| `3-6` | `3-5`, `3-8` | `4-3` |
+| `2-8` | `2-6`, `2-7` | **`2-1`** |
+| `1-8` | `1-7` | — |
+| `3-8` | `3-7` | — |
+| `4-4` | `1-5`, `2-5`, `3-5` | `1-6`, `2-6`, `3-6` |
+
+El `2-8 → 2-1` es especialmente revelador: une un mapa alto con uno bajo, algo que el grafo no hace en
+ningún otro sitio, y `2-1` no tiene datos para devolver el viaje.
+
+### Y tres fallos estructurales que no dependen del grafo
+
+**1 · Cinco portales de una sola dirección** — se va y no se vuelve:
+
+`4-4`→`3-6` · `2-6`→`2-8` · `2-8`→`2-1` · `3-6`→`4-3` · `3-8`→`3-6`
+
+**2 · Cuatro puertas distintas aterrizan en el mismo punto.** En `4-4`, las vueltas hacia `4-2`, `1-6`,
+`2-6` y `3-6` llegan **todas** a `10400, 6300`.
+
+**3 · Dos colisiones más de llegada**: en `4-4` el punto `21900, 11900` recibe desde `4-2` y desde
+`2-6`; en `4-3` el punto `10300, 6600` recibe desde `4-4` y desde `3-6`.
+
+### Lo que esto nos deja como checklist
+
+Los tres fallos estructurales son **comprobables por código** y no cuestan nada, así que nuestros datos
+deberían pasarlos antes de sembrarse:
+
+- toda puerta tiene sus **dos** lados;
+- ninguna llegada **repite** coordenada dentro del mismo mapa;
+- ningún portal apunta a un mapa **sin datos**.
 
 ## Página 0 — el sistema interior
 
