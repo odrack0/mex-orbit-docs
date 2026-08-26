@@ -3,8 +3,12 @@
 **Estado: análisis cerrado, sin implementar.** Fija la **estructura**: qué mapas hay, qué portales
 tiene cada uno, en qué borde están y a dónde llevan. Sin fondos y sin NPCs.
 
-**Alcance: 26 mapas.** `1-1`…`1-8`, `2-1`…`2-8`, `3-1`…`3-8`, `4-1`…`4-5`. **Los `5-x` quedan fuera**
-por decisión del proyecto (2026-08-26).
+**Alcance: 29 mapas y 42 puertas.** `1-1`…`1-8`, `2-1`…`2-8`, `3-1`…`3-8`, `4-1`…`4-5`. **Los `5-x`
+quedan fuera** por decisión del proyecto (2026-08-26).
+
+> Una corrección: las dos primeras versiones de este documento decían *26 mapas y 39 puertas*. Son
+> **29** (8+8+8+5) y **42** — las 39 de borde más las 3 centrales a `4-4`, que se habían contado aparte
+> y luego no se sumaron.
 
 ## De dónde sale esto (y de dónde no)
 
@@ -230,10 +234,39 @@ Los portales van **en pares**: cada puerta son dos portales, uno en cada mapa, y
 etiquetas son números consecutivos (`J1`↔`J2`, `J27`↔`J28`…). Conviene conservar esa propiedad al
 sembrar los datos — es la comprobación más barata de que no falta un lado.
 
+## Sembrado
+
+Migración **`2026.08.26.1`**, aplicada. El SQL **no se escribió a mano**: se genera desde el grafo
+extraído, con las posiciones calculadas del borde y el tercio y las llegadas **derivadas**.
+
+- **Posición**: el borde y el tercio del arte, sobre 20800×12800, con **2000 de margen** para que el
+  portal no toque el borde.
+- **Llegada**: se aterriza **1800 unidades por delante del portal de vuelta**, empujado hacia el centro
+  del mapa. Así no se puede llegar encima de la puerta ni fuera del mapa — los dos fallos del legado —
+  y si un mapa cambia de tamaño, las llegadas se regeneran solas en vez de quedar descuadradas.
+- **El portal `1-1`→`1-2` que ya existía era de una sola dirección.** Los portales se resiembran
+  enteros en vez de parchear alrededor.
+
+Seis comprobaciones contra la base, todas en cero:
+
+| Comprobación | Fallos |
+|---|---|
+| portales de una sola dirección | 0 |
+| dos portales en la misma coordenada | 0 |
+| dos llegadas en la misma coordenada | 0 |
+| portal fuera de los límites del mapa | 0 |
+| llegada fuera de los límites | 0 |
+| mapa sin ningún portal | 0 |
+
 ## Decisiones pendientes
 
 - **El tamaño de `4-4` y `4-5`.** Ver arriba; sin esto, sus coordenadas no se pueden fijar.
-- **Los ids**: conservar la numeración del legado (1…29) o empezar limpio.
-- **La posición de llegada** de cada portal. El arte no la da y el legado solo la tiene para las tres
-  puertas centrales. Lo razonable es llegar **frente al portal de vuelta**, a una distancia fija, y que
-  el dato se derive en vez de escribirse a mano — así no puede quedar descuadrado.
+- **Los nombres.** Solo la facción 1 tiene nombre (*Umbra*). Los `2-x`, `3-x` y `4-x` quedaron como
+  `Sector x-y`, que es un marcador honesto y se cambia con un `UPDATE`.
+- **La vuelta de `4-4` a `4-1`/`4-2`/`4-3`.** El arte deja tres puertos libres en el borde superior de
+  `4-4` —eran los que iban a los `5-x`, ahora fuera— y ahí se colocaron las tres vueltas. Encaja con la
+  geometría (tres puertas hermanas, repartidas) pero **es una inferencia, no una lectura**: el legado
+  las ponía en las esquinas.
+- ~~Los ids~~: resuelto solo. El esquema referencia los mapas por `code`, así que la numeración interna
+  del legado no hacía falta.
+- ~~La posición de llegada~~: resuelta, derivada (ver *Sembrado*).
