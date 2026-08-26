@@ -4,6 +4,8 @@
 
 - **Referencia viva**: [`prototipo-ui-n.html`](prototipo-ui-n.html) — abrir en navegador; toda duda visual se resuelve ahí, no en capturas.
 - Historia del proceso: `prototipo-ui.html` (A) → `-b` → `-c` → `-d` → `-e` → `-h` → `-i` → `-m` → **`-n`**. Los anteriores son archivo, no referencia.
+- Cambios registrados después de la aprobación: reparto del teclado (§6), selector segmentado (§7),
+  trazo blanco y rediseño del glifo de Ajustes (§10), desviación del cristal en Godot (§11).
 - Este documento es **la fuente de verdad** para cualquier interfaz nueva (mockups HTML, UI en Godot, CMS). Si un caso no está cubierto, se propone, se aprueba con el usuario y **se registra aquí**.
 
 ---
@@ -84,6 +86,12 @@ Anatomía (ver `.fp` en el prototipo):
 - Activación al soltar el clic (no al presionar) — herencia del cliente, evita gastar ítems al iniciar un arrastre.
 - **Paleta de categorías**: flecha ▲ a la derecha de la barra II; abre fila de categorías encima, y al elegir una, la sub-fila de ítems encima de esa.
 
+**Reparto del teclado.** Las dos barras se quedan **1–0 y F1–F10**, y eso es todo el teclado que el
+juego reparte por ahora. **Ninguna ventana puede colgarse de una tecla de esas dos series**: los
+Ajustes estuvieron en F1 y se habrían comido un slot en cuanto existan las barras. Las ventanas se
+abren desde su icono (§1.5); si además necesitan atajo, sale de fuera de las series. **`Escape`
+cierra la ventana enfocada** y es la única tecla reservada al margen de las barras.
+
 ## 7. Ventanas del juego (inventario)
 
 Visibles al entrar: **Nave** (vida/escudo/bodega en barras segmentadas + velocidad/configuración), **Usuario** (experiencia, nivel, honor, jackpot, créditos, Flux, bonos de salto, llaves), **Boosters** (filas icono + nombre/código + `+N%` ámbar), **Laboratorio** (pestañas Refinamiento/Potenciación; Asterium/Nebulium/Coronium → Aurorium), **Grupo**, **P.E.T.** (retrato + badge de nivel + 4 barras finas + acciones), **Chat** (pestañas Global/Facción/Clan, nombres clicables, input con susurros), **Registro** (log con clases ok/warn), **Minimapa**.
@@ -92,6 +100,21 @@ Cerradas al entrar: **Misiones** (tracker de una misión con page-dots), **Hanga
 
 - **Barras segmentadas**: 96×11, relleno a rayas verticales de 4px del color de la stat sobre negro.
 - **Fila insuficiente/roja**: fondo `rgba(255,61,110,.1)`, borde `rgba(255,61,110,.35)`.
+
+### Selector segmentado (elegir una de pocas opciones)
+
+Para un ajuste con **dos a cuatro** opciones excluyentes —la calidad gráfica es el primer caso—, en
+vez de un desplegable va una fila de segmentos a la derecha de su fila `.r`, con el mismo estilo que
+las pestañas `.ltab`: Michroma 7px `.1em` UPPERCASE, `padding 4px 10px`, hueco de 3, reposo en
+`--muted` sobre `rgba(0,229,255,.04)` con borde `--edge-soft`.
+
+**El elegido va en `--cyan`**, sobre `rgba(0,229,255,.12)` y borde `--edge` — igual que `.ltab.on`,
+y **no en ámbar**. El ámbar del §1.3 significa "esta ventana está abierta" y ese código no se
+comparte con nada: un segmento elegido es una pestaña activa, no un estado de ventana. Mezclarlos
+deja al jugador sin saber qué le está diciendo el color.
+
+Con más de cuatro opciones deja de caber en la fila y toca otra cosa; cuando aparezca el caso, se
+propone aquí.
 
 ### Solo dos barras de estado: casco y escudo
 
@@ -123,6 +146,14 @@ escudo en una sola barra, porque esconde cuál de los dos se está gastando.
 
 - SVG `viewBox="0 0 24 24"`, `stroke` 1.6–1.7, `fill:none`, `stroke-linecap/linejoin: round`.
 - Un `<symbol>` por concepto, reutilizado vía `<use>`. Glifos simples de una idea (nave, matraz, bandera, grafo…), sin relleno ni detalle interno.
+- **El trazo va en blanco puro**, nunca en el color final. En el prototipo lo pone `currentColor`; en
+  Godot lo pone `modulate` sobre la textura, y un icono ya coloreado **no se puede teñir de ámbar**
+  al abrir su ventana. Es la regla que hace funcionar el §1.3 en el cliente.
+- **Prohibido el relleno, no la forma.** El engranaje de Ajustes era un círculo con ocho rayos
+  sueltos y a 16px se leía como un **sol**: los rayos separados de la corona no dicen "mecanismo".
+  Se redibujó como silueta dentada cerrada —ocho dientes de 20° a radio 9,1 sobre valles a 6,3, más
+  un buje de 2,9— y ahí sí se lee. Cuando un glifo necesita su contorno para significar algo, el
+  contorno **es** la idea y no cuenta como detalle interno.
 
 ## 11. Aplicación en Godot (cuando toque)
 
@@ -130,6 +161,18 @@ escudo en una sola barra, porque esconde cuál de los dos se está gastando.
 - Tokens → `Theme` central (StyleBoxFlat con los colores de §2; sin texturas 9-slice heredadas).
 - Fuentes a incluir en el proyecto: Michroma, Exo 2, JetBrains Mono (hoy el cliente usa la default de Godot; se reemplaza).
 - El chrome de `FloatingPanel` se re-estiliza a §4 conservando su comportamiento (drag en `_process`, clamp, persistencia de layout en server + `user://ui_state.cfg`).
+- El chrome vive en **una sola pieza reutilizable** (`NWindow`), no copiado por ventana: tres
+  cabeceras hechas a mano son la forma de que este documento deje de ser la fuente de verdad.
+
+### Desviación conocida: el cristal no lleva desenfoque
+
+`--glass` va con `backdrop-filter: blur(12px)` y **Godot no lo da gratis**: haría falta un
+`BackBufferCopy` con shader por ventana. Sin él el color es el correcto, pero el fondo se transparenta
+**nítido**, así que sobre una nave o un planeta la ventana se lee más ruidosa que en el prototipo.
+
+**Es la única desviación conocida del §4**, y se deja anotada en vez de disimularla subiendo la
+opacidad: cambiar el token por una ventana rompería el token para todas. Si el ruido llega a molestar,
+la salida es el shader, no la paleta.
 
 ## 12. Checklist para toda interfaz nueva
 
