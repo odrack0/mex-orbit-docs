@@ -5,14 +5,15 @@
 - **Referencia viva**: [`prototipo-ui-n.html`](prototipo-ui-n.html) — abrir en navegador; toda duda visual se resuelve ahí, no en capturas.
 - Historia del proceso: `prototipo-ui.html` (A) → `-b` → `-c` → `-d` → `-e` → `-h` → `-i` → `-m` → **`-n`**. Los anteriores son archivo, no referencia.
 - Cambios registrados después de la aprobación: reparto del teclado (§6), selector segmentado (§7),
-  trazo blanco y rediseño del glifo de Ajustes (§10), desviación del cristal en Godot (§11).
+  trazo blanco y rediseño del glifo de Ajustes (§10), desviación del cristal en Godot (§11),
+  **un solo botón de ventana** (§1.1 y §4) y la comprobación medida del ratio del minimapa (§8).
 - Este documento es **la fuente de verdad** para cualquier interfaz nueva (mockups HTML, UI en Godot, CMS). Si un caso no está cubierto, se propone, se aprueba con el usuario y **se registra aquí**.
 
 ---
 
 ## 1. Leyes de UX (dictámenes aprobados)
 
-1. **Todo es ventana.** Cada elemento del HUD (nave, usuario/general, sector, objetivo, chat, registro, minimapa, boosters, misiones…) es una ventana: se minimiza/cierra y se reabre.
+1. **Todo es ventana.** Cada elemento del HUD (nave, usuario/general, sector, objetivo, chat, registro, minimapa, boosters, misiones…) es una ventana: se minimiza y se reabre desde su icono. **Un solo botón, `–`**: en un juego donde toda ventana vuelve desde la taskbar, "cerrar" y "minimizar" no se distinguen en nada —ni en lo que hacen ni en cómo se vuelve—, y dos botones para una acción solo obligan al jugador a preguntarse cuál es cuál. El `×` era herencia del escritorio y queda retirado (2026-08-26).
 2. **Un solo menú de iconos.** Todas las ventanas viven en la taskbar superior izquierda, con el **mismo estilo** de botón para todas. Nada de dos familias de iconos.
 3. **Un solo código de estado: ámbar = abierta.** Ventana abierta → icono ámbar (borde superior + punto). Cerrada o minimizada → icono neutro. Sin cian para estados, sin doble código.
 4. **Solo iconos, cero texto en el layout.** Los nombres son cadenas localizables y viven **exclusivamente en tooltips**. Un idioma nunca puede romper el ancho de una barra.
@@ -64,7 +65,7 @@ Anatomía (ver `.fp` en el prototipo):
 
 - Contenedor: `--glass` + `backdrop-filter: blur(12px)`, borde 1px `--edge-soft`, sombra `0 0 26px rgba(0,229,255,.06), 0 18px 44px rgba(0,0,0,.5)`.
 - **Esquinas en L**: superior izquierda e inferior derecha, 13px, 1.5px `--cyan`.
-- **Header 26px**: banda izquierda de 3px cian con glow; degradado horizontal `rgba(0,229,255,.12) → transparente`; chip de icono 16px (SVG cian); título Michroma 9px `.16em`; botones `–` y `×` de 17px (borde `--edge-soft`, hover cian). Cursor `move`; es la zona de arrastre.
+- **Header 26px**: banda izquierda de 3px cian con glow; degradado horizontal `rgba(0,229,255,.12) → transparente`; chip de icono 16px (SVG cian); título Michroma 9px `.16em`; botón **`–`** de 17px (borde `--edge-soft`, hover cian) — uno solo, ver §1.1. Cursor `move`; es la zona de arrastre.
 - **Grip diagonal** en la esquina inferior derecha (rayas 135°, `--edge`), señal de redimensionado.
 - Ventanas de peligro (killscreen): mismas reglas con `--hostile` en esquinas y borde.
 
@@ -129,7 +130,7 @@ escudo en una sola barra, porque esconde cuál de los dos se está gastando.
 
 ## 8. Minimapa
 
-- Canvas con borde `--edge`; anchos por pasos `[180, 238, 300, 380, 460]` (botones − / + en el header); alto = ancho / ratio del mapa (20800×12800 → 1.625). Nunca se deforma.
+- Canvas con borde `--edge`; anchos por pasos `[180, 238, 300, 380, 460]` (botones − / + en el header); alto = ancho / ratio del mapa (20800×12800 → 1.625). **Nunca se deforma**, y eso hay que **medirlo**: un mapa estirado sigue pareciendo un mapa en una captura, así que el ratio se compara contra un número en la prueba, no a ojo. En Godot el fallo llegó por ahí — la ventana no encogía al bajar el zoom, el contenedor estiraba el canvas y el mapa salía con el ancho viejo y el alto nuevo (640×260 contra el 1,625 que toca).
 - **Título dinámico**: `"<Sector> · (x, y)"` con coordenadas vivas.
 - Contenido: rejilla cian tenue, portales en violeta, hostiles `--hostile` con **anillo pulsante**, aliados `--hp`, neutros `--muted`, héroe cian con anillo respirando.
 - **Clic = autopiloto**: línea punteada ámbar animada hacia el destino con **X** de 8px, y línea en el Registro.
