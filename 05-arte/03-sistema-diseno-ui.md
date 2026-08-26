@@ -6,7 +6,8 @@
 - Historia del proceso: `prototipo-ui.html` (A) → `-b` → `-c` → `-d` → `-e` → `-h` → `-i` → `-m` → **`-n`**. Los anteriores son archivo, no referencia.
 - Cambios registrados después de la aprobación: reparto del teclado (§6), selector segmentado (§7),
   trazo blanco y rediseño del glifo de Ajustes (§10), desviación del cristal en Godot (§11),
-  **un solo botón de ventana** (§1.1 y §4) y la comprobación medida del ratio del minimapa (§8).
+  **un solo botón de ventana** (§1.1 y §4), la comprobación medida del ratio del minimapa (§8) y
+  las **ventanas contextuales** (§1.11).
 - Este documento es **la fuente de verdad** para cualquier interfaz nueva (mockups HTML, UI en Godot, CMS). Si un caso no está cubierto, se propone, se aprueba con el usuario y **se registra aquí**.
 
 ---
@@ -23,6 +24,7 @@
 8. **Al menos dos barras de acción** (I: teclas 1–0; II: F1–F10).
 9. **Sysbar** arriba a la derecha, fuera del menú de ventanas: ajustes ⚙, ayuda ?, pantalla completa ⛶, salir ⏻ (salir con hover hostil). Ajustes es ventana y también marca ámbar al abrir.
 10. **Clic en una ventana la trae al frente**; z-index incremental.
+11. **La cercanía condiciona las ACCIONES, no la ventana.** Una ventana que depende del contexto —la Estación, que solo sirve atracado— se abre y se cierra desde su icono como todas, y lo que cambia con el contexto es qué se puede **hacer** dentro: fuera de rango sus botones quedan bloqueados (§6) y una línea dice por qué. Un botón apagado enseña que ahí hay algo; una ventana que desaparece no enseña nada. Puede **abrirse sola** al entrar en contexto, pero si el jugador la cierra estando dentro, no se le vuelve a abrir hasta que salga y vuelva: una ventana que se reabre sola tras cerrarla no es cómoda, es terca.
 
 ## 2. Tokens de color
 
