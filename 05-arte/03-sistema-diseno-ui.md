@@ -144,6 +144,13 @@ escudo en una sola barra, porque esconde cuál de los dos se está gastando.
 - **Killscreen**: velo `rgba(5,7,13,.97)` que tapa todo + ventana hostil con 4 opciones (base gratis en verde `--hp`; portal / en este punto / reparación completa en créditos). Menciona el costo de durabilidad.
 - **Logout**: cuenta atrás JetBrains 30px ámbar, botón cancelar hostil.
 - **Login**: logo Michroma + card glass con banda cian; campos API/GameServer/usuario/contraseña; secuencia de estados real ("Autenticando…" → "Sesión HTTP OK…" → "Socket abierto…").
+- **Alta de cuenta**: **el mismo card que el login**, no una pantalla aparte. Los dos modos se eligen con el **selector segmentado del §7** (`ENLACE` / `ALTA`) en la cabecera del card; en `ALTA` aparecen dos campos más (correo y nombre de piloto) y el botón cambia de rótulo. Al crear la cuenta **entra solo**: el jugador acaba de teclear esos datos y volver a pedírselos no comprueba nada.
+
+  Una pantalla aparte habría significado un segundo logo, un segundo card y un botón de "volver" — tres piezas nuevas para un formulario que comparte dos de sus cuatro campos con el que ya existe. El selector segmentado ya estaba en el sistema para justo esto: elegir entre dos y cuatro opciones excluyentes.
+
+  **Los errores dicen cuál es el caso**, no "datos inválidos": "ese usuario ya existe" se arregla cambiando el nombre y "el registro está cerrado" no se arregla de ninguna manera. Juntarlos en un mensaje genérico hace que el jugador pruebe diez nombres contra una puerta cerrada. Fallo en `--hostile`, cuenta creada en `--hp`.
+
+  Las pantallas de entrada (login y alta) **no son ventanas** y no llevan el chrome del §4. El §1 dice "todo es ventana" del juego; antes de entrar no hay escritorio del que formar parte, ni taskbar desde la que reabrir.
 
 ## 10. Iconografía
 
