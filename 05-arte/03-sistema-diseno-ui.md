@@ -143,6 +143,7 @@ escudo en una sola barra, porque esconde cuál de los dos se está gastando.
 - **Pila de recompensas** bajo el toast: líneas ámbar `+ N × recurso`, fade ~3s, máximo 8.
 - **Killscreen**: velo `rgba(5,7,13,.97)` que tapa todo + ventana hostil con 4 opciones (base gratis en verde `--hp`; portal / en este punto / reparación completa en créditos). Menciona el costo de durabilidad.
 - **Logout**: cuenta atrás JetBrains 30px ámbar, botón cancelar hostil.
+- **Números de combate**: JetBrains **24px** con contorno negro (6), flotando sobre la entidad golpeada (suben 42 px en 1 s y se desvanecen). Viven en el **mundo**, no en el HUD, así que el zoom de juego (0,621) los reduce — 24 se ven como ~15 reales; con los 15 originales el golpe pasaba desapercibido. Daño que haces `#FF0000`, daño que recibes `#DB63E2` (herencia del cliente clásico, como los contadores de las barras); golpes seguidos del mismo color sobre el mismo blanco se acumulan en el número vivo.
 - **Login**: logo Michroma + card glass con banda cian; campos API/GameServer/usuario/contraseña; secuencia de estados real ("Autenticando…" → "Sesión HTTP OK…" → "Socket abierto…").
 - **Alta de cuenta**: **el mismo card que el login**, no una pantalla aparte. Los dos modos se eligen con el **selector segmentado del §7** (`ENLACE` / `ALTA`) en la cabecera del card; en `ALTA` aparecen dos campos más (correo y nombre de piloto) y el botón cambia de rótulo. Al crear la cuenta **entra solo**: el jugador acaba de teclear esos datos y volver a pedírselos no comprueba nada.
 
