@@ -105,6 +105,8 @@ Es decir, **al hacer zoom-in (1→3) la cámara baja hasta 20° hacia el horizon
 - Mapa con fondo 2D: `restoreDefaults(true)` instantáneo (zoom 1, FOV 30, pan 0, tilt 135) y sin acoplamiento tilt-zoom.
 
 ### 2.5 Shake de cámara
+
+> **CORRECCIÓN (ago-2026, verificada jugando DO 3D)**: el shake NO dispara con daño normal. Sus únicos disparadores son el tipo de daño `"I"` (detonaciones tipo mina/kamikaze — `§_-01b§\§_-j3H§.as:79` lo exige) y los efectos cuyo XML declara `shakeScreen="true"` (`§_-H4R§`, `§_-Z1w§`). Ver la corrección en el §3 del doc principal.
 `§_-J2P§.shakeScreen()` (líneas 288–293, 610–631): **amplitud inicial 5 u, 40 pasos, 1 paso cada 24 ms (~1 s), amplitud −1 cada 10 pasos**; desplaza el foco `camera.x += amp·cos(paso); camera.y += amp·sin(paso)` (ángulo = índice del paso en radianes → pseudo-aleatorio). Se aplica al punto de mira, no a la cámara 3D directamente.
 
 ---

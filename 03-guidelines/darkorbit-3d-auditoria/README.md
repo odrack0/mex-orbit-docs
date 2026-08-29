@@ -19,7 +19,7 @@
 | 1 | **Banking ausente** (la señal de giro #1) | roll = error angular, clamp ±20° d=0.2; combate −2×, ±10°, d=0.08 | ship_sprite_2d.gd — traducción 2D: squash `scale.x = cos(roll)` o frames horneados por roll (pipeline asset-3d) |
 | 2 | **Giro visual lineal 0.1 s** (robótico en giros grandes) | QuadEaseOut d=0.2 incremental (§15 del guideline) | ship_sprite_2d.gd:140-150 |
 | 3 | **Zoom sin tween** + pasos ×1.1 + clamp [0.1,3] | ×1.2/×0.8, clamp [1,3], tween 0.3 s Quad.easeOut | world.gd:1044-1046 |
-| 4 | **Sin shake de cámara al recibir daño** (0 feedback de cámara) | amp 5→0, 40 pasos × 24 ms, −1 cada 10, solo al héroe | world.gd (el evento ya se distingue en :1511-1514) |
+| 4 | ~~Sin shake de cámara al recibir daño~~ **RETIRADO (ago-2026)**: verificado jugando DO 3D, el original NO sacude con daño normal — solo con el tipo "I" (minas/kamikaze) y efectos con `shakeScreen="true"` en su XML. Este hallazgo era una generalización errónea del análisis; se portó, se sintió mal, y se quitó. Ver la corrección en §3 del guideline | — | — |
 | 5 | **Sin snap a píxel en toda la cadena** (shimmer subpíxel) | DO redondea cámara + fondo + HUD a entero | world.gd:856, map_background.gd:96-98, entity.gd HUD |
 
 ### Tier 2 — Identidad visual (el look del 3D)
