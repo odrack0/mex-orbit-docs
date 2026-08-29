@@ -135,6 +135,7 @@ escudo en una sola barra, porque esconde cuál de los dos se está gastando.
 - Canvas con borde `--edge`; anchos por pasos `[180, 238, 300, 380, 460]` (botones − / + en el header); alto = ancho / ratio del mapa (20800×12800 → 1.625). **Nunca se deforma**, y eso hay que **medirlo**: un mapa estirado sigue pareciendo un mapa en una captura, así que el ratio se compara contra un número en la prueba, no a ojo. En Godot el fallo llegó por ahí — la ventana no encogía al bajar el zoom, el contenedor estiraba el canvas y el mapa salía con el ancho viejo y el alto nuevo (640×260 contra el 1,625 que toca).
 - **Título dinámico**: `"<Sector> · (x, y)"` con coordenadas vivas.
 - Contenido: rejilla cian tenue, portales en violeta, hostiles `--hostile` con **anillo pulsante**, aliados `--hp`, neutros `--muted`, héroe cian con anillo respirando.
+- **El encuadre de la cámara** (herencia del cliente 3D de DarkOrbit, guidelines §4): las cuatro esquinas del viewport llevadas al mapa, dibujando **solo el 12.5% de cada lado desde cada esquina** — un marco entero taparía el contenido. Trazo `--txt` al 45%, 1px. Crece y encoge con el zoom: es la única lectura de "cuánto estoy viendo".
 - **Clic = autopiloto**: línea punteada ámbar animada hacia el destino con **X** de 8px, y línea en el Registro.
 
 ## 9. Overlays y flujos
