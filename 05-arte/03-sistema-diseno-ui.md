@@ -142,6 +142,16 @@ escudo en una sola barra, porque esconde cuál de los dos se está gastando.
 
 - **Toast** centro-superior: Michroma 10px cian sobre panel oscuro con borde `--edge`, 2.6s.
 - **Pila de recompensas** bajo el toast: líneas ámbar `+ N × recurso`, fade ~3s, máximo 8.
+- **Aviso de peligro persistente** (2026-09-01, primer caso: la **zona radiactiva**). Es la anatomía
+  del toast con la sustitución del §4 para peligro: Michroma 10px `.14em` UPPERCASE, panel
+  `rgba(7,10,18,.85)`, borde 1px, centro-superior a 88px — pero texto y borde en `--hostile`. Dos
+  diferencias con el toast, y las dos son lo que significa "persistente": **no caduca** (vive
+  mientras dure la condición) y **late** (opacidad entre 0,55 y 1 cada 1,2 s — el pulso es el
+  idioma de peligro del sistema, el mismo del anillo hostil del minimapa §8). Debajo, una **viñeta**
+  `--hostile` en los bordes del viewport (radial, transparente al centro, 18% en el borde) latiendo
+  en fase: la lectura periférica, para que se sienta sin leer. Entra y sale con el fundido del toast
+  (.25s). No es ventana (§1 no aplica: no se abre ni se cierra, la condición manda) y no lleva
+  chrome. Al entrar y salir, una línea en el Registro (hostil / fría). En Godot: `ui/radiation_warning.gd`.
 - **Killscreen**: velo `rgba(5,7,13,.97)` que tapa todo + ventana hostil con 4 opciones (base gratis en verde `--hp`; portal / en este punto / reparación completa en créditos). Menciona el costo de durabilidad.
 - **Logout**: cuenta atrás JetBrains 30px ámbar, botón cancelar hostil.
 - **Números de combate**: JetBrains **24px** con contorno negro (6), flotando sobre la entidad golpeada (suben 42 px en 1 s y se desvanecen). Viven en el **mundo**, no en el HUD, así que el zoom de juego (0,621) los reduce — 24 se ven como ~15 reales; con los 15 originales el golpe pasaba desapercibido. Daño que haces `#FF0000`, daño que recibes `#DB63E2` (herencia del cliente clásico, como los contadores de las barras); golpes seguidos del mismo color sobre el mismo blanco se acumulan en el número vivo.
