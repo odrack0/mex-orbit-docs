@@ -6,8 +6,9 @@
 - Historia del proceso: `prototipo-ui.html` (A) → `-b` → `-c` → `-d` → `-e` → `-h` → `-i` → `-m` → **`-n`**. Los anteriores son archivo, no referencia.
 - Cambios registrados después de la aprobación: reparto del teclado (§6), selector segmentado (§7),
   trazo blanco y rediseño del glifo de Ajustes (§10), desviación del cristal en Godot (§11),
-  **un solo botón de ventana** (§1.1 y §4), la comprobación medida del ratio del minimapa (§8) y
-  las **ventanas contextuales** (§1.11).
+  **un solo botón de ventana** (§1.1 y §4), la comprobación medida del ratio del minimapa (§8),
+  las **ventanas contextuales** (§1.11) y el **aviso de peligro persistente** (§9, aprobado 2026-09-01
+  en vivo con la zona radiactiva).
 - Este documento es **la fuente de verdad** para cualquier interfaz nueva (mockups HTML, UI en Godot, CMS). Si un caso no está cubierto, se propone, se aprueba con el usuario y **se registra aquí**.
 
 ---
