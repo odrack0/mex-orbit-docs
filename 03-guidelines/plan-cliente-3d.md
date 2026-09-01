@@ -71,17 +71,24 @@ Las recetas ya están mapeadas en G§15 (tabla técnica→Godot). Prioridad de m
 
 ## 7. Calidad — "sus mismas escalas de prioridades" (G§12)
 
-`Quality` (autoload) se conserva con las claves re-mapeadas al mundo 3D, calcando los cortes del original:
+`Quality` (autoload) se conserva con las claves re-mapeadas al mundo 3D, calcando los cortes del original.
+**Hecho el 1-sep-2026, con una corrección al plan**: la fila `npc` decía «quad PNG» en BAJA y MEDIA, y
+en vivo eso se vio roto (un PNG cenital bajo la cámara a 45°) y no ahorraba nada. El principio que
+quedó es el del propio original —nunca cambia *qué* es una nave, cambia cuánto la adorna— más una
+palanca que en 2013 no existía: la resolución del render 3D.
 
 | clave | BAJA | MEDIA | ALTA |
 |---|---|---|---|
-| `npc` | quad PNG | quad PNG | **malla GLB** |
-| `luces` | solo sol | sol + 1 efecto | sol + héroe + pool 3 |
-| `emissive`/glow | apagado | encendido | encendido |
-| `engine` | sin llamas | llamas | llamas + ribbon |
-| `explosion` | flipbook solo | multi-capa | multi-capa + debris |
+| `render` (escala 3D) | 0,5× | 0,75× | 1× |
+| `aa` (MSAA viewport) | 0 | 2× | 4× (el 16× del original no paga en Vulkan) |
+| `luces` | solo sol | sol + héroe | sol + héroe + pool 3 |
+| `engine` | llamas solo del héroe, ½ partículas | todas, ½ partículas | todas + ribbon (pendiente) |
 | `background` | skybox solo | + star dust | + tilemaps 3D |
-| `aa` (MSAA viewport) | 0 | 2× | 4–8× (el 16× del original no paga en Vulkan) |
+| `collectable` | props quietos | animados | animados |
+| `emissive`, `explosion` | encendidos en los tres; solo la auto-calidad los apaga | | |
+
+La malla es el único cuerpo en los tres niveles; una entidad sin GLB no se dibuja (el PNG no quedó ni
+de respaldo). El horno de sprites y `medir_emision` se retiraron.
 
 - **Gates por sitio de invocación**, con booleanos, aplicables en vivo (ya es así).
 - **Auto-quality por FPS** (implementada): la escalera se re-mapea a estos cortes.
