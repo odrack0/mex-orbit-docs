@@ -79,7 +79,7 @@ palanca que en 2013 no existía: la resolución del render 3D.
 
 | clave | BAJA | MEDIA | ALTA |
 |---|---|---|---|
-| `render` (escala 3D, FSR) | 0,5× | 0,85× | 1× |
+| `render` (escala 3D, FSR) | 0,65× | 0,85× | 1× |
 | `aa` (MSAA viewport) | 0 | 2× | 4× (el 16× del original no paga en Vulkan) |
 | `luces` | solo sol | sol + héroe | sol + héroe + pool 3 |
 | `engine` | llamas solo del héroe, ½ partículas | todas, ½ partículas | todas + ribbon (pendiente) |
