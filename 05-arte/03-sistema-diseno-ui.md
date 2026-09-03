@@ -165,6 +165,14 @@ escudo en una sola barra, porque esconde cuál de los dos se está gastando.
 
   Las pantallas de entrada (login y alta) **no son ventanas** y no llevan el chrome del §4. El §1 dice "todo es ventana" del juego; antes de entrar no hay escritorio del que formar parte, ni taskbar desde la que reabrir.
 
+- **Taller de assets** (2026-09-02, **solo builds de desarrollo**). Una ventana N más (chrome §4
+  completo, icono en la sysbar con estado ámbar §1.3, tecla F8), cerrada por defecto, que carga el
+  JSON de un asset y pinta una fila por dial —etiqueta fría a la izquierda, valor en JetBrains ámbar
+  a la derecha, sub-objetos como cabecera Michroma cian con sus filas sangradas—, aplica los cambios
+  en vivo, los guarda al archivo y simula a un dummy (reposo, patrulla, ataque, bajo ataque, huida).
+  Los comentarios `_clave` del JSON son el tooltip de su fila. No existe en release: no forma parte
+  de la UI del jugador, pero se construye con el sistema para no inventar un segundo lenguaje.
+
 ## 10. Iconografía
 
 - SVG `viewBox="0 0 24 24"`, `stroke` 1.6–1.7, `fill:none`, `stroke-linecap/linejoin: round`.
