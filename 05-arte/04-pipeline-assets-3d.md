@@ -390,6 +390,12 @@ La textura debe identificar **qué emite luz**. Godot debe controlar
     las dos máscaras). La **ganancia** del normalizador es la palanca de
     intensidad de color (el Skarnox va a 2,0); no se toca el pulso para
     compensar una textura floja.
+-   **Luces manchadas** (el generador pinta sombra, polvo o metal dentro
+    del parche): no se retexturiza. `LIMPIAR=N` limpia la máscara
+    (cierre + apertura morfológica, N px a 1024) y `PLANO=1` hace la
+    emisión de **un solo color uniforme**. La textura dice dónde hay
+    energía; el motor dice cómo se ve. Receta para un pulido de Tripo:
+    `TUMBAR=0 UMBRAL=0.25 LIMPIAR=3 PLANO=1`.
 
 ------------------------------------------------------------------------
 
@@ -689,8 +695,9 @@ Hace, en orden: une piezas, aplica transformaciones a la malla, **tumba**
 pie), centra el pivote, escala a 1,9 de lado, **suelda** costuras
 (0,0005), baja texturas a **1024**, renombra imágenes por papel
 (`base_color`, `metallic_roughness`, `normal`) y el material generado a
-`mat`, extrae la **emisiva** por canal con la ganancia y apaga el albedo
-donde emite. Sale un GLB con Principled + emisión, con tangentes.
+`mat`, extrae la **emisiva** por canal con la ganancia, la **limpia**
+(`LIMPIAR`), la **aplana** a un color (`PLANO`) y apaga el albedo donde
+emite. Sale un GLB con Principled + emisión, con tangentes.
 
 Si la fuente es Meshy, antes van `decimar-y-vestir.py` (alto + remesh →
 malla de 100 k vestida) y `hornear-normales.py` (relieve del alto). Ver
