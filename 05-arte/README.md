@@ -7,6 +7,7 @@
 - [`01-pipeline-ia.md`](01-pipeline-ia.md) — pipeline de producción de arte con IA.
 - [`02-inventario-assets.md`](02-inventario-assets.md) — inventario completo de assets del juego.
 - [`03-sistema-diseno-ui.md`](03-sistema-diseno-ui.md) — **sistema de diseño de UI aprobado** (tokens, chrome, leyes de UX). Fuente de verdad para toda interfaz; existe el skill `mexorbit-ui` que lo carga.
+- [`04-pipeline-assets-3d.md`](04-pipeline-assets-3d.md) — **pipeline de assets 3D aprobado** (3-sep-2026): concept → Geometry Reference → Tripo → Texture Reference → GLB → cadena automática (normalizar, validar, JSON, bestiario), qué textura favorece al mundo (luz, cámara, material, emisión) y las medidas que lo sostienen. Los comandos y diales viven en `mex-orbit-art/README.md` y en el skill `mexorbit-asset-3d`.
 - `prototipo-ui-n.html` — **la referencia viva de la UI** (Propuesta N = merge M × I).
 - `prototipo-ui*.html` (A, B, C, D, E, H, I, M) — propuestas archivadas del proceso.
 
