@@ -200,7 +200,7 @@ return (hit.x, −hit.z, hit.y)                         // de vuelta a coords de
 ```
 dir = −( sin(tilt°)·sin(pan°),  sin(tilt°)·cos(pan°),  cos(tilt°) )
 ```
-Con los defaults del XML del mapa (**tilt=100, pan=35**): dir ≈ **(−0.565, −0.807, +0.174)** — luz casi cenital, ligeramente lateral. Defaults del XML (`§_-V16§.§_-32A§`): color 0xFFFFFF, diffuse 1, specular 0.7, **ambientColor 0xFFA82E, ambient 0.2**, tilt 100, pan 35. (Preset de código `§_-s37§`: 0xA3FFFF, d 0.8, s 1.1, ambient 0xFF855C/0.5 — lo pisa el XML.)
+Con los defaults del XML del mapa (**tilt=100, pan=35**): dir ≈ **(−0.565, −0.807, +0.174)** — luz casi cenital, ligeramente lateral. Defaults del XML (`§_-V16§.§_-32A§`): color 0xFFFFFF, diffuse 1, specular 0.7, **ambientColor 16756398 = 0xFFAEAE, ambient 0.2**, tilt 100, pan 35. (Preset de código `§_-s37§`: 0xA3FFFF, d 0.8, s 1.1, ambientColor 16745820 = 0xFF855C, ambient 0.5.) **Pero estos defaults casi nunca se ejecutan**: los 6 mapas 3D de `maps-config.xml` traen los siete atributos escritos y todos usan `color="0xA3FFFF" diffuse="0.8" specular="1.1" ambientColor="0xFF855C" ambient="0.5" tilt="100" pan="35"` — es decir, el preset de código. Solo `map_666` (sin `<light>`) cae al default.
 
 **Luz del héroe** (`§_-Q4c§`): PointLight **azul 0x2E7DFF, diffuse 0.6, specular 1.5, fallOff 450**, radius 0; **parentada a la vista de la nave del héroe** (`§_-73c§.initialize`) — la nave del jugador "brilla" y se distingue.
 
@@ -242,6 +242,6 @@ El mismo view 3D sirve mapas con fondo 2D: el bitmap con paralaje (`view2D\backg
 4. Seguimiento rígido al héroe interpolado + shake aditivo (amp 5→0 u, paso 24 ms, ~1 s).
 5. Click-to-move por ray-plane contra y=0, repetido cada frame mientras el botón esté pulsado.
 6. Nave: yaw ease-out 0.2 s, banking = error de yaw clamp ±20° (combate héroe: −2×, ±10°, 0.08 s), flotación (5 u, 5°, 2 s).
-7. Luz: 1 direccional (dir por tilt 100/pan 35), ambiente cálido 0xFFA82E·0.2, specular 0.7; point azul 0x2E7DFF en la nave propia (fallOff 450); sin sombras.
+7. Luz: 1 direccional (dir por tilt 100/pan 35) **cian pálida 0xA3FFFF, diffuse 0.8, specular 1.1**, con **ambiente cálido 0xFF855C a 0.5** — el par frío/cálido que usan los 6 mapas reales; los defaults del parser (blanco/1/0.7, 0xFFAEAE/0.2) no llegan a ejecutarse. Point azul 0x2E7DFF en la nave propia (diffuse 0.6, fallOff 450); sin sombras.
 8. Fondo: skybox de estrellas con twinkle (máscara desplazándose lentamente) + polvo de partículas tileado cada 2000 u en y∈[0,−300] para paralaje.
 9. HUD 2D proyectado con la matriz de cámara y escalado por el factor de zoom.

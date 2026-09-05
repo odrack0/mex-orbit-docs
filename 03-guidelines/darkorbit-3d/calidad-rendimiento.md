@@ -101,7 +101,7 @@ Nota: **la resolución depende de la clase de objeto, no solo del tier** — un 
 Dos "light pickers" (`StaticLightPicker`): el completo (`§_-L1w§`, naves) y uno reducido **solo direccional** para partículas (`§_-q2z§`), y este último solo si `effects >= HIGH`. Las partículas nunca ven point lights.
 
 Constantes de luz (Settings3D):
-- Luz default de mapa `§_-s37§`/`§_-t1y§`: color 0xA3FFFF, diffuse 0.8, specular 1.1, ambientColor 0xFF855C, ambient 0.5, tilt 100, pan 35 — **sobrescribible por XML del mapa** (`§_-V16§.§_-32A§`: atributos color/diffuse/specular/ambientColor/ambient/tilt/pan; defaults diffuse 1, specular 0.7, ambient 0.2, ambientColor 0xFF855C=16756398→0xFFAE2E? (16756398), color 0xFFFFFF).
+- Luz default de mapa `§_-s37§`/`§_-t1y§`: color 0xA3FFFF, diffuse 0.8, specular 1.1, ambientColor 0xFF855C, ambient 0.5, tilt 100, pan 35 — **sobrescribible por XML del mapa** (`§_-V16§.§_-32A§`: atributos color/diffuse/specular/ambientColor/ambient/tilt/pan; defaults del parser: diffuse 1, specular 0.7, ambient 0.2, ambientColor 16756398 = 0xFFAEAE, color 0xFFFFFF — que en la práctica no se usan: los 6 mapas 3D escriben los siete atributos con los valores del preset).
 - Luz del héroe `§_-Q4c§`: 0x2E7DFF, diffuse 0.6, specular 1.5, fallOff 450.
 - Luz de láser `§_-e2§`: diffuse 0, specular 3, fallOff 150 (el color viene del arma).
 - `§_-411§` (explosión): 0xF7C0C0, diffuse 1, specular 2, fallOff 200.

@@ -1,0 +1,113 @@
+[
+ {
+  "asset": "goliath",
+  "levels": [
+   {
+    "ratio": 1.0,
+    "tris": 1831,
+    "gameplay_px": 201,
+    "silhouette_pixels": 3905,
+    "silhouette_changed_px": 0,
+    "silhouette_change_pct": 0.0
+   },
+   {
+    "ratio": 0.75,
+    "tris": 1372,
+    "gameplay_px": 201,
+    "silhouette_pixels": 3905,
+    "silhouette_changed_px": 9,
+    "silhouette_change_pct": 0.23
+   },
+   {
+    "ratio": 0.5,
+    "tris": 915,
+    "gameplay_px": 201,
+    "silhouette_pixels": 3905,
+    "silhouette_changed_px": 90,
+    "silhouette_change_pct": 2.3
+   },
+   {
+    "ratio": 0.25,
+    "tris": 457,
+    "gameplay_px": 201,
+    "silhouette_pixels": 3905,
+    "silhouette_changed_px": 235,
+    "silhouette_change_pct": 6.02
+   }
+  ]
+ },
+ {
+  "asset": "lordakia",
+  "levels": [
+   {
+    "ratio": 1.0,
+    "tris": 1178,
+    "gameplay_px": 134,
+    "silhouette_pixels": 2355,
+    "silhouette_changed_px": 0,
+    "silhouette_change_pct": 0.0
+   },
+   {
+    "ratio": 0.75,
+    "tris": 882,
+    "gameplay_px": 134,
+    "silhouette_pixels": 2355,
+    "silhouette_changed_px": 10,
+    "silhouette_change_pct": 0.42
+   },
+   {
+    "ratio": 0.5,
+    "tris": 588,
+    "gameplay_px": 134,
+    "silhouette_pixels": 2355,
+    "silhouette_changed_px": 28,
+    "silhouette_change_pct": 1.19
+   },
+   {
+    "ratio": 0.25,
+    "tris": 293,
+    "gameplay_px": 134,
+    "silhouette_pixels": 2355,
+    "silhouette_changed_px": 131,
+    "silhouette_change_pct": 5.56
+   }
+  ]
+ },
+ {
+  "asset": "cubikon",
+  "levels": [
+   {
+    "ratio": 1.0,
+    "tris": 2309,
+    "gameplay_px": 272,
+    "silhouette_pixels": 31063,
+    "silhouette_changed_px": 0,
+    "silhouette_change_pct": 0.0
+   },
+   {
+    "ratio": 0.75,
+    "tris": 1731,
+    "gameplay_px": 272,
+    "silhouette_pixels": 31063,
+    "silhouette_changed_px": 0,
+    "silhouette_change_pct": 0.0
+   },
+   {
+    "ratio": 0.5,
+    "tris": 1154,
+    "gameplay_px": 272,
+    "silhouette_pixels": 31063,
+    "silhouette_changed_px": 3,
+    "silhouette_change_pct": 0.01
+   },
+   {
+    "ratio": 0.25,
+    "tris": 577,
+    "gameplay_px": 272,
+    "silhouette_pixels": 31063,
+    "silhouette_changed_px": 138,
+    "silhouette_change_pct": 0.44
+   }
+  ]
+ }
+]

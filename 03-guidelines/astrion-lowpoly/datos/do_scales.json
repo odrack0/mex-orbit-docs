@@ -1,0 +1,2964 @@
+{
+ "_placeholder-building_complex": {
+  "scale_median": 3.0,
+  "scale_min": 3.0,
+  "scale_max": 3.0,
+  "uses": 1,
+  "tex_settings": "",
+  "tex_high_px": null,
+  "texture": "jumpgate-regular",
+  "px_per_unit_zoom1": 3.4747,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "176"
+  ]
+ },
+ "lordakia": {
+  "scale_median": 1.0,
+  "scale_min": 0.7,
+  "scale_max": 3.0,
+  "uses": 4,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "lordakia",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "106",
+   "71",
+   "loardakias",
+   "mesh1"
+  ],
+  "libs": [
+   "176",
+   "187"
+  ]
+ },
+ "asset-mmo-phobos": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "planet",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "1"
+  ],
+  "libs": [
+   "178"
+  ]
+ },
+ "asset-mmo-miningstation-a": {
+  "scale_median": 5.0,
+  "scale_min": 5.0,
+  "scale_max": 5.0,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "asset-mmo-miningstation",
+  "px_per_unit_zoom1": 5.7911,
+  "owners": [
+   "phobos"
+  ],
+  "libs": [
+   "178"
+  ]
+ },
+ "asset-mmo-miningstation-b": {
+  "scale_median": 7.0,
+  "scale_min": 7.0,
+  "scale_max": 7.0,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "asset-mmo-miningstation",
+  "px_per_unit_zoom1": 8.1076,
+  "owners": [
+   "miningstation1"
+  ],
+  "libs": [
+   "178"
+  ]
+ },
+ "asset-mmo-miningstation-c": {
+  "scale_median": 18.0,
+  "scale_min": 18.0,
+  "scale_max": 18.0,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "asset-mmo-miningstation",
+  "px_per_unit_zoom1": 20.848,
+  "owners": [
+   "miningstation2"
+  ],
+  "libs": [
+   "178"
+  ]
+ },
+ "asset-mmo-satellite": {
+  "scale_median": 10.0,
+  "scale_min": 10.0,
+  "scale_max": 10.0,
+  "uses": 1,
+  "tex_settings": "building_small",
+  "tex_high_px": 512,
+  "texture": "",
+  "px_per_unit_zoom1": 11.5822,
+  "owners": [
+   "satellite_container"
+  ],
+  "libs": [
+   "178"
+  ]
+ },
+ "cluster_mars_small_asteroid04": {
+  "scale_median": 0.3,
+  "scale_min": 0.3,
+  "scale_max": 0.3,
+  "uses": 1,
+  "tex_settings": "planet",
+  "tex_high_px": 1024,
+  "texture": "asset-mmo-asteroid-a",
+  "px_per_unit_zoom1": 0.3475,
+  "owners": [
+   "satellite"
+  ],
+  "libs": [
+   "178"
+  ]
+ },
+ "asset-vru-satellite-a": {
+  "scale_median": 15.0,
+  "scale_min": 15.0,
+  "scale_max": 15.0,
+  "uses": 1,
+  "tex_settings": "building_small",
+  "tex_high_px": 512,
+  "texture": "",
+  "px_per_unit_zoom1": 17.3733,
+  "owners": [
+   "map_3-1"
+  ],
+  "libs": [
+   "178"
+  ]
+ },
+ "al-laser_module": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "building_small",
+  "tex_high_px": 512,
+  "texture": "cbs-module-laser-ga",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "module_laserhigh1"
+  ],
+  "libs": [
+   "179"
+  ]
+ },
+ "am-laser_module": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "building_small",
+  "tex_high_px": 512,
+  "texture": "cbs-module-laser-ga",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "module_laserhigh1"
+  ],
+  "libs": [
+   "179"
+  ]
+ },
+ "ga-laser_module": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "building_small",
+  "tex_high_px": 512,
+  "texture": "cbs-module-laser-ga",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "module_laserhigh1"
+  ],
+  "libs": [
+   "179"
+  ]
+ },
+ "destroyed-module": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "building_small",
+  "tex_high_px": 512,
+  "texture": "cbs-module-destroyed",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "module"
+  ],
+  "libs": [
+   "179"
+  ]
+ },
+ "cbs": {
+  "scale_median": 1.6,
+  "scale_min": 1.6,
+  "scale_max": 1.6,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "cbs-core",
+  "px_per_unit_zoom1": 1.8532,
+  "owners": [
+   "click_area"
+  ],
+  "libs": [
+   "179"
+  ]
+ },
+ "mine-asteroid": {
+  "scale_median": 2.5,
+  "scale_min": 2.5,
+  "scale_max": 2.5,
+  "uses": 1,
+  "tex_settings": "building_small",
+  "tex_high_px": 512,
+  "texture": "cbs-asteroid",
+  "px_per_unit_zoom1": 2.8956,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "179"
+  ]
+ },
+ "cbs-construction": {
+  "scale_median": 2.5,
+  "scale_min": 2.5,
+  "scale_max": 2.5,
+  "uses": 1,
+  "tex_settings": "building_small",
+  "tex_high_px": 512,
+  "texture": "",
+  "px_per_unit_zoom1": 2.8956,
+  "owners": [
+   "cbs-construction"
+  ],
+  "libs": [
+   "179"
+  ]
+ },
+ "module-construction": {
+  "scale_median": 0.6,
+  "scale_min": 0.6,
+  "scale_max": 0.6,
+  "uses": 1,
+  "tex_settings": "building_small",
+  "tex_high_px": 512,
+  "texture": "cbs-construction",
+  "px_per_unit_zoom1": 0.6949,
+  "owners": [
+   "construct"
+  ],
+  "libs": [
+   "179"
+  ]
+ },
+ "xmas-tree": {
+  "scale_median": 1.6,
+  "scale_min": 1.6,
+  "scale_max": 1.6,
+  "uses": 1,
+  "tex_settings": "building_small",
+  "tex_high_px": 512,
+  "texture": "",
+  "px_per_unit_zoom1": 1.8532,
+  "owners": [
+   "christmasTreeAsteroid"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "repair-robot": {
+  "scale_median": 0.8,
+  "scale_min": 0.8,
+  "scale_max": 0.8,
+  "uses": 5,
+  "tex_settings": "ship_very_small",
+  "tex_high_px": 128,
+  "texture": "repair-robot",
+  "px_per_unit_zoom1": 0.9266,
+  "owners": [
+   "repair-robot-1",
+   "repair-robot-2",
+   "repair-robot-3",
+   "repair-robot-4",
+   "repair-robot-5"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "repair-robot-tech": {
+  "scale_median": 1.2,
+  "scale_min": 1.2,
+  "scale_max": 1.2,
+  "uses": 1,
+  "tex_settings": "ship_very_small",
+  "tex_high_px": 128,
+  "texture": "repair-robot",
+  "px_per_unit_zoom1": 1.3899,
+  "owners": [
+   "repair-robot-tech"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "icecube": {
+  "scale_median": 0.65,
+  "scale_min": -2.0,
+  "scale_max": 0.65,
+  "uses": 2,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "icecube",
+  "px_per_unit_zoom1": 0.7528,
+  "owners": [
+   "icy-cube-effect",
+   "ship_container"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "building-hq-mmo": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 3,
+  "tex_settings": "building_big",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "building-hq-eic": {
+  "scale_median": 1.1,
+  "scale_min": 1.1,
+  "scale_max": 1.1,
+  "uses": 3,
+  "tex_settings": "building_big",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 1.274,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "building-hq-vru": {
+  "scale_median": 1.6,
+  "scale_min": 1.6,
+  "scale_max": 1.6,
+  "uses": 3,
+  "tex_settings": "building_big",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 1.8532,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "building-hangar": {
+  "scale_median": 1.5,
+  "scale_min": 1.5,
+  "scale_max": 1.5,
+  "uses": 6,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "building-hangar",
+  "px_per_unit_zoom1": 1.7373,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "building-mission-central": {
+  "scale_median": 2.3,
+  "scale_min": 2.3,
+  "scale_max": 2.3,
+  "uses": 6,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "building-mission-central",
+  "px_per_unit_zoom1": 2.6639,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "building-questgiver-beacon": {
+  "scale_median": 1.4,
+  "scale_min": 1.4,
+  "scale_max": 1.4,
+  "uses": 3,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "building-questgiver-beacon",
+  "px_per_unit_zoom1": 1.6215,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "building-repair-module": {
+  "scale_median": 1.4,
+  "scale_min": 1.4,
+  "scale_max": 1.4,
+  "uses": 6,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "building-repair-module",
+  "px_per_unit_zoom1": 1.6215,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "building-tradeport": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 6,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "building-tradeport",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "building-hq-turret-small": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 3,
+  "tex_settings": "building_small",
+  "tex_high_px": 512,
+  "texture": "building-hq-turret",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "turret_55_1,turret_56_1",
+   "turret_55_2,turret_56_2",
+   "turret_55_3,turret_56_3"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "building-hq-turret-large": {
+  "scale_median": 1.2,
+  "scale_min": 1.2,
+  "scale_max": 1.2,
+  "uses": 3,
+  "tex_settings": "building_small",
+  "tex_high_px": 512,
+  "texture": "building-hq-turret",
+  "px_per_unit_zoom1": 1.3899,
+  "owners": [
+   "turret_57_1,turret_58_1",
+   "turret_57_2,turret_58_2",
+   "turret_57_3,turret_58_3"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "beacon-tdm-entrance": {
+  "scale_median": 1.5,
+  "scale_min": 1.5,
+  "scale_max": 1.5,
+  "uses": 1,
+  "tex_settings": "building_small",
+  "tex_high_px": 512,
+  "texture": "",
+  "px_per_unit_zoom1": 1.7373,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "beacon-static": {
+  "scale_median": 1.4,
+  "scale_min": 1.4,
+  "scale_max": 1.4,
+  "uses": 7,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "beacon",
+  "px_per_unit_zoom1": 1.6215,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "beacon-animated": {
+  "scale_median": 1.4,
+  "scale_min": 1.4,
+  "scale_max": 1.4,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "beacon",
+  "px_per_unit_zoom1": 1.6215,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "low-relay": {
+  "scale_median": 0.6,
+  "scale_min": 0.6,
+  "scale_max": 0.6,
+  "uses": 2,
+  "tex_settings": "building_small",
+  "tex_high_px": 512,
+  "texture": "",
+  "px_per_unit_zoom1": 0.6949,
+  "owners": [
+   "bulb"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "low-station-base": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "low-station",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "healthStation"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "low-station-cross": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "low-station",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "healthStation"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "pirate-base-main-asteroid": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "building_big",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "station_6"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "pirate-base-technical-elements": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "building_big",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "station_6"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "pirate-base-billboards": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "building_big",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "elements"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "capsule-sibelon-emperor": {
+  "scale_median": 0.8,
+  "scale_min": 0.8,
+  "scale_max": 0.8,
+  "uses": 1,
+  "tex_settings": "ship_very_small",
+  "tex_high_px": 128,
+  "texture": "",
+  "px_per_unit_zoom1": 0.9266,
+  "owners": [
+   "buffCapsuleBase"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "boosterstation": {
+  "scale_median": 0.5,
+  "scale_min": 0.5,
+  "scale_max": 0.5,
+  "uses": 4,
+  "tex_settings": "building_small",
+  "tex_high_px": 512,
+  "texture": "boosterstation",
+  "px_per_unit_zoom1": 0.5791,
+  "owners": [
+   "boosterstation_1",
+   "boosterstation_2",
+   "boosterstation_3",
+   "boosterstation_4"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "aegis-repair-cross": {
+  "scale_median": 1.34,
+  "scale_min": 1.34,
+  "scale_max": 1.34,
+  "uses": 1,
+  "tex_settings": "ship_very_small",
+  "tex_high_px": 128,
+  "texture": "",
+  "px_per_unit_zoom1": 1.552,
+  "owners": [
+   "pod_heal"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "aegis-repair-pod": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "ship_small",
+  "tex_high_px": 128,
+  "texture": "aegis",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "cross"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "stickybomb": {
+  "scale_median": 0.33,
+  "scale_min": 0.33,
+  "scale_max": 0.33,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "stickybomb",
+  "px_per_unit_zoom1": 0.3822,
+  "owners": [
+   "stickybomb"
+  ],
+  "libs": [
+   "180"
+  ]
+ },
+ "jumpgate-regular": {
+  "scale_median": 0.6,
+  "scale_min": 0.6,
+  "scale_max": 0.6,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "jumpgate-regular",
+  "px_per_unit_zoom1": 0.6949,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "181"
+  ]
+ },
+ "galaxygate-alfa": {
+  "scale_median": 0.65,
+  "scale_min": 0.65,
+  "scale_max": 0.65,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 0.7528,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "181"
+  ]
+ },
+ "galaxygate-beta": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "181"
+  ]
+ },
+ "galaxygate-gamma": {
+  "scale_median": 0.65,
+  "scale_min": 0.65,
+  "scale_max": 0.65,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 0.7528,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "181"
+  ]
+ },
+ "galaxygate-delta": {
+  "scale_median": 0.8,
+  "scale_min": 0.8,
+  "scale_max": 0.8,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 0.9266,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "181"
+  ]
+ },
+ "eventgate-birthday": {
+  "scale_median": 0.8,
+  "scale_min": 0.8,
+  "scale_max": 0.8,
+  "uses": 2,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 0.9266,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "181"
+  ]
+ },
+ "eventgate-highscore": {
+  "scale_median": 0.9,
+  "scale_min": 0.9,
+  "scale_max": 0.9,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 1.0424,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "181"
+  ]
+ },
+ "jumpgate-pirate": {
+  "scale_median": 0.7,
+  "scale_min": 0.65,
+  "scale_max": 0.7,
+  "uses": 2,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "181"
+  ]
+ },
+ "eventgate-invasion-1": {
+  "scale_median": 0.6,
+  "scale_min": 0.6,
+  "scale_max": 0.6,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "eventgate-invasion",
+  "px_per_unit_zoom1": 0.6949,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "181"
+  ]
+ },
+ "eventgate-invasion-2": {
+  "scale_median": 0.6,
+  "scale_min": 0.6,
+  "scale_max": 0.6,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "eventgate-invasion",
+  "px_per_unit_zoom1": 0.6949,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "181"
+  ]
+ },
+ "eventgate-invasion-3": {
+  "scale_median": 0.6,
+  "scale_min": 0.6,
+  "scale_max": 0.6,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "eventgate-invasion",
+  "px_per_unit_zoom1": 0.6949,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "181"
+  ]
+ },
+ "jumpgate-crushed": {
+  "scale_median": 0.75,
+  "scale_min": 0.75,
+  "scale_max": 0.75,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 0.8687,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "181"
+  ]
+ },
+ "galaxygate-epsilon": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "181"
+  ]
+ },
+ "galaxygate-zeta": {
+  "scale_median": 0.8,
+  "scale_min": 0.8,
+  "scale_max": 0.8,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 0.9266,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "181"
+  ]
+ },
+ "eventgate-team": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "181"
+  ]
+ },
+ "eventgate-soccer": {
+  "scale_median": 2.0,
+  "scale_min": 2.0,
+  "scale_max": 2.0,
+  "uses": 2,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 2.3164,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "181"
+  ]
+ },
+ "galaxygate-kappa": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "181"
+  ]
+ },
+ "galaxygate-lambda": {
+  "scale_median": 0.65,
+  "scale_min": 0.65,
+  "scale_max": 0.65,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 0.7528,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "181"
+  ]
+ },
+ "galaxygate-cronos": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "galaxygate-cronos",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "181"
+  ]
+ },
+ "galaxygate-hades": {
+  "scale_median": 0.65,
+  "scale_min": 0.65,
+  "scale_max": 0.65,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 0.7528,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "181"
+  ]
+ },
+ "eventgate-domination": {
+  "scale_median": 0.9,
+  "scale_min": 0.9,
+  "scale_max": 0.9,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 1.0424,
+  "owners": [
+   "click_icon"
+  ],
+  "libs": [
+   "181"
+  ]
+ },
+ "drone-flax-1": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 3,
+  "tex_settings": "drone",
+  "tex_high_px": 128,
+  "texture": "drone-flax-standard",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "drone_1_havok_1",
+   "drone_1_hercules_1",
+   "drone_1_standard_1"
+  ],
+  "libs": [
+   "183"
+  ]
+ },
+ "drone-flax-2": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 3,
+  "tex_settings": "drone",
+  "tex_high_px": 128,
+  "texture": "drone-flax-standard",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "drone_1_havok_2",
+   "drone_1_hercules_2",
+   "drone_1_standard_2"
+  ],
+  "libs": [
+   "183"
+  ]
+ },
+ "drone-flax-3": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 3,
+  "tex_settings": "drone",
+  "tex_high_px": 128,
+  "texture": "drone-flax-standard",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "drone_1_havok_3",
+   "drone_1_hercules_3",
+   "drone_1_standard_3"
+  ],
+  "libs": [
+   "183"
+  ]
+ },
+ "drone-flax-4": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 3,
+  "tex_settings": "drone",
+  "tex_high_px": 128,
+  "texture": "drone-flax-standard",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "drone_1_havok_4",
+   "drone_1_hercules_4",
+   "drone_1_standard_4"
+  ],
+  "libs": [
+   "183"
+  ]
+ },
+ "drone-flax-5": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 3,
+  "tex_settings": "drone",
+  "tex_high_px": 128,
+  "texture": "drone-flax-standard",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "drone_1_havok_5",
+   "drone_1_hercules_5",
+   "drone_1_standard_5"
+  ],
+  "libs": [
+   "183"
+  ]
+ },
+ "drone-flax-6": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 3,
+  "tex_settings": "drone",
+  "tex_high_px": 128,
+  "texture": "drone-flax-standard",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "drone_1_havok_6",
+   "drone_1_hercules_6",
+   "drone_1_standard_6"
+  ],
+  "libs": [
+   "183"
+  ]
+ },
+ "drone-iris-1": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 9,
+  "tex_settings": "drone",
+  "tex_high_px": 128,
+  "texture": "drone-iris-havoc",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "drone_2_havok_1",
+   "drone_2_hercules_1",
+   "drone_2_standard_1",
+   "drone_3_havok_1",
+   "drone_3_hercules_1",
+   "drone_3_standard_1"
+  ],
+  "libs": [
+   "183"
+  ]
+ },
+ "drone-iris-2": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 9,
+  "tex_settings": "drone",
+  "tex_high_px": 128,
+  "texture": "drone-iris-havoc",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "drone_2_havok_2",
+   "drone_2_hercules_2",
+   "drone_2_standard_2",
+   "drone_3_havok_2",
+   "drone_3_hercules_2",
+   "drone_3_standard_2"
+  ],
+  "libs": [
+   "183"
+  ]
+ },
+ "drone-iris-3": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 9,
+  "tex_settings": "drone",
+  "tex_high_px": 128,
+  "texture": "drone-iris-havoc",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "drone_2_havok_3",
+   "drone_2_hercules_3",
+   "drone_2_standard_3",
+   "drone_3_havok_3",
+   "drone_3_hercules_3",
+   "drone_3_standard_3"
+  ],
+  "libs": [
+   "183"
+  ]
+ },
+ "drone-iris-4": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 9,
+  "tex_settings": "drone",
+  "tex_high_px": 128,
+  "texture": "drone-iris-havoc",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "drone_2_havok_4",
+   "drone_2_hercules_4",
+   "drone_2_standard_4",
+   "drone_3_havok_4",
+   "drone_3_hercules_4",
+   "drone_3_standard_4"
+  ],
+  "libs": [
+   "183"
+  ]
+ },
+ "drone-iris-5": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 9,
+  "tex_settings": "drone",
+  "tex_high_px": 128,
+  "texture": "drone-iris-havoc",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "drone_2_havok_5",
+   "drone_2_hercules_5",
+   "drone_2_standard_5",
+   "drone_3_havok_5",
+   "drone_3_hercules_5",
+   "drone_3_standard_5"
+  ],
+  "libs": [
+   "183"
+  ]
+ },
+ "drone-iris-6": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 10,
+  "tex_settings": "drone",
+  "tex_high_px": 128,
+  "texture": "drone-iris-havoc",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "108",
+   "drone_2_havok_6",
+   "drone_2_hercules_6",
+   "drone_2_standard_6",
+   "drone_3_havok_6",
+   "drone_3_hercules_6"
+  ],
+  "libs": [
+   "183",
+   "187"
+  ]
+ },
+ "phoenix": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 1,
+  "tex_settings": "ship_small",
+  "tex_high_px": 128,
+  "texture": "phoenix",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "ship_phoenix"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "yamato": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 1,
+  "tex_settings": "ship_small",
+  "tex_high_px": 128,
+  "texture": "yamato",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "ship_yamato"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "leonov": {
+  "scale_median": 0.8,
+  "scale_min": 0.8,
+  "scale_max": 0.8,
+  "uses": 1,
+  "tex_settings": "ship_small",
+  "tex_high_px": 128,
+  "texture": "leonov",
+  "px_per_unit_zoom1": 0.9266,
+  "owners": [
+   "ship_leonov"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "defcom": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "ship_defcom"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "liberator": {
+  "scale_median": 0.6,
+  "scale_min": 0.6,
+  "scale_max": 0.6,
+  "uses": 1,
+  "tex_settings": "ship_small",
+  "tex_high_px": 128,
+  "texture": "liberator",
+  "px_per_unit_zoom1": 0.6949,
+  "owners": [
+   "ship_liberator"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "piranha": {
+  "scale_median": 0.85,
+  "scale_min": 0.85,
+  "scale_max": 0.85,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "piranha",
+  "px_per_unit_zoom1": 0.9845,
+  "owners": [
+   "ship_piranha"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "nostromo": {
+  "scale_median": 0.85,
+  "scale_min": 0.85,
+  "scale_max": 0.85,
+  "uses": 3,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "nostromo",
+  "px_per_unit_zoom1": 0.9845,
+  "owners": [
+   "ship_nostromo",
+   "ship_nostromo_design_diplomat",
+   "ship_nostromo_design_envoy"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "nostromo-ambassador": {
+  "scale_median": 0.85,
+  "scale_min": 0.85,
+  "scale_max": 0.85,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "nostromo-ambassador",
+  "px_per_unit_zoom1": 0.9845,
+  "owners": [
+   "ship_nostromo_design_ambassador"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "nostromo-razer": {
+  "scale_median": 0.85,
+  "scale_min": 0.85,
+  "scale_max": 0.85,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "nostromo-razer",
+  "px_per_unit_zoom1": 0.9845,
+  "owners": [
+   "ship_nostromo_design_nostromo-razer"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "vengeance": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 4,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "vengeance",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "ship_vengeance",
+   "ship_vengeance_design_adept",
+   "ship_vengeance_design_corsair",
+   "ship_vengeance_design_revenge"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "vengeance-lightning": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "vengeance-lightning",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "ship_vengeance_design_lightning"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "vengeance-avenger": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "vengeance-avenger",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "ship_vengeance_design_avenger"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "vengeance-pusat": {
+  "scale_median": 0.75,
+  "scale_min": 0.75,
+  "scale_max": 0.75,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "vengeance-pusat",
+  "px_per_unit_zoom1": 0.8687,
+  "owners": [
+   "ship_vengeance_design_pusat"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "bigboy": {
+  "scale_median": 0.8,
+  "scale_min": 0.8,
+  "scale_max": 1.0,
+  "uses": 3,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "bigboy",
+  "px_per_unit_zoom1": 0.9266,
+  "owners": [
+   "ship_bigboy",
+   "ship_bigboy_design_mamba",
+   "ship_bigboy_design_solemn"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "goliath": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 6,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "goliath",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "ship_goliath",
+   "ship_goliath_design_crimson",
+   "ship_goliath_design_enforcer",
+   "ship_goliath_design_exalted",
+   "ship_goliath_design_ignite",
+   "ship_goliath_design_independence"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "goliath-bastion": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "goliath-bastion",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "ship_goliath_design_bastion"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "goliath-angled-wings": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 18,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "goliath-angled-wings",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "ship_goliath_design_admincloak",
+   "ship_goliath_design_amber",
+   "ship_goliath_design_ancient",
+   "ship_goliath_design_bronze",
+   "ship_goliath_design_cbs-design",
+   "ship_goliath_design_goal"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "goliath-solace": {
+  "scale_median": 0.85,
+  "scale_min": 0.85,
+  "scale_max": 0.85,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 0.9845,
+  "owners": [
+   "ship_goliath_design_solace"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "goliath-sentinel": {
+  "scale_median": 0.85,
+  "scale_min": 0.85,
+  "scale_max": 0.85,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 0.9845,
+  "owners": [
+   "ship_goliath_design_sentinel"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "goliath-venom": {
+  "scale_median": 0.85,
+  "scale_min": 0.85,
+  "scale_max": 0.85,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 0.9845,
+  "owners": [
+   "ship_goliath_design_venom"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "goliath-reversed-angled-wings": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 2,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "ship_goliath_design_centaur",
+   "ship_goliath_design_saturn"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "goliath-double-winged": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "ship_goliath_design_veteran"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "goliath-spectrum": {
+  "scale_median": 0.85,
+  "scale_min": 0.85,
+  "scale_max": 0.85,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 0.9845,
+  "owners": [
+   "ship_goliath_design_spectrum"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "goliath-diminisher": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "ship_goliath_design_diminisher"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "demaner": {
+  "scale_median": 0.5,
+  "scale_min": 0.5,
+  "scale_max": 0.5,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 0.5791,
+  "owners": [
+   "11"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "streunerr-boss": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 2,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "23",
+   "36"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "saimon-boss": {
+  "scale_median": 1.12,
+  "scale_min": 1.12,
+  "scale_max": 1.12,
+  "uses": 2,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 1.2972,
+  "owners": [
+   "25",
+   "38"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "devolarium-boss": {
+  "scale_median": 23.0,
+  "scale_min": 23.0,
+  "scale_max": 23.0,
+  "uses": 2,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "",
+  "px_per_unit_zoom1": 26.6391,
+  "owners": [
+   "26",
+   "39"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "santa-1100101": {
+  "scale_median": 0.8,
+  "scale_min": 0.8,
+  "scale_max": 0.8,
+  "uses": 1,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "",
+  "px_per_unit_zoom1": 0.9266,
+  "owners": [
+   "32"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "streuner-boss": {
+  "scale_median": 60.0,
+  "scale_min": 60.0,
+  "scale_max": 60.0,
+  "uses": 2,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 69.4934,
+  "owners": [
+   "34",
+   "44"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "disguisor": {
+  "scale_median": 30.0,
+  "scale_min": 30.0,
+  "scale_max": 30.0,
+  "uses": 1,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "",
+  "px_per_unit_zoom1": 34.7467,
+  "owners": [
+   "48"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "citadel": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 12,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "citadel",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "ship_citadel",
+   "ship_citadel_1",
+   "ship_citadel_2",
+   "ship_citadel_3",
+   "ship_citadel_design_citadel-elite",
+   "ship_citadel_design_citadel-elite_1"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "spearhead": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 12,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "spearhead",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "ship_spearhead",
+   "ship_spearhead_1",
+   "ship_spearhead_2",
+   "ship_spearhead_3",
+   "ship_spearhead_design_spearhead-elite",
+   "ship_spearhead_design_spearhead-elite_1"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "devolarium": {
+  "scale_median": 25.0,
+  "scale_min": 25.0,
+  "scale_max": 25.0,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 28.9556,
+  "owners": [
+   "72"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "saimon": {
+  "scale_median": 1.08,
+  "scale_min": 1.08,
+  "scale_max": 1.08,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 1.2509,
+  "owners": [
+   "75"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "lordakium-boss": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 2,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "28",
+   "41"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "lordakium-emperor": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 1,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "123"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "ice-meteoroid-boss": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "33"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "ice-meteoroid-mega-boss": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "127"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "protegit": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "ship_very_small",
+  "tex_high_px": 128,
+  "texture": "",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "81"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "kucurbium": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "ship_very_small",
+  "tex_high_px": 128,
+  "texture": "kucurbium-boss",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "82"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "streuner": {
+  "scale_median": 0.65,
+  "scale_min": 0.65,
+  "scale_max": 0.65,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 0.7528,
+  "owners": [
+   "84"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "streunerr": {
+  "scale_median": 0.9,
+  "scale_min": 0.9,
+  "scale_max": 0.9,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 1.0424,
+  "owners": [
+   "85"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "referee": {
+  "scale_median": 0.9,
+  "scale_min": 0.9,
+  "scale_max": 0.9,
+  "uses": 2,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 1.0424,
+  "owners": [
+   "104",
+   "89"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "century-falcon": {
+  "scale_median": 40.0,
+  "scale_min": 40.0,
+  "scale_max": 40.0,
+  "uses": 1,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "",
+  "px_per_unit_zoom1": 46.3289,
+  "owners": [
+   "90"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "corsair": {
+  "scale_median": 18.0,
+  "scale_min": 18.0,
+  "scale_max": 18.0,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 20.848,
+  "owners": [
+   "91"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "outcast": {
+  "scale_median": 10.0,
+  "scale_min": 10.0,
+  "scale_max": 10.0,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 11.5822,
+  "owners": [
+   "92"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "marauder": {
+  "scale_median": 8.0,
+  "scale_min": 8.0,
+  "scale_max": 8.0,
+  "uses": 1,
+  "tex_settings": "ship_small",
+  "tex_high_px": 128,
+  "texture": "",
+  "px_per_unit_zoom1": 9.2658,
+  "owners": [
+   "93"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "vagrant": {
+  "scale_median": 7.0,
+  "scale_min": 7.0,
+  "scale_max": 7.0,
+  "uses": 1,
+  "tex_settings": "ship_small",
+  "tex_high_px": 128,
+  "texture": "",
+  "px_per_unit_zoom1": 8.1076,
+  "owners": [
+   "94"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "convict": {
+  "scale_median": 15.0,
+  "scale_min": 15.0,
+  "scale_max": 15.0,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 17.3733,
+  "owners": [
+   "95"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "hooligan": {
+  "scale_median": 10.0,
+  "scale_min": 10.0,
+  "scale_max": 10.0,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 11.5822,
+  "owners": [
+   "96"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "ravager": {
+  "scale_median": 14.0,
+  "scale_min": 14.0,
+  "scale_max": 14.0,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 16.2151,
+  "owners": [
+   "97"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "scorcher": {
+  "scale_median": 14.0,
+  "scale_min": 14.0,
+  "scale_max": 14.0,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 16.2151,
+  "owners": [
+   "99"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "infernal": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 1,
+  "tex_settings": "ship_very_small",
+  "tex_high_px": 128,
+  "texture": "",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "100"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "melter": {
+  "scale_median": 30.0,
+  "scale_min": 30.0,
+  "scale_max": 30.0,
+  "uses": 1,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "",
+  "px_per_unit_zoom1": 34.7467,
+  "owners": [
+   "102"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "devourer": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 1,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "105"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "interceptor": {
+  "scale_median": 6.0,
+  "scale_min": 6.0,
+  "scale_max": 6.0,
+  "uses": 1,
+  "tex_settings": "ship_very_small",
+  "tex_high_px": 128,
+  "texture": "",
+  "px_per_unit_zoom1": 6.9493,
+  "owners": [
+   "111"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "barracuda": {
+  "scale_median": 23.0,
+  "scale_min": 23.0,
+  "scale_max": 23.0,
+  "uses": 1,
+  "tex_settings": "ship_small",
+  "tex_high_px": 128,
+  "texture": "",
+  "px_per_unit_zoom1": 26.6391,
+  "owners": [
+   "112"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "saboteur": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 1,
+  "tex_settings": "ship_small",
+  "tex_high_px": 128,
+  "texture": "",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "113"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "annihilator": {
+  "scale_median": 1.02,
+  "scale_min": 1.02,
+  "scale_max": 1.02,
+  "uses": 1,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "",
+  "px_per_unit_zoom1": 1.1814,
+  "owners": [
+   "114"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "battleray": {
+  "scale_median": 0.75,
+  "scale_min": 0.75,
+  "scale_max": 0.75,
+  "uses": 1,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "",
+  "px_per_unit_zoom1": 0.8687,
+  "owners": [
+   "115"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "curcubitor-boss": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "118"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "curcubitor": {
+  "scale_median": 1.8,
+  "scale_min": 1.8,
+  "scale_max": 1.8,
+  "uses": 1,
+  "tex_settings": "ship_small",
+  "tex_high_px": 128,
+  "texture": "",
+  "px_per_unit_zoom1": 2.0848,
+  "owners": [
+   "119"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "turkey": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "120"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "snowman": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "121"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "sibelon-emperor": {
+  "scale_median": 1.3,
+  "scale_min": 1.3,
+  "scale_max": 1.3,
+  "uses": 1,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "",
+  "px_per_unit_zoom1": 1.5057,
+  "owners": [
+   "124"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "bollerwagen": {
+  "scale_median": 0.6,
+  "scale_min": 0.6,
+  "scale_max": 0.6,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 0.6949,
+  "owners": [
+   "125"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "demaner-freighter": {
+  "scale_median": 0.43,
+  "scale_min": 0.43,
+  "scale_max": 0.43,
+  "uses": 1,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "",
+  "px_per_unit_zoom1": 0.498,
+  "owners": [
+   "126"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "pet-1": {
+  "scale_median": 0.0,
+  "scale_min": 0.0,
+  "scale_max": 0.0,
+  "uses": 1,
+  "tex_settings": "ship_small",
+  "tex_high_px": 128,
+  "texture": "pet",
+  "px_per_unit_zoom1": 0.0,
+  "owners": [
+   "12"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "pet-4": {
+  "scale_median": 0.0,
+  "scale_min": 0.0,
+  "scale_max": 0.0,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "pet",
+  "px_per_unit_zoom1": 0.0,
+  "owners": [
+   "13"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "pet-7": {
+  "scale_median": 0.0,
+  "scale_min": 0.0,
+  "scale_max": 0.0,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "pet",
+  "px_per_unit_zoom1": 0.0,
+  "owners": [
+   "14"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "pet-10": {
+  "scale_median": 0.0,
+  "scale_min": 0.0,
+  "scale_max": 0.0,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "pet",
+  "px_per_unit_zoom1": 0.0,
+  "owners": [
+   "15"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "pet-15": {
+  "scale_median": 0.0,
+  "scale_min": 0.0,
+  "scale_max": 0.0,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "pet",
+  "px_per_unit_zoom1": 0.0,
+  "owners": [
+   "22"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "ufo": {
+  "scale_median": 1.0,
+  "scale_min": 0.5,
+  "scale_max": 1.0,
+  "uses": 2,
+  "tex_settings": "ship_small",
+  "tex_high_px": 128,
+  "texture": "",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "21",
+   "ship_admin"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "lordakia-boss": {
+  "scale_median": 0.65,
+  "scale_min": 0.65,
+  "scale_max": 0.65,
+  "uses": 2,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 0.7528,
+  "owners": [
+   "24",
+   "37"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "sibelonit": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 3,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "container"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "sibelonit-boss-tentacles": {
+  "scale_median": 0.4,
+  "scale_min": 0.4,
+  "scale_max": 0.4,
+  "uses": 2,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "sibelonit",
+  "px_per_unit_zoom1": 0.4633,
+  "owners": [
+   "main"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "mordon-boss": {
+  "scale_median": 1.3,
+  "scale_min": 1.3,
+  "scale_max": 1.3,
+  "uses": 2,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "mordon",
+  "px_per_unit_zoom1": 1.5057,
+  "owners": [
+   "31",
+   "43"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "sibelon-boss": {
+  "scale_median": 1.2,
+  "scale_min": 1.2,
+  "scale_max": 1.2,
+  "uses": 2,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "sibelon",
+  "px_per_unit_zoom1": 1.3899,
+  "owners": [
+   "46",
+   "47"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "aegis": {
+  "scale_median": 0.8,
+  "scale_min": 0.8,
+  "scale_max": 0.8,
+  "uses": 12,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "aegis",
+  "px_per_unit_zoom1": 0.9266,
+  "owners": [
+   "ship_aegis",
+   "ship_aegis_1",
+   "ship_aegis_2",
+   "ship_aegis_3",
+   "ship_aegis_design_aegis-elite",
+   "ship_aegis_design_aegis-elite_1"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "aegis-ship-pod": {
+  "scale_median": 0.8,
+  "scale_min": 0.8,
+  "scale_max": 0.8,
+  "uses": 12,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "aegis",
+  "px_per_unit_zoom1": 0.9266,
+  "owners": [
+   "ship_aegis",
+   "ship_aegis_1",
+   "ship_aegis_2",
+   "ship_aegis_3",
+   "ship_aegis_design_aegis-elite",
+   "ship_aegis_design_aegis-elite_1"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "fortify": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "fortify",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "citadel_fortify"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "mordon": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "mordon",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "73"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "sibelon": {
+  "scale_median": 1.2,
+  "scale_min": 1.2,
+  "scale_max": 1.2,
+  "uses": 1,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "",
+  "px_per_unit_zoom1": 1.3899,
+  "owners": [
+   "74"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "lordakium": {
+  "scale_median": 0.65,
+  "scale_min": 0.65,
+  "scale_max": 0.65,
+  "uses": 2,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "lordakium-solar",
+  "px_per_unit_zoom1": 0.7528,
+  "owners": [
+   "107",
+   "77"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "icy": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "ship_very_small",
+  "tex_high_px": 128,
+  "texture": "",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "103"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "ice-meteoroid": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "101"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "kristallin": {
+  "scale_median": 0.4,
+  "scale_min": 0.4,
+  "scale_max": 0.4,
+  "uses": 3,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "kristallin-boss",
+  "px_per_unit_zoom1": 0.4633,
+  "owners": [
+   "29",
+   "42",
+   "78"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "kristallon": {
+  "scale_median": 0.5,
+  "scale_min": 0.5,
+  "scale_max": 0.5,
+  "uses": 3,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "kristallon",
+  "px_per_unit_zoom1": 0.5791,
+  "owners": [
+   "35",
+   "45",
+   "79"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "kristallon-emperor": {
+  "scale_median": 2.8,
+  "scale_min": 2.8,
+  "scale_max": 2.8,
+  "uses": 1,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "kristallon-emperor",
+  "px_per_unit_zoom1": 3.243,
+  "owners": [
+   "122"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "cubikon": {
+  "scale_median": 0.65,
+  "scale_min": 0.65,
+  "scale_max": 0.65,
+  "uses": 1,
+  "tex_settings": "building",
+  "tex_high_px": 1024,
+  "texture": "",
+  "px_per_unit_zoom1": 0.7528,
+  "owners": [
+   "container"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "kucurbium-boss": {
+  "scale_median": 0.9,
+  "scale_min": 0.9,
+  "scale_max": 0.9,
+  "uses": 1,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "",
+  "px_per_unit_zoom1": 1.0424,
+  "owners": [
+   "83"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "police": {
+  "scale_median": 0.7,
+  "scale_min": 0.7,
+  "scale_max": 0.7,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 0.8108,
+  "owners": [
+   "ship_police"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "hitac-mothership": {
+  "scale_median": 0.8,
+  "scale_min": 0.8,
+  "scale_max": 0.8,
+  "uses": 1,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "hitac",
+  "px_per_unit_zoom1": 0.9266,
+  "owners": [
+   "dock_6"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "hitac-minion": {
+  "scale_median": 0.9,
+  "scale_min": 0.9,
+  "scale_max": 0.9,
+  "uses": 1,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "hitac",
+  "px_per_unit_zoom1": 1.0424,
+  "owners": [
+   "117"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "plague-minion": {
+  "scale_median": 0.5,
+  "scale_min": 0.5,
+  "scale_max": 1.0,
+  "uses": 3,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "plague-npc",
+  "px_per_unit_zoom1": 0.5791,
+  "owners": [
+   "128",
+   "minion1",
+   "mothership"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "plague-mothership": {
+  "scale_median": 1.0,
+  "scale_min": 1.0,
+  "scale_max": 1.0,
+  "uses": 1,
+  "tex_settings": "ship_big",
+  "tex_high_px": 512,
+  "texture": "plague-npc",
+  "px_per_unit_zoom1": 1.1582,
+  "owners": [
+   "129"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "spaceball-summer": {
+  "scale_median": 0.6,
+  "scale_min": 0.6,
+  "scale_max": 0.6,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 0.6949,
+  "owners": [
+   "442"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "spaceball-winter": {
+  "scale_median": 0.5,
+  "scale_min": 0.5,
+  "scale_max": 0.5,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 0.5791,
+  "owners": [
+   "443"
+  ],
+  "libs": [
+   "187"
+  ]
+ },
+ "spaceball": {
+  "scale_median": 0.6,
+  "scale_min": 0.6,
+  "scale_max": 0.6,
+  "uses": 1,
+  "tex_settings": "ship",
+  "tex_high_px": 256,
+  "texture": "",
+  "px_per_unit_zoom1": 0.6949,
+  "owners": [
+   "444"
+  ],
+  "libs": [
+   "187"
+  ]
+ }
+}

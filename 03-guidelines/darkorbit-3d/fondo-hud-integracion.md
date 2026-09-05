@@ -195,7 +195,7 @@ Respuesta corta: **no es solo un skybox; es una mini-escena Away3D por mapa** (c
   §_-J38§.§_-B4E§ = hasBg3D ? fondo3D : fondo2D; // proveedor de lensflares
   ```
   (`§_-F2Q§` = "tiene fondo 3D" = el descriptor existía).
-- El mismo `<display3D>` también define la **luz del mapa** (`<light color diffuse specular ambientColor ambient tilt pan>`; defaults: color 0xFFFFFF, diffuse 1, specular 0.7, ambientColor 0xFFA5AE(16756398), ambient 0.2, tilt 100, pan 35) y las **cameraZone** (§5).
+- El mismo `<display3D>` también define la **luz del mapa** (`<light color diffuse specular ambientColor ambient tilt pan>`; defaults del parser: color 0xFFFFFF, diffuse 1, specular 0.7, ambientColor 16756398 = 0xFFAEAE, ambient 0.2, tilt 100, pan 35 — pero los 6 mapas 3D los pisan todos con 0xA3FFFF/0.8/1.1/0xFF855C/0.5) y las **cameraZone** (§5).
 
 ### 3.1 Contenido del XML display3D (`§_-115§` UberAsset3D)
 

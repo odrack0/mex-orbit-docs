@@ -1,0 +1,29 @@
+{
+ "spaceball": {
+  "tris": 788,
+  "visible": 228,
+  "on_silhouette": 55,
+  "hidden": 560,
+  "silhouette_share_of_visible": 0.241,
+  "hidden_share": 0.711,
+  "game_px": 117
+ },
+ "protegit": {
+  "tris": 310,
+  "visible": 145,
+  "on_silhouette": 91,
+  "hidden": 165,
+  "silhouette_share_of_visible": 0.628,
+  "hidden_share": 0.532,
+  "game_px": 72
+ },
+ "tartarus": {
+  "tris": 4218,
+  "visible": 1895,
+  "on_silhouette": 487,
+  "hidden": 2323,
+  "silhouette_share_of_visible": 0.257,
+  "hidden_share": 0.551,
+  "game_px": null
+ }
+}
